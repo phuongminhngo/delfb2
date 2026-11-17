@@ -901,6 +901,7 @@ V.examen=()=>{
   const ex=S.get('exams',[]);clearTimers();
   const pick={co:shuffle([...CO.keys()]).slice(0,2),ce:Math.floor(Math.random()*CE.length),pe:Math.floor(Math.random()*PE.length),po:Math.floor(Math.random()*PO.length)};
   app.innerHTML=`<h1>Examen blanc</h1><p class="mut">Faites un examen complet une fois par mois, puis toutes les deux semaines le dernier mois. Ne regardez ni transcription ni pistes pendant l'épreuve.</p>
+  <div class="box small">Le plus proche du vrai examen : les <a href="https://www.france-education-international.fr/diplome/delf-tout-public/niveau-b2/exemples-sujets" target="_blank" rel="noopener">sujets d'exemple officiels</a> (avec audios et grilles). Faites-les sur le site officiel, avec les minuteurs ci-dessous, puis notez votre score ici.</div>
   <h2>Votre sujet</h2>
   <table>
   <tr><td>1. Compréhension de l'oral</td><td>${pick.co.map(i=>`<a href="javascript:void 0" onclick="coOpen(${i})">${CO[i].titre}</a>`).join('<br>')}</td></tr>
@@ -978,7 +979,7 @@ function todoTick(key,k,on){let d=S.get(key,[]);d=d.filter(x=>x!==k);if(on)d.pus
 
 V.ressources=()=>{const R=[
 ["Écoute",[["Le français facile avec RFI","https://francaisfacile.rfi.fr/fr","Journal en français facile quotidien de 10 minutes, avec transcription et exercices."],["TV5Monde Apprendre le français","https://apprendre.tv5monde.com/fr","Vidéos d'actualité classées par niveau, avec exercices de compréhension (choisissez B2)."],["France Culture","https://www.radiofrance.fr/franceculture","Émissions et podcasts à débit naturel, pour les derniers mois."],["InnerFrench","https://innerfrench.com","Podcast pour apprenants intermédiaires sur des sujets de société."]]],
-["Examen officiel",[["DELF B2 tout public, France Éducation international","https://www.france-education-international.fr/diplome/delf-tout-public/niveau-b2","Présentation des épreuves, exemples de sujets, conseils et manuel du candidat."]]]
+["Examen officiel (gratuit)",[["Sujets d'exemple officiels DELF B2","https://www.france-education-international.fr/diplome/delf-tout-public/niveau-b2/exemples-sujets","Deux examens complets (les deux formats d'écoute et de lecture), l'oral, les audios et les grilles de correction."],["Exercices d'entraînement officiels","https://www.france-education-international.fr/diplome/delf-tout-public/niveau-b2/entrainement","Un modèle de chaque exercice avec des conseils, et les audios."],["Présentation du DELF B2 tout public","https://www.france-education-international.fr/diplome/delf-tout-public/niveau-b2","Les épreuves, la durée et le barème."]]]
 ];app.innerHTML=`${back('#exercices','Exercices')}<h1>Ressources</h1>${R.map(g=>`<h2>${g[0]}</h2>${g[1].map(r=>`<div class="ph" style="display:block"><a href="${r[1]}" target="_blank" rel="noopener">${r[0]}</a><div class="small mut">${r[2]}</div></div>`).join('')}`).join('')}`};
 
 /* ---------- Routeur ---------- */
