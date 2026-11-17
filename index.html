@@ -65,7 +65,7 @@ th{font-weight:600}
 .back:hover{color:var(--fg)}
 .okc{color:var(--ok)}.koc{color:var(--ko)}
 ul{padding-left:20px;margin:6px 0 12px}
-.todo{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:10px 0;border-top:1px solid var(--line)}.todo label{display:flex;gap:10px;cursor:pointer}.todo input{margin-top:5px}.todo.done .tt,.todo.done b{color:var(--mut);text-decoration:line-through}.todo button,.todo a{flex-shrink:0}
+.todo{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:10px 0;border-top:1px solid var(--line)}.todo label{display:flex;gap:10px;cursor:pointer}.todo input{margin-top:5px}.todo.done .tt,.todo.done b{color:var(--mut);text-decoration:line-through}.todo button,.todo a{flex-shrink:0}.todo a{border:1px solid var(--line);border-radius:6px;padding:6px 12px;font-size:14px;text-decoration:none}
 .tabs{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0 24px}.tabs button.on{background:var(--fg);color:var(--bg);border-color:var(--fg)}
 .in{font:inherit;font-size:15px;color:var(--fg);background:transparent;border:1px solid var(--line);border-radius:6px;padding:5px 9px}.in.wide{display:block;width:100%;margin:6px 0}.cz{padding:1px 6px;margin:0 2px}
 textarea.sm{min-height:90px;margin:6px 0}
@@ -448,45 +448,19 @@ const V={};
 V.accueil=()=>{
   const d=S.get('date','2027-05-17');
   const days=Math.ceil((new Date(d+'T09:00:00')-new Date())/864e5);
-  const co=S.get('co',{}),coN=Object.keys(co).length;
-  const coAvg=coN?Math.round(Object.values(co).reduce((a,b)=>a+b,0)/coN):0;
-  const po=S.get('po',[]),vk=S.get('vk',[]),gr=S.get('gr',{best:0,n:0}),ex=S.get('exams',[]);
-  const totalV=VOC.reduce((a,t)=>a+t[1].length,0);
-  const jours=["Repos, ou un épisode du Journal en français facile pour le plaisir","Écoute : un exercice ici, puis 10 min de RFI","Oral : un sujet complet avec les minuteurs","Vocabulaire (un thème) et une série de grammaire","Écoute : un exercice ici, puis un podcast TV5Monde","Oral : un sujet complet, enregistrez-vous avec votre téléphone","Lecture ou écrit, en alternance"];
-  const auj=jours[new Date().getDay()];
-  app.innerHTML=`<h1>Bonjour.</h1>
-  <p class="mut">${days>0?`Il reste <b style="color:var(--fg)">${days} jours</b> avant l'examen.`:days===0?"C'est le jour J. Bon courage.":"La date de l'examen est passée."}</p>
-  <div class="row small"><label class="mut" for="dt">Date de l'examen</label><input type="date" id="dt" value="${d}" onchange="S.set('date',this.value);V.accueil()"></div>
+  app.innerHTML=`<p class="mut">${days>0?`J-${days} avant l'examen`:days===0?"Jour J. Bon courage.":"Examen passé."}</p>
   ${todayHTML()}
-  <div class="stats">
-    <div><b>${coN}/${CO.length}</b><span>écoutes faites${coN?`, moyenne ${coAvg} %`:''}</span></div>
-    <div><b>${po.length}</b><span>séances d'oral</span></div>
-    <div><b>${vk.length}/${totalV}</b><span>mots maîtrisés</span></div>
-    <div><b>${gr.n?gr.best+'/10':'0'}</b><span>meilleur score en grammaire</span></div>
-    <div><b>${ex.length?ex[ex.length-1].total+'/100':'0'}</b><span>dernier examen blanc</span></div>
-  </div>
-  <h2>Le plan : 3 mois intensifs</h2>
+  <details><summary>Réglages et plan</summary>
+  <div class="row small"><label class="mut" for="dt">Date de l'examen</label><input type="date" id="dt" value="${d}" onchange="S.set('date',this.value);V.accueil()"></div>
   <div class="row small"><label class="mut" for="st">Début du plan</label><input type="date" id="st" value="${S.get('start',iso(new Date()))}" onchange="S.set('start',this.value);V.accueil()"></div>
   <table>
-  <tr><td>Semaines 1 à 4</td><td><b>Fondations.</b> Écoutes guidées, sujets oraux complets en six étapes, activités de méthode.</td></tr>
-  <tr><td>Semaines 5 à 8</td><td><b>Entraînement.</b> Écoute en mode examen ; à l'oral, exposé et débat directement, minuteurs lancés et enregistrés.</td></tr>
-  <tr><td>Semaines 9 à 12</td><td><b>Conditions d'examen.</b> Tirage au sort de deux sujets chaque jour, examen blanc chaque dimanche.</td></tr>
-  <tr><td>Ensuite</td><td>Le rythme « conditions d'examen » continue jusqu'au jour J.</td></tr></table>
-  <p class="small mut">Semaine : environ 1 h 30 par jour. Samedi : lecture ou écrit, tirage oral, vocabulaire. Dimanche : examen blanc une semaine sur deux (chaque semaine à partir de la semaine 9), sinon repos actif.</p>
-  <details><summary>Conseils pour progresser vite</summary><ul>
-  <li>Régularité avant intensité : 1 h 30 chaque jour vaut mieux que 5 heures le week-end.</li>
-  <li>Parlez à voix haute à chaque séance d'oral et enregistrez-vous ; réécoutez et notez trois erreurs à corriger la fois suivante.</li>
-  <li>Si vous manquez un jour, ne rattrapez pas tout : reprenez simplement la liste du jour.</li>
-  <li>Un tandem linguistique ou un club de conversation une fois par semaine aide beaucoup pour le débat.</li>
-  <li>À l'écoute : lisez les questions avant, sens général à la première écoute, détails à la seconde, attention aux connecteurs.</li></ul></details>
-  <h2>Rappel de l'examen</h2>
-  <table><tr><th>Épreuve</th><th>Durée</th><th>Note</th></tr>
-  <tr><td>Compréhension de l'oral</td><td>environ 30 min</td><td>/25</td></tr>
-  <tr><td>Compréhension des écrits</td><td>1 h</td><td>/25</td></tr>
-  <tr><td>Production écrite (250 mots min.)</td><td>1 h</td><td>/25</td></tr>
-  <tr><td>Production orale</td><td>20 min, après 30 min de préparation</td><td>/25</td></tr></table>
-  <p class="small mut">Il faut 50/100 au total et au moins 5/25 dans chaque épreuve. Vérifiez toujours le format à jour sur le site officiel (voir Ressources).</p>`;
+  <tr><td>Semaines 1 à 4</td><td>Fondations : exercices guidés</td></tr>
+  <tr><td>Semaines 5 à 8</td><td>Entraînement : mode examen, minuteurs</td></tr>
+  <tr><td>Semaines 9 à 12</td><td>Conditions d'examen : tirage au sort chaque jour, examen blanc le dimanche</td></tr></table>
+  <p class="small mut">Examen : écoute 30 min, lecture 1 h, écrit 1 h, oral 20 min (+ 30 min de préparation). Chaque épreuve sur 25. Il faut 50/100, et au moins 5/25 partout.</p>
+  </details>`;
 };
+
 
 /* ---------- Données : étapes guidées par sujet oral ---------- */
 const POX=[
@@ -1087,11 +1061,11 @@ function todayHTML(){
   const P=dayPlan(date),key='todo_'+iso(date),done=S.get(key,[]);
   const tot=P.T.reduce((a,t)=>a+t.m,0);
   const lbl=TODAY_OFF===0?"Aujourd'hui":TODAY_OFF===1?"Demain":TODAY_OFF===-1?"Hier":date.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
-  return `<div class="box">
-  <div class="row" style="justify-content:space-between;margin:0 0 6px"><span><b>${lbl}</b> <span class="small mut">Semaine ${P.week}${P.week>12?' (révision)':''} · ${P.titre} · environ ${tot>=60?Math.floor(tot/60)+' h '+String(tot%60).padStart(2,'0'):tot+' min'}</span></span>
-  <span class="row" style="margin:0"><button onclick="TODAY_OFF--;V.accueil()">‹</button><button onclick="TODAY_OFF=0;V.accueil()">Aujourd'hui</button><button onclick="TODAY_OFF++;V.accueil()">›</button></span></div>
+  return `<div>
+  <div class="row" style="justify-content:space-between;margin:0 0 6px"><span><b style="font-size:20px">${lbl}</b><br><span class="small mut">Semaine ${P.week} · ${tot>=60?Math.floor(tot/60)+' h '+String(tot%60).padStart(2,'0'):tot+' min'}</span></span>
+  <span class="row" style="margin:0"><button onclick="TODAY_OFF--;V.accueil()">‹</button><button onclick="TODAY_OFF++;V.accueil()">›</button></span></div>
   ${P.T.map((t,k)=>`<div class="todo ${done.includes(k)?'done':''}"><label><input type="checkbox" ${done.includes(k)?'checked':''} onchange="todoTick('${key}',${k},this.checked)"> <span><b>${t.k}</b> <span class="mut small">${t.m} min</span><br><span class="tt">${t.t}</span></span></label>${t.href?`<a class="small" href="${t.href}" target="_blank" rel="noopener">Ouvrir</a>`:t.a?`<button onclick="${t.a}">Ouvrir</button>`:''}</div>`).join('')}
-  <div class="small mut" style="margin-top:8px">${done.length}/${P.T.length} terminées${done.length===P.T.length?' : bravo, journée validée.':''}</div></div>`;
+  ${done.length===P.T.length?'<p class="okc small" style="margin:8px 0 0">Journée terminée.</p>':''}</div>`;
 }
 function todoTick(key,k,on){let d=S.get(key,[]);d=d.filter(x=>x!==k);if(on)d.push(k);S.set(key,d);V.accueil()}
 
