@@ -66,6 +66,7 @@ th{font-weight:600}
 .okc{color:var(--ok)}.koc{color:var(--ko)}
 ul{padding-left:20px;margin:6px 0 12px}
 .todo{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:10px 0;border-top:1px solid var(--line)}.todo label{display:flex;gap:10px;cursor:pointer}.todo input{margin-top:5px}.todo.done .tt,.todo.done b{color:var(--mut);text-decoration:line-through}.todo button,.todo a{flex-shrink:0}.todo a{border:1px solid var(--line);border-radius:6px;padding:6px 12px;font-size:14px;text-decoration:none}
+details.step{border-top:1px solid var(--line);margin:0}details.step>summary{font-size:17px;font-weight:600;color:var(--fg);padding:14px 0;list-style:none}details.step>summary::before{content:'+ ';color:var(--mut)}details.step[open]>summary::before{content:'- ';}
 .tabs{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0 24px}.tabs button.on{background:var(--fg);color:var(--bg);border-color:var(--fg)}
 .in{font:inherit;font-size:15px;color:var(--fg);background:transparent;border:1px solid var(--line);border-radius:6px;padding:5px 9px}.in.wide{display:block;width:100%;margin:6px 0}.cz{padding:1px 6px;margin:0 2px}
 textarea.sm{min-height:90px;margin:6px 0}
@@ -77,15 +78,9 @@ select{cursor:pointer}
 <header>
   <a class="brand" href="#accueil">DELF B2</a>
   <nav>
-    <a href="#accueil">Accueil</a>
-    <a href="#ecoute">Écoute</a>
-    <a href="#oral">Oral</a>
-    <a href="#vocabulaire">Vocabulaire</a>
-    <a href="#grammaire">Grammaire</a>
-    <a href="#lecture">Lecture</a>
-    <a href="#ecrit">Écrit</a>
+    <a href="#accueil">Aujourd'hui</a>
+    <a href="#exercices">Exercices</a>
     <a href="#examen">Examen blanc</a>
-    <a href="#ressources">Ressources</a>
   </nav>
 </header>
 <main id="app"></main>
@@ -615,63 +610,21 @@ function speedRow(){return `<div class="row small"><span class="mut">Vitesse</sp
 function transcript(x){return x.segs.map(s=>`<p>${x.segs.length>1?`<b>${s[0]==='A'?'Journaliste':'Invité'}</b> : `:''}${s[1]}</p>`).join('')}
 
 /* ===== ÉCOUTE ===== */
+V.exercices=()=>{
+  const L=[["ecoute","Écoute","Documents audio et petits exercices"],["oral","Oral","Sujets, tirage au sort, méthode"],["vocabulaire","Vocabulaire","Cartes par thème"],["grammaire","Grammaire","Séries de 10 questions"],["lecture","Lecture","Textes et questions"],["ecrit","Écrit","Sujets avec minuteur"],["ressources","Ressources","Liens gratuits"]];
+  app.innerHTML=`<div class="list">${L.map(l=>`<div class="item" onclick="location.hash='${l[0]}'"><span class="t">${l[1]}</span><span class="meta">${l[2]}</span></div>`).join('')}</div>`;
+};
 V.ecoute=()=>{
-  const t=ETAB.ecoute;let h=`<h1>Compréhension de l'oral</h1>`+tabs('ecoute');
-  if(t==='comprendre')h+=`
-  <h2>L'épreuve</h2>
-  <table><tr><td>Durée</td><td>Environ 30 minutes</td></tr><tr><td>Note</td><td>/25</td></tr>
-  <tr><td>Documents</td><td>Enregistrements variés : interview, reportage, débat, extrait de conférence, bulletin d'informations</td></tr>
-  <tr><td>Écoutes</td><td>Certains documents sont diffusés deux fois, d'autres une seule fois</td></tr>
-  <tr><td>Questions</td><td>À lire avant l'écoute. Choix multiples, vrai ou faux avec justification, réponses courtes</td></tr></table>
-  <p class="small mut">Vérifiez le format exact sur le site officiel avant l'examen (voir Ressources).</p>
-  <h2>Les savoir-faire</h2>
-  <ul><li>Comprendre globalement un document : thème, type de document, situation</li>
-  <li>Identifier les locuteurs et leur opinion</li>
-  <li>Percevoir les nuances : accord partiel, doute, ironie, concession</li>
-  <li>Prendre des notes rapidement</li>
-  <li>Repérer les informations factuelles : chiffres, dates, lieux</li>
-  <li>Reformuler une information importante avec ses propres mots</li></ul>
-  <h2>Comment travailler cette section</h2>
-  <table><tr><td><b>Se préparer</b></td><td>Activités pour acquérir chaque savoir-faire : écoute guidée en quatre étapes, repérage des opinions, notation des chiffres.</td></tr>
-  <tr><td><b>S'entraîner</b></td><td>Les documents en conditions d'examen : nombre d'écoutes limité, correction à la fin.</td></tr>
-  <tr><td><b>Prêt pour l'examen</b></td><td>L'essentiel à mémoriser : mots d'opinion, connecteurs, abréviations, conseils pour le jour J.</td></tr></table>`;
-  else if(t==='preparer')h+=`
-  <p class="mut">Des activités pour développer chaque savoir-faire, avant de passer aux conditions d'examen.</p>
-  ${voiceNote()}${speedRow()}
-  <h2>1. Écoute guidée pas à pas</h2>
-  <p class="small mut">Avant l'écoute, compréhension globale, détails, puis travail sur la transcription. Écoutes illimitées.</p>
-  <div class="list">${CO.map((x,i)=>`<div class="item" onclick="coGuided(${i})"><span><span class="t">${x.titre}</span><br><span class="small mut">${x.type}</span></span><span class="meta">${S.get('cog'+i,0)?'fait':''}</span></div>`).join('')}</div>
-  <h2>2. Repérer l'opinion du locuteur</h2>
-  <p class="small mut">Huit phrases courtes : le locuteur est-il pour, contre, ou nuancé ?</p>
-  <div class="row"><button class="pri" onclick="coOpinion()">Commencer</button></div>
-  <h2>3. Noter les chiffres</h2>
-  <p class="small mut">Pourcentages, dates, grands nombres : les questions d'examen portent souvent sur ces détails.</p>
-  <div class="row"><button class="pri" onclick="coChiffres()">Commencer</button></div>`;
-  else if(t==='entrainer'){const co=S.get('co',{});h+=`
-  <p class="mut">Conditions d'examen : lisez les questions, puis écoutez. Nombre d'écoutes limité, correction à la fin.</p>
-  ${voiceNote()}${speedRow()}
-  <div class="row small"><label><input type="checkbox" ${S.get('free',false)?'checked':''} onchange="S.set('free',this.checked)"> Écoutes illimitées</label></div>
-  <div class="list">${CO.map((x,i)=>`<div class="item" onclick="coOpen(${i})"><span><span class="t">${x.titre}</span><br><span class="small mut">${x.type}, ${x.ecoutes} écoute${x.ecoutes>1?'s':''}</span></span><span class="meta">${co[x.id]!==undefined?co[x.id]+' %':''}</span></div>`).join('')}</div>
-  <p class="small mut" style="margin-top:20px">Complétez avec de vrais enregistrements : RFI et TV5Monde (voir <a href="#ressources">Ressources</a>).</p>`}
-  else h+=`
-  <h2>Les mots qui annoncent une opinion</h2>
-  <table><tr><td>Accord</td><td>Je suis convaincu que, j'approuve, c'est une excellente idée, enfin !</td></tr>
-  <tr><td>Désaccord</td><td>Je suis opposé à, je doute que, permettez-moi d'en douter, ça n'a aucun sens</td></tr>
-  <tr><td>Nuance</td><td>Sur le papier…, mais ; il y a du bon et du moins bon ; tout dépendra de ; ce n'est pas la priorité</td></tr></table>
-  <h2>Les connecteurs à surveiller</h2>
-  <table><tr><td>Opposition</td><td>mais, pourtant, cependant, en revanche, or</td></tr>
-  <tr><td>Concession</td><td>certes, même si, bien que, il est vrai que</td></tr>
-  <tr><td>Conséquence</td><td>donc, c'est pourquoi, si bien que, par conséquent</td></tr>
-  <tr><td>Cause</td><td>car, puisque, en raison de, étant donné que</td></tr></table>
-  <p class="small mut">Les questions portent souvent sur ce qui suit un connecteur d'opposition.</p>
-  <h2>Abréviations pour prendre des notes</h2>
-  <table><tr><td>↑ / ↓</td><td>augmentation / baisse</td></tr><tr><td>→</td><td>conséquence, donc</td></tr><tr><td>= / ≠</td><td>égal / différent</td></tr><tr><td>pb, gvt, qqn, qqch</td><td>problème, gouvernement, quelqu'un, quelque chose</td></tr><tr><td>ex., nb, pr, ss</td><td>exemple, nombre, pour, sans</td></tr></table>
-  <h2>Le jour J</h2>
-  <ul><li>Utilisez le temps de lecture pour souligner les mots-clés de chaque question.</li>
-  <li>Première écoute : le sens général. Deuxième écoute : les détails.</li>
-  <li>Pour un « vrai ou faux », la justification doit reprendre une information précise du document.</li>
-  <li>Ne laissez aucune question sans réponse.</li></ul>`;
-  app.innerHTML=h;
+  app.innerHTML=`${back('#exercices','Exercices')}<h1>Écoute</h1>${voiceNote()}${speedRow()}
+  <div class="list">${CO.map((x,i)=>`<div class="ph"><span>${x.titre}</span><span class="row" style="margin:0;flex-wrap:nowrap"><button onclick="coGuided(${i})">Guidé</button><button onclick="coOpen(${i})">Examen</button></span></div>`).join('')}</div>
+  <h2>Petits exercices</h2>
+  <div class="list"><div class="item" onclick="coOpinion()"><span class="t">Pour, contre ou nuancé ?</span></div><div class="item" onclick="coChiffres()"><span class="t">Noter les chiffres</span></div></div>
+  <details><summary>Méthode et mémo</summary>
+  <ul><li>L'épreuve : environ 30 min, sur 25. Certains documents s'écoutent deux fois, d'autres une fois. Lisez les questions avant.</li>
+  <li>Première écoute : le sens général. Deuxième : les détails (chiffres, opinions).</li>
+  <li>Les questions portent souvent sur ce qui suit « mais », « pourtant », « en revanche ».</li>
+  <li>Vrai ou faux : la justification reprend une information précise du document.</li>
+  <li>Notes rapides : ↑ hausse, ↓ baisse, → donc, ≠ différent, pb problème, qqn quelqu'un.</li></ul></details>`;
 };
 function coOpen(i){
   const x=CO[i];let plays=0;const max=S.get('free',false)?99:x.ecoutes;stopSpeech();
@@ -695,16 +648,16 @@ function coGuided(i){
   const glob=[{q:"De quel type de document s'agit-il ?",o:types,a:types.indexOf(x.type)},{q:"Combien de personnes parlent ?",o:["Une","Deux"],a:n-1},{q:"Quel est le thème principal ?",o:themes,a:themes.indexOf(x.titre)}];
   const play=`<div class="row"><button class="pri" onclick="speakSegs(CO[${i}].segs,S.get('rate',0.95))">Écouter</button><button onclick="stopSpeech()">Arrêter</button></div>`;
   app.innerHTML=`${back('#ecoute','Écoute')}<h1>${x.titre}</h1><p class="mut">Écoute guidée en quatre étapes. Écoutes illimitées.</p>${voiceNote()}
-  <h2>1. Avant l'écoute</h2><p>Lisez seulement le titre. De quoi va parler le document ? Quels mots pensez-vous entendre ?</p>
+  <details class="step" open><summary>1. Avant l'écoute</summary><p>Lisez seulement le titre. De quoi va parler le document ? Quels mots pensez-vous entendre ?</p>
   <textarea class="sm" data-k="cog${i}_hyp" placeholder="Vos hypothèses…"></textarea>
-  <h2>2. Première écoute : comprendre globalement</h2><p class="small mut">Écoutez une fois sans prendre de notes, puis répondez.</p>${play}
+  </details><details class="step" open><summary>2. Première écoute : comprendre globalement</summary><p class="small mut">Écoutez une fois sans prendre de notes, puis répondez.</p>${play}
   ${quizHTML(glob,'g1')}<div class="row"><button id="v1">Vérifier</button></div>
-  <h2>3. Deuxième écoute : les détails</h2><p class="small mut">Lisez les questions, puis réécoutez en notant les chiffres, les noms, les opinions et les connecteurs (mais, pourtant, en revanche).</p>${play}
+  </details><details class="step" open><summary>3. Deuxième écoute : les détails</summary><p class="small mut">Lisez les questions, puis réécoutez en notant les chiffres, les noms, les opinions et les connecteurs (mais, pourtant, en revanche).</p>${play}
   <textarea class="sm" data-k="cog${i}_notes" placeholder="Vos notes…"></textarea>
   ${quizHTML(x.qs,'g2')}<div class="row"><button id="v2">Vérifier</button><span id="r2" class="small"></span></div>
-  <h2>4. Après l'écoute</h2><p>Lisez la transcription et relevez cinq mots ou expressions liés au thème. Puis réécoutez en répétant en même temps que la voix (shadowing).</p>
+  </details><details class="step" open><summary>4. Après l'écoute</summary><p>Lisez la transcription et relevez cinq mots ou expressions liés au thème. Puis réécoutez en répétant en même temps que la voix (shadowing).</p>
   <details><summary>Transcription</summary>${transcript(x)}</details>
-  <textarea class="sm" data-k="cog${i}_mots" placeholder="Mots et expressions à retenir…"></textarea>`;
+  <textarea class="sm" data-k="cog${i}_mots" placeholder="Mots et expressions à retenir…"></textarea></details>`;
   keep();
   document.getElementById('v1').onclick=()=>grade(glob,'g1');
   document.getElementById('v2').onclick=()=>{const s=grade(x.qs,'g2');document.getElementById('r2').textContent=`${s}/${x.qs.length}`;S.set('cog'+i,1)};
@@ -727,65 +680,19 @@ function coChiffres(){
 
 /* ===== ORAL ===== */
 V.oral=()=>{
-  const t=ETAB.oral;let h=`<h1>Production orale</h1>`+tabs('oral');
-  if(t==='comprendre')h+=`
-  <h2>L'épreuve</h2>
-  <table><tr><td>Préparation</td><td>30 minutes. Vous tirez au sort deux sujets et vous en choisissez un.</td></tr>
-  <tr><td>Passation</td><td>20 minutes, en deux parties</td></tr>
-  <tr><td>Partie 1 : monologue suivi</td><td>Présenter le problème soulevé par un court article, puis défendre votre point de vue de façon structurée.</td></tr>
-  <tr><td>Partie 2 : débat</td><td>L'examinateur vous pose des questions et peut contester vos idées. Vous précisez, nuancez, contre-argumentez.</td></tr></table>
-  <h2>Le barème (sur 25)</h2>
-  <table><tr><td>Monologue suivi</td><td>7 points</td></tr><tr><td>Débat</td><td>6 points</td></tr><tr><td>Lexique</td><td>4 points</td></tr><tr><td>Morphosyntaxe (grammaire)</td><td>5 points</td></tr><tr><td>Phonétique et prononciation</td><td>3 points</td></tr></table>
-  <p class="small mut">La langue compte pour près de la moitié de la note : soignez le vocabulaire et la grammaire autant que les idées.</p>
-  <h2>Les savoir-faire</h2>
-  <ul><li>Présenter le thème d'un document et en dégager une problématique</li>
-  <li>Défendre un point de vue clair, avec des arguments et des exemples</li>
-  <li>Parler de façon suivie et structurée</li>
-  <li>Confirmer, nuancer, apporter des précisions</li>
-  <li>Réagir aux arguments de l'examinateur pour défendre sa position</li></ul>
-  <h2>Comment travailler cette section</h2>
-  <table><tr><td><b>Se préparer</b></td><td>Activités courtes, une compétence à la fois : distinguer argument et exemple, ordonner ses idées, trouver des idées, réfuter, reformuler.</td></tr>
-  <tr><td><b>S'entraîner</b></td><td>Chaque sujet se travaille en six étapes : analyser le document, trouver des arguments, construire le plan, présenter, préparer le débat, s'évaluer.</td></tr>
-  <tr><td><b>Prêt pour l'examen</b></td><td>L'essentiel à mémoriser avant le jour J.</td></tr></table>
-  <div class="row"><button onclick="poMethode()">Méthode détaillée</button></div>`;
-  else if(t==='preparer')h+=`
-  <p class="mut">Une compétence à la fois, dans l'ordre de l'épreuve : d'abord le monologue, puis le débat.</p>
-  <h2>Préparer le monologue</h2>
-  <div class="list">
-  <div class="item" onclick="prepArgEx()"><span class="t">1. Argument ou exemple ?</span><span class="meta">Trouver des arguments</span></div>
-  <div class="item" onclick="prepIdees()"><span class="t">2. Trouver des idées</span><span class="meta">Trouver des arguments</span></div>
-  <div class="item" onclick="prepEnrich()"><span class="t">3. Transformer une idée en argument</span><span class="meta">Trouver des arguments</span></div>
-  <div class="item" onclick="prepOrdre()"><span class="t">4. Remettre les idées dans l'ordre</span><span class="meta">Construire un plan</span></div>
-  <div class="item" onclick="poPhrases()"><span class="t">5. Phrases pour introduire, enchaîner, conclure</span><span class="meta">Présenter son opinion</span></div></div>
-  <h2>Préparer le débat</h2>
-  <div class="list">
-  <div class="item" onclick="prepReform()"><span class="t">6. Reformuler pour l'examinateur</span><span class="meta">Réagir</span></div>
-  <div class="item" onclick="prepRefut()"><span class="t">7. Réfuter une affirmation</span><span class="meta">Défendre son point de vue</span></div>
-  <div class="item" onclick="prepDesacc()"><span class="t">8. Exprimer son désaccord</span><span class="meta">Défendre son point de vue</span></div></div>`;
-  else if(t==='entrainer'){const po=S.get('po',[]);h+=`
-  <p class="mut">Chaque sujet se travaille en six étapes. Le jour où vous vous sentez prêt, sautez directement aux étapes 4 et 5 avec les minuteurs.</p>
-  <div class="row"><button class="pri" onclick="poTirage()">Tirage au sort (2 sujets)</button></div>
+  const po=S.get('po',[]);
+  app.innerHTML=`${back('#exercices','Exercices')}<h1>Oral</h1>
+  <div class="row"><button class="pri" onclick="poTirage()">Tirage au sort</button><button onclick="poPhrases()">Phrases utiles</button></div>
   <div class="list">${PO.map((x,i)=>{const n=po.filter(p=>p.i===i);return `<div class="item" onclick="poOpen(${i})"><span class="t">${x.titre}</span><span class="meta">${n.length?n[n.length-1].s+'/'+(n[n.length-1].m||12):''}</span></div>`}).join('')}</div>
-  ${po.length?`<h2>Historique</h2><table><tr><th>Date</th><th>Sujet</th><th>Note</th></tr>${po.slice(-8).reverse().map(p=>`<tr><td>${p.d}</td><td>${PO[p.i].titre}</td><td>${p.s}/${p.m||12}</td></tr>`).join('')}</table>`:''}`}
-  else h+=`
-  <h2>Le déroulé à connaître par cœur</h2>
-  <table><tr><td>Préparation (30 min)</td><td>Document, problématique, idées, plan, introduction et conclusion rédigées, objections anticipées</td></tr>
-  <tr><td>Monologue (environ 10 min)</td><td>Introduction, deux ou trois parties avec arguments et exemples, conclusion</td></tr>
-  <tr><td>Débat (environ 10 min)</td><td>Écouter, reformuler si besoin, nuancer, défendre sa position</td></tr></table>
-  <h2>Grammaire essentielle à l'oral</h2>
-  <ul><li>Opinion : « je pense que » + indicatif, « je ne pense pas que » + subjonctif</li>
-  <li>Concession : « bien que » + subjonctif, « même si » + indicatif, « malgré » + nom</li>
-  <li>Hypothèse : « si » + imparfait, conditionnel (« si on interdisait…, les élèves seraient… »)</li>
-  <li>Nuance : le conditionnel (« il faudrait », « on pourrait »)</li>
-  <li>Relatifs : dont, auquel, pour lequel</li></ul>
-  <h2>Le jour J</h2>
-  <ul><li>Saluez l'examinateur au début et à la fin.</li>
-  <li>Choisissez le sujet sur lequel vous avez le plus d'idées, pas celui qui semble le plus facile.</li>
-  <li>Ne lisez pas vos notes : jetez-y un coup d'œil, puis regardez l'examinateur.</li>
-  <li>Gérez votre temps : annoncez votre plan, puis respectez-le.</li>
-  <li>Si vous ne comprenez pas une question, demandez de la répéter.</li></ul>
-  <div class="row"><button onclick="poPhrases()">Phrases utiles</button><button onclick="poMethode()">Méthode détaillée</button></div>`;
-  app.innerHTML=h;
+  <h2>Petits exercices</h2>
+  <div class="list">${[["Argument ou exemple ?","prepArgEx()"],["Trouver des idées","prepIdees()"],["Transformer une idée en argument","prepEnrich()"],["Remettre les idées dans l'ordre","prepOrdre()"],["Reformuler","prepReform()"],["Réfuter l'examinateur","prepRefut()"],["Exprimer son désaccord","prepDesacc()"]].map(a=>`<div class="item" onclick="${a[1]}"><span class="t">${a[0]}</span></div>`).join('')}</div>
+  <details><summary>Méthode et mémo</summary>
+  <ul><li>L'épreuve : 30 min de préparation, puis 20 min : exposé (environ 10 min) et débat (environ 10 min). Vous choisissez entre deux sujets.</li>
+  <li>Note sur 25 : exposé 7, débat 6, vocabulaire 4, grammaire 5, prononciation 3.</li>
+  <li>Exposé : présentation du document, problématique, plan, deux parties avec arguments et exemples, conclusion.</li>
+  <li>Débat : écoutez, concédez un point, puis défendez votre position.</li>
+  <li>Ne lisez pas vos notes. Saluez l'examinateur. Demandez de répéter si besoin.</li></ul>
+  <div class="row"><button onclick="poMethode()">Méthode détaillée</button></div></details>`;
 };
 
 /* Activités « Se préparer » */
@@ -841,7 +748,7 @@ function poOpen(i){
   <div class="doc">${x.doc}</div>
   <div class="row"><button onclick="say(PO[${i}].doc)">Écouter le document</button><button onclick="stopSpeech()">Arrêter</button></div>
 
-  <h2>Étape 1. Analyser le document</h2>
+  <details class="step" open><summary>Étape 1. Analyser le document</summary>
   ${quizHTML(s1,'s1')}<div class="row"><button id="v1">Vérifier</button></div>
   <div class="q"><div class="qt">Posez-vous les questions : qui ? quoi ? pourquoi ?</div>
   <input class="in wide" data-k="po${i}_qui" placeholder="Qui est concerné ?"><input class="in wide" data-k="po${i}_quoi" placeholder="De quoi s'agit-il ?"><input class="in wide" data-k="po${i}_pq" placeholder="Pourquoi est-ce un problème ?"></div>
@@ -849,26 +756,26 @@ function poOpen(i){
   ${x.cles.map((c,k)=>`<div style="margin:8px 0"><span>« ${c[0]} »</span><input class="in wide" data-k="po${i}_c${k}" placeholder="Reformulation…"><details style="margin:4px 0"><summary>Proposition</summary>${c[1]}</details></div>`).join('')}</div>
   <div class="q"><div class="qt">Formulez la problématique sous forme de question</div><input class="in wide" data-k="po${i}_prob" placeholder="Faut-il… ? Dans quelle mesure… ?"><details><summary>Proposition</summary>${x.prob}</details></div>
 
-  <h2>Étape 2. Trouver des arguments</h2>
+  </details><details class="step"><summary>Étape 2. Trouver des arguments</summary>
   <p class="small mut">Notez toutes vos idées sans trier : avantages, inconvénients, causes, conséquences, personnes concernées. Ajoutez un exemple de votre pays ou de votre vie.</p>
   <textarea class="sm" data-k="po${i}_idees" placeholder="Vos idées…"></textarea>
   <details><summary>Pistes de réflexion</summary><div class="row" style="align-items:flex-start;gap:32px"><div><b>Pour</b><ul>${x.pour.map(p=>`<li>${p}</li>`).join('')}</ul></div><div><b>Contre</b><ul>${x.contre.map(p=>`<li>${p}</li>`).join('')}</ul></div></div></details>
 
-  <h2>Étape 3. Construire le plan</h2>
+  </details><details class="step"><summary>Étape 3. Construire le plan</summary>
   <p class="small mut">Reconstituez un plan modèle : pour chaque élément, indiquez la partie et son rôle (titre, argument ou exemple).</p>
   <div id="pl">${items.map(it=>`<div class="ph"><span>${it.t}</span><span class="row" style="margin:0;flex-wrap:nowrap"><select data-p="${it.pi}"><option value="">Partie</option><option value="0">I</option><option value="1">II</option></select><select data-r="${it.ri}"><option value="">Rôle</option>${R.map((r,k)=>`<option value="${k}">${r}</option>`).join('')}</select></span></div>`).join('')}</div>
   <div class="row"><button id="v3">Vérifier</button><span id="r3" class="small"></span></div><div id="plm"></div>
   <p>Écrivez maintenant votre propre plan, avec un exemple supplémentaire pour chaque argument.</p>
   <textarea class="sm" data-k="po${i}_plan" placeholder="Introduction :&#10;Partie 1 :&#10;Partie 2 :&#10;Conclusion :"></textarea>
 
-  <h2>Étape 4. Présenter son point de vue</h2>
+  </details><details class="step"><summary>Étape 4. Présenter son point de vue</summary>
   <p class="small mut">Complétez cette introduction modèle, puis écoutez-la et répétez-la. Elle contient les quatre éléments attendus : présentation du document, résumé du problème, problématique, annonce du plan.</p>
   <div class="box" id="cz">${cloze}</div>
   <div class="row"><button id="v4">Vérifier</button><button onclick="say(PO[${i}].intro.replace(/[\\[\\]]/g,''))">Écouter l'introduction</button><span id="r4" class="small"></span></div>
   <p>À vous : préparez votre exposé en conditions réelles, puis présentez-le à voix haute. Enregistrez-vous avec votre téléphone.</p>
   ${timer('tp','Préparation',1800)}${timer('tm','Monologue',600)}
 
-  <h2>Étape 5. Préparer le débat</h2>
+  </details><details class="step"><summary>Étape 5. Préparer le débat</summary>
   <p class="small mut">L'examinateur conteste vos idées. Écoutez chaque objection et répondez à voix haute : concédez un point, puis défendez votre position avec un argument.</p>
   ${x.obj.map((o,k)=>`<div class="q"><div class="row" style="margin:0"><button onclick="say(PO[${i}].obj[${k}][0])">Écouter l'objection ${k+1}</button></div><details><summary>Afficher l'objection et une réponse possible</summary><p><b>Examinateur :</b> ${o[0]}</p><p><b>Réponse :</b> ${o[1]} <button onclick="say(PO[${i}].obj[${k}][1])">Écouter</button></p></details></div>`).join('')}
   <h3>Simulation du débat</h3>
@@ -876,10 +783,10 @@ function poOpen(i){
   <div class="box"><div id="dq" class="mut">Cliquez sur « Question suivante » pour commencer.</div></div>
   <div class="row"><button class="pri" id="nq">Question suivante</button><button id="rq">Réécouter</button><label class="small"><input type="checkbox" id="showq" checked> Afficher la question</label></div>
 
-  <h2>Étape 6. S'évaluer</h2>
+  </details><details class="step"><summary>Étape 6. S'évaluer</summary>
   <p class="small mut">Réécoutez votre enregistrement et notez-vous selon le barème officiel. Soyez exigeant.</p>
   <div id="bar">${BAREME.map((b,k)=>`<div class="ph"><span>${b[0]}<br><span class="small mut">${b[2].join(' · ')}</span></span><span style="white-space:nowrap"><select data-b="${k}">${Array.from({length:b[1]*2+1},(_,v)=>v/2).map(v=>`<option value="${v}">${String(v).replace('.',',')}</option>`).join('')}</select> <span class="small mut">/${b[1]}</span></span></div>`).join('')}</div>
-  <div class="row"><button class="pri" id="savepo">Enregistrer la séance</button><span id="sv" class="small"></span></div>`;
+  <div class="row"><button class="pri" id="savepo">Enregistrer la séance</button><span id="sv" class="small"></span></div></details>`;
   keep();
   document.getElementById('v1').onclick=()=>grade(s1,'s1');
   document.getElementById('v3').onclick=()=>{let s=0;const rows=[...document.querySelectorAll('#pl .ph')];rows.forEach(r=>{const p=r.querySelector('[data-p]'),q=r.querySelector('[data-r]');const ok=p.value===p.dataset.p&&q.value===q.dataset.r;if(ok)s++;r.style.color=ok?'var(--ok)':'var(--ko)'});
@@ -952,7 +859,7 @@ function vocRender(){
   const cards=vocCards(),vk=S.get('vk',[]);
   if(VS.i>=cards.length)VS.i=0;
   const cur=cards[VS.i];
-  app.innerHTML=`<h1>Vocabulaire</h1><p class="mut">Cliquez sur la carte pour la retourner.</p>
+  app.innerHTML=`${back('#exercices','Exercices')}<h1>Vocabulaire</h1>
   <div class="row"><select onchange="VS.t=+this.value;VS.i=0;VS.f=false;vocRender()">${VOC.map((t,i)=>`<option value="${i}" ${i===VS.t?'selected':''}>${t[0]} (${t[1].filter((_,j)=>vk.includes(i+'-'+j)).length}/${t[1].length})</option>`).join('')}</select>
   <label class="small"><input type="checkbox" ${VS.rev?'checked':''} onchange="VS.rev=this.checked;VS.i=0;VS.f=false;vocRender()"> Seulement les mots à revoir</label></div>
   ${cur?`<div class="card" onclick="VS.f=!VS.f;vocRender()"><div class="w">${cur.c[0]}</div>${VS.f?`<div class="d">${cur.c[1]}</div><div class="ex">${cur.c[2]}</div>`:'<div class="small mut" style="margin-top:10px">définition et exemple au verso</div>'}</div>
@@ -962,7 +869,7 @@ function vocRender(){
 function vocMark(k){const cards=vocCards();const id=cards[VS.i].id;let vk=S.get('vk',[]);vk=vk.filter(x=>x!==id);if(k)vk.push(id);S.set('vk',vk);if(!(VS.rev&&k))VS.i++;VS.f=false;vocRender()}
 
 let GS=null;
-V.grammaire=()=>{const gr=S.get('gr',{best:0,n:0});app.innerHTML=`<h1>Grammaire</h1><p class="mut">Séries de 10 questions tirées au hasard parmi ${GR.length}, avec explication après chaque réponse. Points clés du B2 : subjonctif, hypothèses, relatifs, accords, discours indirect, connecteurs.</p>
+V.grammaire=()=>{const gr=S.get('gr',{best:0,n:0});app.innerHTML=`${back('#exercices','Exercices')}<h1>Grammaire</h1>
 <p>${gr.n?`Séries faites : ${gr.n}. Meilleur score : ${gr.best}/10.`:''}</p><div class="row"><button class="pri" onclick="grStart()">Commencer une série</button></div>`};
 function grStart(){GS={qs:shuffle(GR).slice(0,10),i:0,s:0,done:false};grRender()}
 function grRender(){
@@ -974,12 +881,12 @@ function grRender(){
 function grAns(j){const x=GS.qs[GS.i];const ls=document.querySelectorAll('#gq label');ls[x.a].classList.add('ok');if(j!==x.a)ls[j].classList.add('ko');else GS.s++;document.querySelectorAll('#gq input').forEach(n=>n.disabled=true);
   document.getElementById('ge').innerHTML=`<p class="${j===x.a?'okc':'koc'}">${j===x.a?'Correct.':'Pas tout à fait.'}</p><p>${x.e}</p><div class="row"><button class="pri" onclick="GS.i++;grRender()">Suivant</button></div>`}
 
-V.lecture=()=>{const ce=S.get('ce',{});app.innerHTML=`<h1>Compréhension des écrits</h1><p class="mut">Lisez une première fois pour le sens général, puis les questions, puis relisez. À l'examen, comptez environ 1 heure pour l'ensemble de l'épreuve.</p>
+V.lecture=()=>{const ce=S.get('ce',{});app.innerHTML=`${back('#exercices','Exercices')}<h1>Lecture</h1>
 <div class="list">${CE.map((x,i)=>`<div class="item" onclick="ceOpen(${i})"><span><span class="t">${x.titre}</span><br><span class="small mut">${x.type}</span></span><span class="meta">${ce[i]!==undefined?ce[i]+' %':''}</span></div>`).join('')}</div>`};
 function ceOpen(i){const x=CE[i];clearTimers();app.innerHTML=`${back('#lecture','Lecture')}<h1>${x.titre}</h1>${timer('tc','Temps conseillé',1500)}<div class="doc">${x.txt.map(p=>`<p>${p}</p>`).join('')}</div>${quizHTML(x.qs,'ce')}<div class="row"><button class="pri" id="chk">Corriger</button></div><div id="res"></div>`;
   document.getElementById('chk').onclick=()=>{const s=grade(x.qs,'ce');const pct=Math.round(s/x.qs.length*100);const ce=S.get('ce',{});ce[i]=Math.max(ce[i]||0,pct);S.set('ce',ce);document.getElementById('res').innerHTML=`<p><b>${s}/${x.qs.length}</b> <span class="mut">(${pct} %)</span></p>`}}
 
-V.ecrit=()=>{app.innerHTML=`<h1>Production écrite</h1><p class="mut">Un texte argumenté de 250 mots minimum en 1 heure. Votre brouillon est conservé dans ce navigateur.</p>
+V.ecrit=()=>{app.innerHTML=`${back('#exercices','Exercices')}<h1>Écrit</h1><p class="small mut">250 mots minimum, 1 heure. Le brouillon est enregistré.</p>
 <div class="list">${PE.map((x,i)=>`<div class="item" onclick="peOpen(${i})"><span><span class="t">${x.titre}</span><br><span class="small mut">${x.type}</span></span><span class="meta">${S.get('pe'+i,'')?'brouillon':''}</span></div>`).join('')}</div>`};
 function peOpen(i){const x=PE[i];clearTimers();app.innerHTML=`${back('#ecrit','Écrit')}<h1>${x.titre}</h1><p class="small mut">${x.type}</p><div class="doc">${x.c}</div>${timer('tw','Temps',3600)}
 <textarea id="ta" placeholder="Écrivez ici…">${S.get('pe'+i,'').replace(/</g,'&lt;')}</textarea><div class="row small"><span id="wc" class="mut"></span><button id="cp">Copier le texte</button></div>
@@ -1072,11 +979,11 @@ function todoTick(key,k,on){let d=S.get(key,[]);d=d.filter(x=>x!==k);if(on)d.pus
 V.ressources=()=>{const R=[
 ["Écoute",[["Le français facile avec RFI","https://francaisfacile.rfi.fr/fr","Journal en français facile quotidien de 10 minutes, avec transcription et exercices."],["TV5Monde Apprendre le français","https://apprendre.tv5monde.com/fr","Vidéos d'actualité classées par niveau, avec exercices de compréhension (choisissez B2)."],["France Culture","https://www.radiofrance.fr/franceculture","Émissions et podcasts à débit naturel, pour les derniers mois."],["InnerFrench","https://innerfrench.com","Podcast pour apprenants intermédiaires sur des sujets de société."]]],
 ["Examen officiel",[["DELF B2 tout public, France Éducation international","https://www.france-education-international.fr/diplome/delf-tout-public/niveau-b2","Présentation des épreuves, exemples de sujets, conseils et manuel du candidat."]]]
-];app.innerHTML=`<h1>Ressources gratuites</h1><p class="mut">Les liens s'ouvrent dans un nouvel onglet.</p>${R.map(g=>`<h2>${g[0]}</h2>${g[1].map(r=>`<div class="ph" style="display:block"><a href="${r[1]}" target="_blank" rel="noopener">${r[0]}</a><div class="small mut">${r[2]}</div></div>`).join('')}`).join('')}`};
+];app.innerHTML=`${back('#exercices','Exercices')}<h1>Ressources</h1>${R.map(g=>`<h2>${g[0]}</h2>${g[1].map(r=>`<div class="ph" style="display:block"><a href="${r[1]}" target="_blank" rel="noopener">${r[0]}</a><div class="small mut">${r[2]}</div></div>`).join('')}`).join('')}`};
 
 /* ---------- Routeur ---------- */
 function route(){const v=(location.hash||'#accueil').slice(1);stopSpeech();clearTimers();
-  document.querySelectorAll('nav a').forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+(V[v]?v:'accueil')));
+  const nv=['ecoute','oral','vocabulaire','grammaire','lecture','ecrit','ressources'].includes(v)?'exercices':(V[v]?v:'accueil');document.querySelectorAll('nav a').forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+nv));
   (V[v]||V.accueil)();window.scrollTo(0,0)}
 window.addEventListener('hashchange',route);
 route();
