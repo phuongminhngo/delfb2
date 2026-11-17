@@ -443,8 +443,7 @@ const V={};
 V.accueil=()=>{
   const d=S.get('date','2027-05-17');
   const days=Math.ceil((new Date(d+'T09:00:00')-new Date())/864e5);
-  app.innerHTML=`<p class="mut">${days>0?`J-${days} avant l'examen`:days===0?"Jour J. Bon courage.":"Examen passé."}</p>
-  ${todayHTML()}
+  app.innerHTML=`${todayHTML()}
   <details><summary>Réglages et plan</summary>
   <div class="row small"><label class="mut" for="dt">Date de l'examen</label><input type="date" id="dt" value="${d}" onchange="S.set('date',this.value);V.accueil()"></div>
   <div class="row small"><label class="mut" for="st">Début du plan</label><input type="date" id="st" value="${S.get('start',iso(new Date()))}" onchange="S.set('start',this.value);V.accueil()"></div>
