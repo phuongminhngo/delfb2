@@ -65,6 +65,11 @@ th{font-weight:600}
 .back:hover{color:var(--fg)}
 .okc{color:var(--ok)}.koc{color:var(--ko)}
 ul{padding-left:20px;margin:6px 0 12px}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0 24px}.tabs button.on{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.in{font:inherit;font-size:15px;color:var(--fg);background:transparent;border:1px solid var(--line);border-radius:6px;padding:5px 9px}.in.wide{display:block;width:100%;margin:6px 0}.cz{padding:1px 6px;margin:0 2px}
+textarea.sm{min-height:90px;margin:6px 0}
+select{cursor:pointer}
+
 </style>
 </head>
 <body>
@@ -434,7 +439,7 @@ function clearTimers(){Object.keys(T).forEach(k=>{clearInterval(T[k].iv);delete 
 
 /* Quiz générique */
 function quizHTML(qs,p){return qs.map((x,i)=>`<div class="q" id="${p}q${i}"><div class="qt">${i+1}. ${x.q}</div>${x.o.map((o,j)=>`<label><input type="radio" name="${p}${i}" value="${j}"> ${o}</label>`).join('')}</div>`).join('')}
-function grade(qs,p){let s=0;qs.forEach((x,i)=>{const box=document.getElementById(p+'q'+i);const c=box.querySelector('input:checked');const labels=box.querySelectorAll('label');labels.forEach(l=>l.classList.remove('ok','ko'));labels[x.a].classList.add('ok');if(c&&+c.value===x.a)s++;else if(c)labels[+c.value].classList.add('ko');box.querySelectorAll('input').forEach(n=>n.disabled=true);if(x.j&&!box.querySelector('.jus'))box.insertAdjacentHTML('beforeend',`<div class="small mut jus">Justification : ${x.j}</div>`)});return s}
+function grade(qs,p){let s=0;qs.forEach((x,i)=>{const box=document.getElementById(p+'q'+i);const c=box.querySelector('input:checked');const labels=box.querySelectorAll('label');labels.forEach(l=>l.classList.remove('ok','ko'));labels[x.a].classList.add('ok');if(c&&+c.value===x.a)s++;else if(c)labels[+c.value].classList.add('ko');box.querySelectorAll('input').forEach(n=>n.disabled=true);if(x.j&&!box.querySelector('.jus'))box.insertAdjacentHTML('beforeend',`<div class="small mut jus">${x.jl||'Justification'} : ${x.j}</div>`)});return s}
 const back=(h,l)=>`<button class="back" onclick="location.hash='${h}';route()">‹ ${l}</button>`;
 
 /* ---------- Vues ---------- */
@@ -471,46 +476,443 @@ V.accueil=()=>{
   <p class="small mut">Il faut 50/100 au total et au moins 5/25 dans chaque épreuve. Vérifiez toujours le format à jour sur le site officiel (voir Ressources).</p>`;
 };
 
+/* ---------- Données : étapes guidées par sujet oral ---------- */
+const POX=[
+{titres:["Le téléphone, ennemi de la concentration en classe ?","Les lycéens achètent de moins en moins de téléphones","Comment les parents surveillent leurs enfants"],
+vf:[["L'interdiction a été décidée par les parents.",false,"C'est la direction du lycée qui l'a mise en place ; plusieurs parents protestent."],["Selon la direction, les élèves se parlent davantage pendant les récréations.",true,"« Des récréations où l'on se parle à nouveau »."],["Les parents opposés veulent pouvoir contacter leurs enfants.",true,"Ils souhaitent « pouvoir joindre leurs enfants à tout moment »."]],
+cles:[["déposer leur téléphone","remettre leur portable avant le cours"],["les résultats sont visibles","on constate déjà des effets positifs"],["de façon responsable","avec mesure, de manière raisonnable"]],
+prob:"Faut-il interdire le téléphone portable en classe, ou vaut-il mieux apprendre aux jeunes à bien l'utiliser ?",
+plan:[["Les bénéfices de l'interdiction","Sans téléphone, les élèves sont plus attentifs en cours.","Les notifications interrompent la concentration plusieurs fois par heure."],["Les limites d'une interdiction totale","Interdire n'apprend pas à utiliser le téléphone de façon responsable.","Un élève privé de téléphone au lycée le retrouve sans règles à la maison."]],
+intro:"Le document [proposé] est un article qui aborde la place du téléphone portable à l'école. Un lycée a décidé d'[interdire] les téléphones en classe, ce qui [divise] parents et enseignants. On peut donc se [demander] s'il faut interdire le portable ou apprendre aux élèves à l'utiliser. Dans un premier temps, j'évoquerai les avantages de cette mesure, [puis] ses limites, avant de donner mon point de vue.",
+obj:[["De toute façon, les élèves trouveront toujours un moyen de contourner l'interdiction.","C'est possible, mais une règle claire réduit fortement l'usage. Même si quelques élèves la contournent, la majorité en profite."],["Le téléphone est aussi un outil pédagogique formidable.","Je suis d'accord, mais dans ce cas l'enseignant peut l'autoriser pour une activité précise. Le problème, c'est l'usage personnel pendant le cours."]]},
+{titres:["Les influenceurs bientôt soumis à de nouvelles règles ?","Comment devenir influenceur","Les jeunes délaissent les réseaux sociaux"],
+vf:[["La loi a déjà été adoptée.",false,"Il s'agit d'« un projet de loi »."],["Les créateurs de contenu soutiennent tous le projet.",false,"Certains estiment qu'il punit toute la profession pour les fautes d'une minorité."],["Le projet vise notamment à protéger les jeunes.",true,"Il « protège un public jeune et souvent vulnérable »."]],
+cles:[["encadrer plus strictement","fixer des règles plus précises"],["un public vulnérable","des personnes facilement influençables"],["freiner un secteur","ralentir le développement d'une activité"]],
+prob:"Faut-il réglementer davantage l'activité des influenceurs pour protéger les consommateurs ?",
+plan:[["Une régulation nécessaire","Les abonnés ne distinguent pas toujours un conseil d'une publicité.","Une vidéo « coup de cœur » peut en réalité être payée par une marque."],["Les risques d'une loi trop sévère","Une minorité de tricheurs ne doit pas pénaliser toute une profession.","De nombreux créateurs sérieux vivent de partenariats transparents."]],
+intro:"Ce document [traite] d'un projet de loi visant à encadrer l'activité des influenceurs. Il [oppose] ceux qui veulent protéger les jeunes et ceux qui craignent de freiner un secteur en [croissance]. La question qui se [pose] est donc la suivante : faut-il réglementer davantage les influenceurs ? Je [présenterai] d'abord les arguments en faveur de cette loi, puis ses limites.",
+obj:[["Les jeunes savent très bien reconnaître une publicité.","Certains, oui, mais pas tous. Les plus jeunes, en particulier, font confiance à des personnes qu'ils considèrent presque comme des amis."],["C'est aux parents de surveiller ce que regardent leurs enfants, pas à l'État.","Les parents ont un rôle important, je l'admets. Cependant, ils ne peuvent pas tout contrôler, et la loi fixe un cadre commun pour tous."]]},
+{titres:["Le centre-ville bientôt interdit aux voitures","Les cyclistes réclament plus de pistes","Les commerces du centre-ville ferment"],
+vf:[["Tous les véhicules seront interdits.",false,"Les riverains et les livraisons pourront encore circuler."],["Les associations de cyclistes approuvent la décision.",true,"Elles saluent une décision « courageuse »."],["Les commerçants craignent de perdre des clients venant des communes voisines.",true,"Ces habitants sont « mal desservis par les transports en commun »."]],
+cles:[["les riverains","les habitants du quartier"],["saluent une décision","approuvent, félicitent"],["mal desservis","peu reliés, avec peu de transports"]],
+prob:"Faut-il fermer les centres-villes aux voitures, au risque de pénaliser certains habitants et commerçants ?",
+plan:[["Une ville plus agréable et plus saine","Moins de voitures signifie moins de pollution et de bruit.","Dans les rues piétonnes, on peut marcher et s'asseoir en terrasse en sécurité."],["Des conditions indispensables","Sans transports en commun efficaces, la mesure exclut les habitants de la périphérie.","Une personne âgée vivant à quinze kilomètres ne pourra plus venir faire ses courses."]],
+intro:"L'article qui m'a été [proposé] annonce la fermeture d'un centre historique aux voitures. Cette décision est [saluée] par les cyclistes, mais [inquiète] les commerçants. On peut se demander si interdire la voiture en ville est une bonne [solution]. J'exposerai d'abord les avantages de cette mesure, puis les [conditions] nécessaires à sa réussite.",
+obj:[["Sans voitures, les clients iront dans les centres commerciaux en périphérie.","Ce risque existe, mais dans plusieurs villes, les rues piétonnes attirent davantage de passants, donc de clients."],["Le vélo, ce n'est pas pour tout le monde.","Tout à fait, c'est pourquoi il faut développer en même temps les bus, les parkings à l'entrée de la ville et des solutions pour les personnes à mobilité réduite."]]},
+{titres:["Vers un engagement citoyen obligatoire pour les jeunes ?","Les jeunes refusent de travailler","Le bénévolat en baisse chez les retraités"],
+vf:[["L'engagement durerait six mois.",true,"« Un engagement de six mois »."],["Il concernerait toute la population.",false,"Seulement « les jeunes de 18 à 25 ans »."],["Beaucoup de jeunes trouvent l'idée juste.",false,"Ils la jugent « injuste »."]],
+cles:[["l'intérêt général","le bien de tous, de la société"],["la cohésion sociale","les liens et la solidarité entre citoyens"],["l'engagement n'a de sens que s'il est choisi","on ne peut pas forcer quelqu'un à s'engager sincèrement"]],
+prob:"Peut-on imposer l'engagement citoyen aux jeunes pour renforcer la solidarité ?",
+plan:[["Un projet utile pour la société","Ce service permettrait de rencontrer des personnes d'autres milieux.","Un étudiant en droit pourrait aider des enfants en difficulté scolaire."],["Le problème de l'obligation","Un engagement forcé risque d'être fait sans motivation.","Des jeunes pourraient se contenter du minimum pour valider leurs six mois."]],
+intro:"Le document [aborde] la proposition d'un député : rendre obligatoire un engagement de six mois pour les jeunes. L'objectif est de [renforcer] la cohésion sociale, mais de nombreux jeunes y sont [opposés]. La question est de savoir si l'on peut [imposer] la solidarité. Je montrerai d'abord l'intérêt de ce projet, puis ses [limites].",
+obj:[["Les jeunes d'aujourd'hui sont individualistes, il faut les obliger.","Je ne suis pas d'accord : beaucoup de jeunes s'engagent déjà dans des associations. Le problème est plutôt qu'on ne leur propose pas assez d'occasions."],["Le service militaire était obligatoire autrefois, et cela fonctionnait.","Il avait certains effets positifs, c'est vrai. Mais la société a changé, et un engagement civique devrait laisser plus de choix aux jeunes."]]},
+{titres:["L'intelligence artificielle à l'université : interdire ou intégrer ?","Les étudiants préfèrent les cours en ligne","Les professeurs de philosophie inquiets pour leur emploi"],
+vf:[["Toutes les universités interdisent ces outils.",false,"Certaines les interdisent, d'autres les intègrent."],["Certaines universités demandent aux étudiants d'expliquer leur usage de l'IA.",true,"Elles leur demandent « d'expliquer comment ils les ont utilisés »."],["Le professeur de philosophie est favorable à l'interdiction.",false,"Il affirme : « Interdire, c'est perdre d'avance »."]],
+cles:[["la généralisation","la diffusion massive"],["intégrer dans les cours","utiliser officiellement dans l'enseignement"],["penser par eux-mêmes","réfléchir de façon autonome"]],
+prob:"L'université doit-elle interdire l'intelligence artificielle ou apprendre aux étudiants à l'utiliser ?",
+plan:[["Un outil qu'il faut apprendre à maîtriser","Les étudiants utiliseront ces outils dans leur futur métier.","Dans les entreprises, l'IA sert déjà à rédiger des comptes rendus."],["Un risque pour l'apprentissage","Si l'outil fait le travail, l'étudiant ne développe pas sa réflexion.","Un étudiant qui fait rédiger tous ses essais n'apprend pas à argumenter."]],
+intro:"Le texte [évoque] la place de l'intelligence artificielle à l'université. Certains établissements l'[interdisent], d'autres l'intègrent dans leurs cours. On peut donc se demander dans quelle [mesure] l'université doit accepter ces outils. J'aborderai d'abord les raisons de les intégrer, puis les [risques] pour l'apprentissage.",
+obj:[["Avec l'IA, les étudiants n'apprendront plus rien.","Ce risque est réel si l'outil remplace l'effort. Mais s'il sert à vérifier, reformuler ou chercher des idées, il peut au contraire aider à apprendre."],["Il est impossible de savoir qui a vraiment écrit un devoir.","C'est vrai pour les devoirs à la maison. C'est pourquoi les examens sur table et les oraux devraient prendre plus de place."]]},
+{titres:["Un site naturel limite le nombre de visiteurs","Le tourisme en forte baisse","Les habitants quittent la région"],
+vf:[["La visite se fait désormais sur réservation.",true,"2 000 visiteurs par jour, « sur réservation »."],["Les professionnels du tourisme approuvent la mesure.",false,"Ils « dénoncent une décision qui menace l'emploi local »."],["Certains habitants regrettent de ne plus pouvoir venir librement.",true,"Le lieu est « réservé à ceux qui s'organisent à l'avance »."]],
+cles:[["très fréquenté","qui reçoit beaucoup de visiteurs"],["se félicitent","se réjouissent, approuvent"],["menace l'emploi local","met en danger les emplois de la région"]],
+prob:"Faut-il limiter l'accès aux sites touristiques pour les protéger ?",
+plan:[["Protéger les sites fragiles","Un nombre trop élevé de visiteurs abîme la nature.","Les sentiers s'élargissent et la végétation disparaît sous les pas."],["Ne pas oublier les habitants et l'économie","Le tourisme fait vivre de nombreuses familles.","Les hôtels et restaurants dépendent de la fréquentation du site."]],
+intro:"Le document que j'ai [choisi] porte sur la décision de limiter le nombre de visiteurs d'un site naturel. Cette mesure [ravit] les défenseurs de l'environnement, mais [inquiète] les professionnels du tourisme. Faut-il limiter l'accès aux sites touristiques pour les [protéger] ? Je présenterai d'abord les raisons de cette mesure, puis ses conséquences [économiques] et sociales.",
+obj:[["Si on limite les visites, seuls les riches pourront voir ces lieux.","La réservation n'est pas forcément payante. On pourrait aussi garder des places pour les habitants ou prévoir des journées gratuites."],["La nature appartient à tout le monde.","Justement : si on ne la protège pas, plus personne ne pourra en profiter dans quelques années."]]},
+{titres:["Des repas végétariens au menu des cantines","Les enfants refusent de manger à la cantine","Le prix des repas scolaires augmente"],
+vf:[["Toutes les cantines sont devenues végétariennes.",false,"Elles proposent « un ou deux repas végétariens par semaine »."],["Les municipalités avancent des raisons écologiques et économiques.",true,"Elles « mettent en avant des raisons écologiques et économiques »."],["Certains parents craignent pour l'équilibre alimentaire de leurs enfants.",true,"Ils « s'inquiètent de l'équilibre alimentaire »."]],
+cles:[["mettent en avant","soulignent, insistent sur"],["relève de la vie privée","concerne seulement les familles"],["l'équilibre alimentaire","une alimentation variée et suffisante"]],
+prob:"Les cantines scolaires doivent-elles proposer des repas végétariens ?",
+plan:[["Un choix bénéfique","Réduire la viande diminue l'impact environnemental.","L'élevage produit une part importante des gaz à effet de serre."],["Respecter les familles","L'alimentation est liée aux habitudes et aux cultures familiales.","Certains enfants ne mangent presque rien les jours de menu végétarien."]],
+intro:"L'article [porte] sur l'introduction de repas végétariens dans les cantines scolaires. Les municipalités y voient un [intérêt] écologique, tandis que certains parents s'y [opposent]. La question est donc de savoir si l'école doit [modifier] les habitudes alimentaires des enfants. Je développerai d'abord les avantages de cette mesure, puis les [réserves] qu'elle suscite.",
+obj:[["Un enfant a besoin de viande pour grandir.","Un repas végétarien bien préparé apporte les protéines nécessaires. Et il s'agit d'un ou deux repas par semaine, pas de supprimer la viande."],["Ce n'est pas le rôle de l'école de décider ce que mangent les enfants.","L'école a pourtant toujours eu un rôle d'éducation à la santé. Proposer des repas variés en fait partie."]]},
+{titres:["Une entreprise bloque les courriels le soir et le week-end","Les salariés travaillent moins","La fin du courrier électronique"],
+vf:[["Les courriels sont bloqués entre 20 heures et 7 heures.",true,"Ainsi que le week-end."],["La direction veut augmenter la productivité.",false,"Elle veut « protéger la santé de ses salariés »."],["Tous les employés sont satisfaits.",false,"Certains « déplorent une mesure rigide »."]],
+cles:[["applaudissent","approuvent avec enthousiasme"],["déplorent","regrettent"],["une mesure rigide","une règle peu souple"]],
+prob:"Faut-il imposer la déconnexion aux salariés pour protéger leur santé ?",
+plan:[["Protéger les salariés","Recevoir des courriels le soir empêche de se reposer.","Un salarié qui consulte ses messages avant de dormir dort plus mal."],["Préserver la liberté d'organisation","Chacun n'a pas le même rythme de travail.","Un parent peut préférer finir son travail le soir après avoir récupéré ses enfants."]],
+intro:"Le document [présente] la décision d'une entreprise de bloquer les courriels en dehors des heures de travail. Si cette mesure est souvent [applaudie], certains salariés la jugent trop [rigide]. On peut donc se demander s'il faut [imposer] la déconnexion. Je montrerai d'abord les bienfaits de cette règle, [ensuite] ses inconvénients.",
+obj:[["Chacun est libre d'éteindre son téléphone, pas besoin de règle.","En théorie, oui. Mais quand un responsable envoie un message à 22 heures, beaucoup de salariés se sentent obligés de répondre."],["Avec des collègues à l'étranger, c'est impossible.","Dans ce cas, on peut adapter les horaires par équipe. L'important est que chaque salarié ait une vraie période de repos."]]},
+{titres:["Des robots dans les maisons de retraite : progrès ou danger ?","Les personnes âgées apprennent l'informatique","Les maisons de retraite recrutent massivement"],
+vf:[["Ces robots sont déjà utilisés partout.",false,"Plusieurs maisons de retraite les « testent »."],["Les directions pensent qu'ils peuvent soulager le personnel.",true,"Elles y voient « un moyen de soulager les équipes »."],["Les familles et les soignants sont tous favorables.",false,"Ils « s'inquiètent »."]],
+cles:[["faire face à","répondre à, affronter"],["soulager les équipes","alléger le travail du personnel"],["servir de prétexte","être utilisé comme une fausse justification"]],
+prob:"Les robots peuvent-ils aider à prendre soin des personnes âgées sans remplacer la présence humaine ?",
+plan:[["Une aide précieuse","Les robots prennent en charge des tâches répétitives.","Rappeler les médicaments plusieurs fois par jour prend beaucoup de temps aux soignants."],["Une présence humaine irremplaçable","Les personnes âgées ont besoin d'écoute et de contact.","Une conversation avec un soignant ne peut pas être remplacée par une machine."]],
+intro:"Le texte [traite] de l'arrivée de robots dans les maisons de retraite. Les directions y voient une [aide], alors que familles et soignants s'en [inquiètent]. La question qui se pose est la suivante : un robot peut-il aider sans [remplacer] l'humain ? Je présenterai d'abord les avantages de ces machines, puis leurs [limites].",
+obj:[["Un robot ne se fatigue jamais, c'est plus fiable qu'un humain.","Pour certaines tâches, oui. Mais la fiabilité ne suffit pas : une personne âgée a aussi besoin d'attention et de chaleur humaine."],["De toute façon, il n'y a pas assez de personnel, donc c'est la seule solution.","Le manque de personnel est réel, mais la vraie solution est de rendre ces métiers plus attractifs. Les robots ne peuvent être qu'un complément."]]},
+{titres:["Le retour de la dictée en classe","Les élèves écrivent de plus en plus","Les correcteurs automatiques interdits à l'école"],
+vf:[["La dictée est faite une fois par mois.",false,"Il s'agit d'une « dictée quotidienne »."],["Les enseignants qui la pratiquent observent des progrès.",true,"Ils « constatent des progrès réguliers »."],["Certains préfèrent travailler l'expression écrite et la créativité.",true,"Selon eux, il vaut mieux y consacrer ce temps."]],
+cles:[["réintroduit","remis en place"],["dépassé","démodé, plus adapté à notre époque"],["consacrer ce temps à","utiliser ce temps pour"]],
+prob:"La dictée est-elle encore utile à l'heure des correcteurs automatiques ?",
+plan:[["Les atouts de la dictée","Un exercice régulier permet de mémoriser les règles.","Un élève qui écrit chaque jour retient mieux les accords."],["Un exercice à faire évoluer","Écrire, ce n'est pas seulement respecter l'orthographe.","Un texte sans faute peut être creux et mal organisé."]],
+intro:"L'article [évoque] le retour de la dictée quotidienne dans certaines écoles. Les enseignants qui la [pratiquent] constatent des progrès, alors que d'autres la jugent [dépassée]. On peut donc se demander si cet exercice est encore [utile] aujourd'hui. Je commencerai par ses avantages, puis j'en montrerai les [limites].",
+obj:[["Les correcteurs automatiques suffisent aujourd'hui.","Ils aident beaucoup, mais ils ne corrigent pas tout, et on n'en a pas toujours, par exemple pendant un examen ou en écrivant à la main."],["La dictée décourage les élèves en difficulté.","C'est un risque si on compte seulement les fautes. On peut la corriger ensemble et valoriser les progrès."]]},
+{titres:["Une langue étrangère dès la maternelle ?","Les enfants parlent de moins en moins","L'anglais devient langue officielle"],
+vf:[["L'apprentissage passe par des chansons et des jeux.",true,"« Sous forme de chansons et de jeux »."],["Les opposants pensent qu'il faut d'abord maîtriser sa langue maternelle.",true,"C'est leur premier argument."],["Il y a assez d'enseignants formés.",false,"Les opposants soulignent « le manque d'enseignants formés »."]],
+cles:[["introduisent","mettent en place"],["assimilent les sons","apprennent et reproduisent facilement les sons"],["soulignent","insistent sur"]],
+prob:"Faut-il commencer l'apprentissage d'une langue étrangère dès la petite enfance ?",
+plan:[["Un âge idéal pour apprendre","Les jeunes enfants imitent facilement les sons.","Un enfant de quatre ans répète une chanson sans accent."],["Des conditions à réunir","Sans enseignants formés, l'apprentissage reste superficiel.","Une heure par semaine avec un enseignant non spécialiste a peu d'effet."]],
+intro:"Ce document [aborde] l'apprentissage d'une langue étrangère dès la maternelle. Ses partisans [rappellent] que les jeunes enfants apprennent facilement, tandis que ses opposants mettent en avant d'autres [priorités]. On peut se demander s'il faut [commencer] si tôt. Je présenterai d'abord les avantages, puis les [conditions] de réussite.",
+obj:[["Les enfants vont mélanger les deux langues.","Au début, c'est possible, mais ce mélange est temporaire et normal. Cela ne les empêche pas d'apprendre."],["Mieux vaut apprendre plus tard, quand on est motivé.","La motivation compte beaucoup, c'est vrai. Mais la prononciation, elle, s'acquiert bien plus facilement très jeune."]]},
+{titres:["Les animaux de compagnie, un budget en hausse","Les animaux sauvages en danger","Les vétérinaires manquent dans les campagnes"],
+vf:[["Les dépenses consacrées aux animaux diminuent.",false,"Elles augmentent."],["Pour beaucoup, l'animal aide à lutter contre la solitude.",true,"« Un remède contre la solitude »."],["Les abandons ont surtout lieu en hiver.",false,"Il y en a de nombreux « chaque été »."]],
+cles:[["haut de gamme","de grande qualité, cher"],["un remède contre la solitude","une façon de se sentir moins seul"],["s'interrogent","se posent des questions"]],
+prob:"Quelle place les animaux de compagnie doivent-ils occuper dans nos vies et nos budgets ?",
+plan:[["Un vrai bienfait","Un animal apporte de la compagnie et oblige à sortir.","Promener son chien chaque jour est une activité physique régulière."],["Une responsabilité souvent sous-estimée","Avoir un animal demande du temps et de l'argent.","Beaucoup d'animaux sont abandonnés avant les vacances."]],
+intro:"L'article [porte] sur la place croissante des animaux de compagnie dans les foyers. Pour certains, ils sont un membre de la [famille] ; d'autres [s'inquiètent] des abandons et des sommes dépensées. La question est de savoir quelle place [accorder] aux animaux. Je parlerai d'abord de leurs bienfaits, puis des [responsabilités] qu'ils impliquent.",
+obj:[["Dépenser autant pour un animal, c'est choquant quand des gens sont pauvres.","Je comprends cette réaction. Mais chacun dépense son argent comme il le souhaite, et ces dépenses font aussi vivre des emplois."],["Il faudrait interdire les animaux en appartement.","Ce serait excessif : un chat ou un petit chien peut très bien vivre en appartement si on s'en occupe correctement."]]},
+{titres:["La mode à petit prix dans le viseur","Les jeunes ne s'intéressent plus à la mode","Les magasins de vêtements ferment"],
+vf:[["Ces enseignes proposent peu de nouveaux produits.",false,"« Des centaines de nouveaux vêtements » chaque jour."],["Ce modèle attire surtout les jeunes.",true,"Il « séduit particulièrement les jeunes »."],["Certains pays envisagent de taxer ces produits.",true,"C'est indiqué à la fin du document."]],
+cles:[["renouveler leur garde-robe","acheter de nouveaux vêtements"],["de plus en plus critiqué","qui reçoit de plus en plus de reproches"],["envisagent","réfléchissent à, projettent"]],
+prob:"Faut-il freiner la mode à très bas prix, malgré son succès auprès des consommateurs ?",
+plan:[["Un modèle très séduisant","Ces vêtements permettent à tous de suivre la mode.","Un étudiant peut s'habiller pour quelques euros."],["Un coût caché","Les prix bas ont des conséquences sociales et écologiques.","Des vêtements portés trois fois finissent jetés ou incinérés."]],
+intro:"Le document [traite] du succès des enseignes de vêtements à très bas prix. Ce modèle [séduit] les jeunes, mais il est de plus en plus [critiqué]. On peut donc se demander s'il faut [freiner] ce type de consommation. J'aborderai d'abord les raisons de son succès, puis ses [conséquences].",
+obj:[["Tout le monde n'a pas les moyens d'acheter des vêtements chers.","C'est vrai, mais la seconde main permet de s'habiller à petit prix sans encourager la surproduction."],["Le consommateur n'est pas responsable de ce qui se passe dans les usines.","Il n'en est pas le seul responsable, mais ses choix envoient un message aux entreprises."]]},
+{titres:["Chacun son écran : la famille déconnectée ?","Les parents achètent moins de téléphones","Les adolescents lisent davantage"],
+vf:[["Dans beaucoup de foyers, chacun passe la soirée sur son propre écran.",true,"C'est le résultat de l'enquête."],["Tous les parents ont instauré des règles.",false,"Seulement « certains parents »."],["Les adolescents reprochent à leurs parents d'utiliser leur téléphone pendant les repas.",true,"Leurs parents sont « souvent les premiers » à le faire."]],
+cles:[["instauré des règles","mis en place des règles"],["font remarquer","soulignent, signalent"],["consulter leur téléphone","regarder leur téléphone"]],
+prob:"Faut-il fixer des règles d'usage des écrans en famille, et qui doit les respecter ?",
+plan:[["Les écrans éloignent","Chacun sur son écran, on se parle moins.","Pendant le repas, une notification interrompt une conversation."],["Des règles pour tous","Les règles n'ont de sens que si les parents montrent l'exemple.","Un repas sans téléphone pour toute la famille est plus juste qu'une interdiction réservée aux enfants."]],
+intro:"Le document [présente] les résultats d'une enquête sur l'usage des écrans en famille. Certains parents ont [instauré] des règles, mais les adolescents [critiquent] l'attitude de leurs parents. La question est de savoir s'il faut [encadrer] l'usage des écrans à la maison. Je montrerai d'abord leurs effets sur la vie familiale, puis les [solutions] possibles.",
+obj:[["Regarder un film ensemble, c'est aussi un moment en famille.","Bien sûr, et c'est très différent de chacun sur son téléphone. Le problème n'est pas l'écran lui-même, mais l'isolement."],["Les adolescents ont besoin de leur téléphone pour leur vie sociale.","Je suis d'accord, c'est pourquoi les règles doivent rester limitées : le repas, ou une soirée par semaine, pas une interdiction totale."]]},
+{titres:["Un congé plus long pour les pères","Les mères travaillent de moins en moins","Les entreprises recrutent des pères"],
+vf:[["Plusieurs pays ont allongé ce congé.",true,"« Plusieurs pays ont allongé le congé »."],["Tous les pères prennent la totalité du congé.",false,"« Une partie des pères ne prend pas la totalité »."],["Certaines petites entreprises s'inquiètent de l'organisation.",true,"C'est indiqué à la fin du document."]],
+cles:[["un levier","un moyen d'agir"],["le partage des tâches","la répartition du travail à la maison"],["par crainte pour leur carrière","parce qu'ils ont peur que cela nuise à leur travail"]],
+prob:"Allonger le congé des pères suffit-il à faire progresser l'égalité entre les femmes et les hommes ?",
+plan:[["Un progrès pour l'égalité","Si les pères s'occupent du bébé, les tâches sont mieux partagées.","Un père présent dès la naissance s'implique davantage ensuite."],["Des obstacles persistants","Les mentalités au travail évoluent lentement.","Un père qui prend tout son congé peut être mal vu par son employeur."]],
+intro:"L'article [aborde] l'allongement du congé accordé aux pères après une naissance. Ses défenseurs y voient un [levier] pour l'égalité, mais tous les pères ne le [prennent] pas entièrement. On peut se demander si cette mesure [suffit] à faire progresser l'égalité. Je présenterai d'abord ses avantages, puis les [obstacles] qui demeurent.",
+obj:[["C'est surtout la mère qui a besoin d'être avec le bébé.","La mère a des besoins spécifiques, c'est certain. Mais la présence du père lui permet justement de se reposer, et le lien avec l'enfant se construit dès les premières semaines."],["Pour une petite entreprise, une absence d'un mois est un vrai problème.","Je le reconnais. L'État pourrait aider ces entreprises, par exemple en finançant un remplacement."]]},
+{titres:["Voyager sans avion, une tendance qui s'installe","Les prix des billets d'avion baissent","Les trains de nuit disparaissent"],
+vf:[["De plus en plus de voyageurs renoncent à l'avion pour les trajets courts.",true,"Pour réduire leur empreinte carbone."],["Les trains de nuit ont été supprimés.",false,"Les voyageurs les « redécouvrent »."],["Pour beaucoup, le train reste moins cher que l'avion.",false,"Il « reste plus cher et plus long »."]],
+cles:[["renoncent à","abandonnent, ne prennent plus"],["une alternative","une autre solution"],["une ouverture sur le monde","une manière de découvrir d'autres cultures"]],
+prob:"Faut-il renoncer à l'avion pour protéger le climat, au risque de moins voyager ?",
+plan:[["Changer nos habitudes","L'avion est l'un des moyens de transport les plus polluants par passager.","Sur un trajet de 500 kilomètres, le train émet beaucoup moins de CO2."],["Ne pas renoncer au voyage","Voyager loin permet de découvrir d'autres cultures.","Pour aller d'Europe en Asie, il n'existe pas d'alternative réaliste à l'avion."]],
+intro:"Le document [traite] du choix de nombreux voyageurs de renoncer à l'avion. Certains gouvernements [envisagent] même d'interdire des vols courts, mais pour beaucoup le train reste trop [cher]. La question qui se pose est la suivante : faut-il moins prendre l'avion pour [protéger] le climat ? J'aborderai d'abord les raisons de changer, puis les [limites] de ce choix.",
+obj:[["Les avions ne représentent qu'une petite part de la pollution mondiale.","C'est une part limitée, mais elle augmente vite, et pour une personne, un seul long vol peut représenter une grande partie de son empreinte annuelle."],["Interdire des vols, c'est limiter la liberté.","Il ne s'agit pas d'interdire de voyager, mais de privilégier le train quand il existe. On garde la liberté de se déplacer."]]}
+];
+POX.forEach((x,i)=>{if(PO[i])Object.assign(PO[i],x)});
+
+/* ---------- Données : activités « Se préparer » ---------- */
+const PREP_ARGEX=[["Le télétravail améliore l'équilibre entre vie professionnelle et vie privée.",0],["Ma sœur gagne une heure par jour depuis qu'elle travaille de chez elle.",1],["Les réseaux sociaux favorisent la diffusion de fausses informations.",0],["Pendant la dernière campagne électorale, une fausse vidéo a été vue des millions de fois.",1],["Apprendre une langue étrangère facilite l'insertion professionnelle.",0],["Dans de nombreuses offres d'emploi, l'anglais est exigé.",1],["Le sport améliore la santé mentale.",0],["Après une séance de course à pied, on se sent plus détendu et on dort mieux.",1]];
+const PREP_ORDRE=[
+["Le vélo en ville",["Le vélo est de plus en plus présent dans nos villes.","En effet, il est rapide, économique et bon pour la santé.","Cependant, de nombreux cyclistes ne se sentent pas en sécurité.","Il faut donc développer des pistes cyclables séparées de la circulation."]],
+["La lecture chez les jeunes",["On entend souvent que les jeunes ne lisent plus.","Pourtant, ils lisent beaucoup sur leurs écrans : articles, messages, mangas.","Ce sont donc surtout les supports et les contenus qui ont changé.","Il serait plus juste de dire que la lecture se transforme."]],
+["Le bien-être au travail",["Pour beaucoup de salariés, le salaire n'est plus le seul critère.","Ils recherchent aussi du sens et un bon équilibre de vie.","C'est pourquoi les entreprises développent le télétravail et les horaires flexibles.","Ainsi, le bien-être au travail devient un argument de recrutement."]]];
+const PREP_IDEES=[
+["Les voyages forment davantage que l'école.",["découvrir d'autres cultures et modes de vie","apprendre à s'adapter, à se débrouiller","l'école donne des bases indispensables (lire, compter, raisonner)","tout le monde n'a pas les moyens de voyager","les deux sont complémentaires"]],
+["Manger bio, c'est réservé aux personnes aisées.",["les produits bio coûtent souvent plus cher","on peut acheter local et de saison à petit prix","les supermarchés proposent maintenant des gammes bio moins chères","cuisiner soi-même réduit les dépenses","question de priorités dans le budget"]],
+["Le télétravail isole les salariés.",["moins de contacts informels (pause, déjeuner)","risque de solitude pour ceux qui vivent seuls","gain de temps de transport, moins de fatigue","outils de visioconférence","formule mixte : quelques jours au bureau"]],
+["Tout le monde devrait parler au moins deux langues.",["ouverture d'esprit, compréhension d'autres cultures","atout professionnel","voyages plus riches","apprendre demande du temps et des moyens","la traduction automatique progresse"]]];
+const PREP_ENRICH=[["Le covoiturage se développe.","Il permet de réduire les frais de transport tout en limitant la pollution."],["Les jeunes changent souvent d'emploi.","Ils recherchent un travail qui a du sens plutôt que la stabilité à tout prix."],["Les achats en ligne sont très pratiques.","Mais ils fragilisent les commerces de proximité et le lien social dans les quartiers."],["Le sport à l'école est essentiel.","Il transmet aussi l'esprit d'équipe et le respect des règles, pas seulement la forme physique."]];
+const PREP_REFUT=[["Les jeunes passent trop de temps sur leur téléphone, c'est une génération perdue.","Je ne partage pas tout à fait ce point de vue. Les jeunes utilisent aussi leur téléphone pour apprendre, s'informer ou s'engager."],["Le travail à distance, c'est la fin de l'esprit d'équipe.","Je comprends cette crainte, mais avec une ou deux journées au bureau par semaine, l'équipe garde des moments ensemble."],["Les petits gestes écologiques ne servent à rien.","Pris isolément, leur effet est limité, c'est vrai. Néanmoins, additionnés à l'échelle d'un pays, ils comptent, et ils font évoluer les mentalités."],["Apprendre une langue à l'âge adulte, c'est impossible.","Je ne suis pas d'accord : c'est plus long que pour un enfant, mais un adulte motivé, avec une bonne méthode, peut atteindre un très bon niveau."],["La télévision n'apprend rien aux enfants.","Cela dépend des programmes. Certains documentaires sont très instructifs, à condition de limiter le temps passé devant l'écran."]];
+const PREP_REFORM=[["Le bonheur au travail dépend surtout des collègues.","Autrement dit, je pense que l'ambiance compte davantage que le salaire pour se sentir bien au travail."],["Voyager seul est la meilleure école de la vie.","Ce que je veux dire, c'est qu'en voyageant seul, on apprend à se débrouiller et à aller vers les autres."],["L'école ne prépare pas au monde du travail.","En d'autres termes, l'école transmet des connaissances, mais pas assez de compétences pratiques, comme le travail en équipe."],["Les villes moyennes sont l'avenir.","Je veux dire par là que de plus en plus de gens préféreront vivre dans des villes plus petites, moins chères et plus calmes."]];
+const PREP_DESACC=[
+{q:"Je ne suis pas ___ d'accord avec vous.",o:["tout à fait","pas","très"],a:0,j:"« Pas tout à fait d'accord » : désaccord poli et nuancé."},
+{q:"Vous avez raison sur ce point ; ___, je pense que le problème est ailleurs.",o:["néanmoins","donc","car"],a:0,j:"On concède, puis on s'oppose : néanmoins, cependant, toutefois."},
+{q:"Je ne pense pas que ce ___ la meilleure solution.",o:["soit","est","sera"],a:0,j:"« Je ne pense pas que » + subjonctif."},
+{q:"___ je comprends votre point de vue, je ne le partage pas.",o:["Même si","Bien que","Malgré"],a:0,j:"« Même si » + indicatif. « Bien que » demanderait « je comprenne »."},
+{q:"Permettez-moi de ___ : ce n'est pas tout à fait exact.",o:["nuancer","nuancé","nuance"],a:0,j:"Après « permettez-moi de », on utilise l'infinitif."},
+{q:"C'est ce que beaucoup de gens pensent. ___, les faits montrent le contraire.",o:["Pourtant","Ainsi","D'ailleurs"],a:0,j:"« Pourtant » introduit une opposition."}];
+
+/* ---------- Données : activités d'écoute ---------- */
+const CO_OPINION=[["Franchement, je ne vois pas comment on pourrait s'en passer aujourd'hui.",0],["C'est une idée séduisante sur le papier, mais dans la pratique, ça me semble difficile.",2],["Je suis totalement opposé à cette mesure, elle n'a aucun sens.",1],["Il y a du bon et du moins bon, tout dépendra de la façon dont on l'applique.",2],["Enfin une décision courageuse ! Il était temps.",0],["On nous présente cela comme un progrès ; permettez-moi d'en douter.",1],["Je n'étais pas convaincu au départ, mais j'avoue que les résultats sont là.",0],["Ce n'est pas inutile, mais ce n'est certainement pas la priorité.",2]];
+const CO_CHIFFRES=[["Près de soixante-dix-huit pour cent des personnes interrogées sont satisfaites.","78","78 %"],["La ville compte quatre-vingt-quatorze mille habitants.","94000","94 000"],["L'enquête a été menée auprès de mille cinq cents salariés.","1500","1 500"],["Les prix ont augmenté de quatorze virgule cinq pour cent.","145","14,5 %"],["Le musée a accueilli deux cent soixante-dix mille visiteurs l'an dernier.","270000","270 000"],["Le premier train partira à six heures quarante-cinq.","645","6 h 45"],["Le projet a coûté trois millions deux cent mille euros.","3200000","3 200 000 €"],["La loi a été votée en mille neuf cent quatre-vingt-dix-sept.","1997","1997"]];
+
+/* ---------- Structure en quatre parties (Comprendre, Se préparer, S'entraîner, Prêt pour l'examen) ---------- */
+const ETAB={ecoute:S.get('tab_ecoute','comprendre'),oral:S.get('tab_oral','comprendre')};
+function tabs(sec){const cur=ETAB[sec];const L=[['comprendre','Comprendre'],['preparer','Se préparer'],['entrainer',"S'entraîner"],['pret',"Prêt pour l'examen"]];
+  return `<div class="tabs">${L.map(t=>`<button class="${t[0]===cur?'on':''}" onclick="ETAB.${sec}='${t[0]}';S.set('tab_${sec}','${t[0]}');V.${sec}()">${t[1]}</button>`).join('')}</div>`}
+function keep(){document.querySelectorAll('[data-k]').forEach(el=>{el.value=S.get(el.dataset.k,'');el.addEventListener('input',()=>S.set(el.dataset.k,el.value))})}
+const norm=s=>s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[’]/g,"'").trim();
+function speedRow(){return `<div class="row small"><span class="mut">Vitesse</span><select onchange="S.set('rate',+this.value)">${[[0.8,'Lente'],[0.95,'Normale'],[1.1,'Rapide']].map(r=>`<option value="${r[0]}" ${S.get('rate',0.95)==r[0]?'selected':''}>${r[1]}</option>`).join('')}</select></div>`}
+function transcript(x){return x.segs.map(s=>`<p>${x.segs.length>1?`<b>${s[0]==='A'?'Journaliste':'Invité'}</b> : `:''}${s[1]}</p>`).join('')}
+
+/* ===== ÉCOUTE ===== */
 V.ecoute=()=>{
-  const co=S.get('co',{});
-  app.innerHTML=`<h1>Compréhension de l'oral</h1>
-  <p class="mut">Documents originaux lus par la voix de synthèse de votre appareil. Comme à l'examen, lisez d'abord les questions, puis écoutez. Certains documents s'écoutent deux fois, d'autres une seule.</p>
-  ${voiceNote()}
-  <div class="row small"><span class="mut">Vitesse</span><select onchange="S.set('rate',+this.value)">${[[0.8,'Lente'],[0.95,'Normale'],[1.1,'Rapide']].map(r=>`<option value="${r[0]}" ${S.get('rate',0.95)==r[0]?'selected':''}>${r[1]}</option>`).join('')}</select>
-  <label><input type="checkbox" ${S.get('free',false)?'checked':''} onchange="S.set('free',this.checked)"> Écoutes illimitées (entraînement)</label></div>
+  const t=ETAB.ecoute;let h=`<h1>Compréhension de l'oral</h1>`+tabs('ecoute');
+  if(t==='comprendre')h+=`
+  <h2>L'épreuve</h2>
+  <table><tr><td>Durée</td><td>Environ 30 minutes</td></tr><tr><td>Note</td><td>/25</td></tr>
+  <tr><td>Documents</td><td>Enregistrements variés : interview, reportage, débat, extrait de conférence, bulletin d'informations</td></tr>
+  <tr><td>Écoutes</td><td>Certains documents sont diffusés deux fois, d'autres une seule fois</td></tr>
+  <tr><td>Questions</td><td>À lire avant l'écoute. Choix multiples, vrai ou faux avec justification, réponses courtes</td></tr></table>
+  <p class="small mut">Vérifiez le format exact sur le site officiel avant l'examen (voir Ressources).</p>
+  <h2>Les savoir-faire</h2>
+  <ul><li>Comprendre globalement un document : thème, type de document, situation</li>
+  <li>Identifier les locuteurs et leur opinion</li>
+  <li>Percevoir les nuances : accord partiel, doute, ironie, concession</li>
+  <li>Prendre des notes rapidement</li>
+  <li>Repérer les informations factuelles : chiffres, dates, lieux</li>
+  <li>Reformuler une information importante avec ses propres mots</li></ul>
+  <h2>Comment travailler cette section</h2>
+  <table><tr><td><b>Se préparer</b></td><td>Activités pour acquérir chaque savoir-faire : écoute guidée en quatre étapes, repérage des opinions, notation des chiffres.</td></tr>
+  <tr><td><b>S'entraîner</b></td><td>Les documents en conditions d'examen : nombre d'écoutes limité, correction à la fin.</td></tr>
+  <tr><td><b>Prêt pour l'examen</b></td><td>L'essentiel à mémoriser : mots d'opinion, connecteurs, abréviations, conseils pour le jour J.</td></tr></table>`;
+  else if(t==='preparer')h+=`
+  <p class="mut">Des activités pour développer chaque savoir-faire, avant de passer aux conditions d'examen.</p>
+  ${voiceNote()}${speedRow()}
+  <h2>1. Écoute guidée pas à pas</h2>
+  <p class="small mut">Avant l'écoute, compréhension globale, détails, puis travail sur la transcription. Écoutes illimitées.</p>
+  <div class="list">${CO.map((x,i)=>`<div class="item" onclick="coGuided(${i})"><span><span class="t">${x.titre}</span><br><span class="small mut">${x.type}</span></span><span class="meta">${S.get('cog'+i,0)?'fait':''}</span></div>`).join('')}</div>
+  <h2>2. Repérer l'opinion du locuteur</h2>
+  <p class="small mut">Huit phrases courtes : le locuteur est-il pour, contre, ou nuancé ?</p>
+  <div class="row"><button class="pri" onclick="coOpinion()">Commencer</button></div>
+  <h2>3. Noter les chiffres</h2>
+  <p class="small mut">Pourcentages, dates, grands nombres : les questions d'examen portent souvent sur ces détails.</p>
+  <div class="row"><button class="pri" onclick="coChiffres()">Commencer</button></div>`;
+  else if(t==='entrainer'){const co=S.get('co',{});h+=`
+  <p class="mut">Conditions d'examen : lisez les questions, puis écoutez. Nombre d'écoutes limité, correction à la fin.</p>
+  ${voiceNote()}${speedRow()}
+  <div class="row small"><label><input type="checkbox" ${S.get('free',false)?'checked':''} onchange="S.set('free',this.checked)"> Écoutes illimitées</label></div>
   <div class="list">${CO.map((x,i)=>`<div class="item" onclick="coOpen(${i})"><span><span class="t">${x.titre}</span><br><span class="small mut">${x.type}, ${x.ecoutes} écoute${x.ecoutes>1?'s':''}</span></span><span class="meta">${co[x.id]!==undefined?co[x.id]+' %':''}</span></div>`).join('')}</div>
-  <p class="small mut" style="margin-top:20px">Pour de vrais enregistrements, complétez avec RFI et TV5Monde (voir <a href="#ressources">Ressources</a>).</p>`;
+  <p class="small mut" style="margin-top:20px">Complétez avec de vrais enregistrements : RFI et TV5Monde (voir <a href="#ressources">Ressources</a>).</p>`}
+  else h+=`
+  <h2>Les mots qui annoncent une opinion</h2>
+  <table><tr><td>Accord</td><td>Je suis convaincu que, j'approuve, c'est une excellente idée, enfin !</td></tr>
+  <tr><td>Désaccord</td><td>Je suis opposé à, je doute que, permettez-moi d'en douter, ça n'a aucun sens</td></tr>
+  <tr><td>Nuance</td><td>Sur le papier…, mais ; il y a du bon et du moins bon ; tout dépendra de ; ce n'est pas la priorité</td></tr></table>
+  <h2>Les connecteurs à surveiller</h2>
+  <table><tr><td>Opposition</td><td>mais, pourtant, cependant, en revanche, or</td></tr>
+  <tr><td>Concession</td><td>certes, même si, bien que, il est vrai que</td></tr>
+  <tr><td>Conséquence</td><td>donc, c'est pourquoi, si bien que, par conséquent</td></tr>
+  <tr><td>Cause</td><td>car, puisque, en raison de, étant donné que</td></tr></table>
+  <p class="small mut">Les questions portent souvent sur ce qui suit un connecteur d'opposition.</p>
+  <h2>Abréviations pour prendre des notes</h2>
+  <table><tr><td>↑ / ↓</td><td>augmentation / baisse</td></tr><tr><td>→</td><td>conséquence, donc</td></tr><tr><td>= / ≠</td><td>égal / différent</td></tr><tr><td>pb, gvt, qqn, qqch</td><td>problème, gouvernement, quelqu'un, quelque chose</td></tr><tr><td>ex., nb, pr, ss</td><td>exemple, nombre, pour, sans</td></tr></table>
+  <h2>Le jour J</h2>
+  <ul><li>Utilisez le temps de lecture pour souligner les mots-clés de chaque question.</li>
+  <li>Première écoute : le sens général. Deuxième écoute : les détails.</li>
+  <li>Pour un « vrai ou faux », la justification doit reprendre une information précise du document.</li>
+  <li>Ne laissez aucune question sans réponse.</li></ul>`;
+  app.innerHTML=h;
 };
 function coOpen(i){
   const x=CO[i];let plays=0;const max=S.get('free',false)?99:x.ecoutes;stopSpeech();
-  app.innerHTML=`${back('#ecoute','Écoute')}<h1>${x.titre}</h1><p class="mut">${x.type}. ${x.ecoutes===2?'Deux écoutes.':'Une seule écoute.'}</p>
+  app.innerHTML=`${back('#ecoute','Écoute')}<h1>${x.titre}</h1><p class="mut">${x.type}. ${x.ecoutes===2?'Deux écoutes.':'Une seule écoute.'} Prenez une minute pour lire les questions avant d'écouter.</p>
   ${voiceNote()}
   <div class="row"><button class="pri" id="play">Écouter</button><button onclick="stopSpeech()">Arrêter</button><span class="small mut" id="pc">0/${max>9?'∞':max}</span></div>
   ${quizHTML(x.qs,'co')}
-  <div class="row"><button class="pri" id="chk">Corriger</button></div>
-  <div id="res"></div>`;
+  <div class="row"><button class="pri" id="chk">Corriger</button></div><div id="res"></div>`;
   const play=document.getElementById('play'),pc=document.getElementById('pc');
   play.onclick=()=>{if(plays>=max)return;plays++;pc.textContent=plays+'/'+(max>9?'∞':max);play.disabled=true;play.textContent='Lecture…';
-    speakSegs(x.segs,S.get('rate',0.95),()=>{play.textContent=plays>=max?'Écoutes terminées':'Réécouter';play.disabled=plays>=max});
-    setTimeout(()=>{if(play.textContent==='Lecture…'){}},0)};
-  document.getElementById('chk').onclick=()=>{
-    stopSpeech();const s=grade(x.qs,'co');const pct=Math.round(s/x.qs.length*100);
+    speakSegs(x.segs,S.get('rate',0.95),()=>{play.textContent=plays>=max?'Écoutes terminées':'Réécouter';play.disabled=plays>=max})};
+  document.getElementById('chk').onclick=()=>{stopSpeech();const s=grade(x.qs,'co');const pct=Math.round(s/x.qs.length*100);
     const co=S.get('co',{});co[x.id]=Math.max(co[x.id]||0,pct);S.set('co',co);
-    document.getElementById('res').innerHTML=`<p><b>${s}/${x.qs.length}</b> <span class="mut">(${pct} %)</span></p>
-    <details><summary>Transcription</summary>${x.segs.map(s=>`<p>${x.segs.length>1?`<b>${s[0]==='A'?'Journaliste':'Invité'}</b> : `:''}${s[1]}</p>`).join('')}</details>
-    <p class="small mut">Conseil : réécoutez en lisant la transcription, puis répétez les phrases à voix haute (shadowing).</p>`;
-  };
+    document.getElementById('res').innerHTML=`<p><b>${s}/${x.qs.length}</b> <span class="mut">(${pct} %)</span></p><details><summary>Transcription</summary>${transcript(x)}</details>`};
+}
+function coGuided(i){
+  const x=CO[i];stopSpeech();
+  const n=new Set(x.segs.map(s=>s[0])).size;
+  const types=shuffle([x.type,...shuffle([...new Set(CO.map(c=>c.type))].filter(t=>t!==x.type)).slice(0,2)]);
+  const themes=shuffle([x.titre,...shuffle(CO.filter(c=>c!==x).map(c=>c.titre)).slice(0,2)]);
+  const glob=[{q:"De quel type de document s'agit-il ?",o:types,a:types.indexOf(x.type)},{q:"Combien de personnes parlent ?",o:["Une","Deux"],a:n-1},{q:"Quel est le thème principal ?",o:themes,a:themes.indexOf(x.titre)}];
+  const play=`<div class="row"><button class="pri" onclick="speakSegs(CO[${i}].segs,S.get('rate',0.95))">Écouter</button><button onclick="stopSpeech()">Arrêter</button></div>`;
+  app.innerHTML=`${back('#ecoute','Écoute')}<h1>${x.titre}</h1><p class="mut">Écoute guidée en quatre étapes. Écoutes illimitées.</p>${voiceNote()}
+  <h2>1. Avant l'écoute</h2><p>Lisez seulement le titre. De quoi va parler le document ? Quels mots pensez-vous entendre ?</p>
+  <textarea class="sm" data-k="cog${i}_hyp" placeholder="Vos hypothèses…"></textarea>
+  <h2>2. Première écoute : comprendre globalement</h2><p class="small mut">Écoutez une fois sans prendre de notes, puis répondez.</p>${play}
+  ${quizHTML(glob,'g1')}<div class="row"><button id="v1">Vérifier</button></div>
+  <h2>3. Deuxième écoute : les détails</h2><p class="small mut">Lisez les questions, puis réécoutez en notant les chiffres, les noms, les opinions et les connecteurs (mais, pourtant, en revanche).</p>${play}
+  <textarea class="sm" data-k="cog${i}_notes" placeholder="Vos notes…"></textarea>
+  ${quizHTML(x.qs,'g2')}<div class="row"><button id="v2">Vérifier</button><span id="r2" class="small"></span></div>
+  <h2>4. Après l'écoute</h2><p>Lisez la transcription et relevez cinq mots ou expressions liés au thème. Puis réécoutez en répétant en même temps que la voix (shadowing).</p>
+  <details><summary>Transcription</summary>${transcript(x)}</details>
+  <textarea class="sm" data-k="cog${i}_mots" placeholder="Mots et expressions à retenir…"></textarea>`;
+  keep();
+  document.getElementById('v1').onclick=()=>grade(glob,'g1');
+  document.getElementById('v2').onclick=()=>{const s=grade(x.qs,'g2');document.getElementById('r2').textContent=`${s}/${x.qs.length}`;S.set('cog'+i,1)};
+}
+function coOpinion(){
+  stopSpeech();const L=["Pour","Contre","Nuancé"];
+  const qs=CO_OPINION.map((c,k)=>({q:`<button onclick="say(CO_OPINION[${k}][0])">Écouter</button> Phrase ${k+1}`,o:L,a:c[1],j:c[0],jl:'Phrase'}));
+  app.innerHTML=`${back('#ecoute','Écoute')}<h1>Repérer l'opinion du locuteur</h1><p class="mut">Écoutez chaque phrase sans la lire. Le locuteur est-il pour, contre, ou nuancé ? Faites attention à l'intonation et aux mots qui marquent la nuance.</p>${voiceNote()}
+  ${quizHTML(qs,'op')}<div class="row"><button class="pri" id="chk">Corriger</button><span id="r" class="small"></span></div>`;
+  document.getElementById('chk').onclick=()=>{const s=grade(qs,'op');document.getElementById('r').textContent=`${s}/${qs.length}`};
+}
+function coChiffres(){
+  stopSpeech();
+  app.innerHTML=`${back('#ecoute','Écoute')}<h1>Noter les chiffres</h1><p class="mut">Écoutez et notez le nombre en chiffres (par exemple 1 500 ou 14,5).</p>${voiceNote()}
+  ${CO_CHIFFRES.map((c,k)=>`<div class="ph"><span class="row" style="margin:0"><button onclick="say(CO_CHIFFRES[${k}][0])">Écouter</button> <input class="in" id="ch${k}" placeholder="Nombre"></span><span id="cr${k}" class="small"></span></div>`).join('')}
+  <div class="row"><button class="pri" id="chk">Corriger</button><span id="r" class="small"></span></div>`;
+  document.getElementById('chk').onclick=()=>{let s=0;CO_CHIFFRES.forEach((c,k)=>{const v=(document.getElementById('ch'+k).value.match(/\d/g)||[]).join('');const ok=v===c[1];if(ok)s++;
+    document.getElementById('cr'+k).innerHTML=`<span class="${ok?'okc':'koc'}">${c[2]}</span>`});document.getElementById('r').textContent=`${s}/${CO_CHIFFRES.length}`};
 }
 
+/* ===== ORAL ===== */
 V.oral=()=>{
-  const po=S.get('po',[]);
-  app.innerHTML=`<h1>Production orale</h1>
-  <p class="mut">À l'examen : 30 minutes de préparation à partir d'un court document, puis 20 minutes face au jury. Vous présentez le problème soulevé et défendez votre point de vue (monologue), puis vous débattez avec l'examinateur (interaction).</p>
-  <div class="row"><button onclick="poMethode()">Méthode</button><button onclick="poPhrases()">Phrases utiles</button><button class="pri" onclick="poTirage()">Tirage au sort (2 sujets)</button></div>
-  <h2>Sujets</h2>
-  <div class="list">${PO.map((x,i)=>`<div class="item" onclick="poOpen(${i})"><span class="t">${x.titre}</span><span class="meta">${po.filter(p=>p.i===i).length?po.filter(p=>p.i===i).length+'×':''}</span></div>`).join('')}</div>
-  ${po.length?`<h2>Historique</h2><table><tr><th>Date</th><th>Sujet</th><th>Auto-évaluation</th></tr>${po.slice(-8).reverse().map(p=>`<tr><td>${p.d}</td><td>${PO[p.i].titre}</td><td>${p.s}/12</td></tr>`).join('')}</table>`:''}`;
+  const t=ETAB.oral;let h=`<h1>Production orale</h1>`+tabs('oral');
+  if(t==='comprendre')h+=`
+  <h2>L'épreuve</h2>
+  <table><tr><td>Préparation</td><td>30 minutes. Vous tirez au sort deux sujets et vous en choisissez un.</td></tr>
+  <tr><td>Passation</td><td>20 minutes, en deux parties</td></tr>
+  <tr><td>Partie 1 : monologue suivi</td><td>Présenter le problème soulevé par un court article, puis défendre votre point de vue de façon structurée.</td></tr>
+  <tr><td>Partie 2 : débat</td><td>L'examinateur vous pose des questions et peut contester vos idées. Vous précisez, nuancez, contre-argumentez.</td></tr></table>
+  <h2>Le barème (sur 25)</h2>
+  <table><tr><td>Monologue suivi</td><td>7 points</td></tr><tr><td>Débat</td><td>6 points</td></tr><tr><td>Lexique</td><td>4 points</td></tr><tr><td>Morphosyntaxe (grammaire)</td><td>5 points</td></tr><tr><td>Phonétique et prononciation</td><td>3 points</td></tr></table>
+  <p class="small mut">La langue compte pour près de la moitié de la note : soignez le vocabulaire et la grammaire autant que les idées.</p>
+  <h2>Les savoir-faire</h2>
+  <ul><li>Présenter le thème d'un document et en dégager une problématique</li>
+  <li>Défendre un point de vue clair, avec des arguments et des exemples</li>
+  <li>Parler de façon suivie et structurée</li>
+  <li>Confirmer, nuancer, apporter des précisions</li>
+  <li>Réagir aux arguments de l'examinateur pour défendre sa position</li></ul>
+  <h2>Comment travailler cette section</h2>
+  <table><tr><td><b>Se préparer</b></td><td>Activités courtes, une compétence à la fois : distinguer argument et exemple, ordonner ses idées, trouver des idées, réfuter, reformuler.</td></tr>
+  <tr><td><b>S'entraîner</b></td><td>Chaque sujet se travaille en six étapes : analyser le document, trouver des arguments, construire le plan, présenter, préparer le débat, s'évaluer.</td></tr>
+  <tr><td><b>Prêt pour l'examen</b></td><td>L'essentiel à mémoriser avant le jour J.</td></tr></table>
+  <div class="row"><button onclick="poMethode()">Méthode détaillée</button></div>`;
+  else if(t==='preparer')h+=`
+  <p class="mut">Une compétence à la fois, dans l'ordre de l'épreuve : d'abord le monologue, puis le débat.</p>
+  <h2>Préparer le monologue</h2>
+  <div class="list">
+  <div class="item" onclick="prepArgEx()"><span class="t">1. Argument ou exemple ?</span><span class="meta">Trouver des arguments</span></div>
+  <div class="item" onclick="prepIdees()"><span class="t">2. Trouver des idées</span><span class="meta">Trouver des arguments</span></div>
+  <div class="item" onclick="prepEnrich()"><span class="t">3. Transformer une idée en argument</span><span class="meta">Trouver des arguments</span></div>
+  <div class="item" onclick="prepOrdre()"><span class="t">4. Remettre les idées dans l'ordre</span><span class="meta">Construire un plan</span></div>
+  <div class="item" onclick="poPhrases()"><span class="t">5. Phrases pour introduire, enchaîner, conclure</span><span class="meta">Présenter son opinion</span></div></div>
+  <h2>Préparer le débat</h2>
+  <div class="list">
+  <div class="item" onclick="prepReform()"><span class="t">6. Reformuler pour l'examinateur</span><span class="meta">Réagir</span></div>
+  <div class="item" onclick="prepRefut()"><span class="t">7. Réfuter une affirmation</span><span class="meta">Défendre son point de vue</span></div>
+  <div class="item" onclick="prepDesacc()"><span class="t">8. Exprimer son désaccord</span><span class="meta">Défendre son point de vue</span></div></div>`;
+  else if(t==='entrainer'){const po=S.get('po',[]);h+=`
+  <p class="mut">Chaque sujet se travaille en six étapes. Le jour où vous vous sentez prêt, sautez directement aux étapes 4 et 5 avec les minuteurs.</p>
+  <div class="row"><button class="pri" onclick="poTirage()">Tirage au sort (2 sujets)</button></div>
+  <div class="list">${PO.map((x,i)=>{const n=po.filter(p=>p.i===i);return `<div class="item" onclick="poOpen(${i})"><span class="t">${x.titre}</span><span class="meta">${n.length?n[n.length-1].s+'/'+(n[n.length-1].m||12):''}</span></div>`}).join('')}</div>
+  ${po.length?`<h2>Historique</h2><table><tr><th>Date</th><th>Sujet</th><th>Note</th></tr>${po.slice(-8).reverse().map(p=>`<tr><td>${p.d}</td><td>${PO[p.i].titre}</td><td>${p.s}/${p.m||12}</td></tr>`).join('')}</table>`:''}`}
+  else h+=`
+  <h2>Le déroulé à connaître par cœur</h2>
+  <table><tr><td>Préparation (30 min)</td><td>Document, problématique, idées, plan, introduction et conclusion rédigées, objections anticipées</td></tr>
+  <tr><td>Monologue (environ 10 min)</td><td>Introduction, deux ou trois parties avec arguments et exemples, conclusion</td></tr>
+  <tr><td>Débat (environ 10 min)</td><td>Écouter, reformuler si besoin, nuancer, défendre sa position</td></tr></table>
+  <h2>Grammaire essentielle à l'oral</h2>
+  <ul><li>Opinion : « je pense que » + indicatif, « je ne pense pas que » + subjonctif</li>
+  <li>Concession : « bien que » + subjonctif, « même si » + indicatif, « malgré » + nom</li>
+  <li>Hypothèse : « si » + imparfait, conditionnel (« si on interdisait…, les élèves seraient… »)</li>
+  <li>Nuance : le conditionnel (« il faudrait », « on pourrait »)</li>
+  <li>Relatifs : dont, auquel, pour lequel</li></ul>
+  <h2>Le jour J</h2>
+  <ul><li>Saluez l'examinateur au début et à la fin.</li>
+  <li>Choisissez le sujet sur lequel vous avez le plus d'idées, pas celui qui semble le plus facile.</li>
+  <li>Ne lisez pas vos notes : jetez-y un coup d'œil, puis regardez l'examinateur.</li>
+  <li>Gérez votre temps : annoncez votre plan, puis respectez-le.</li>
+  <li>Si vous ne comprenez pas une question, demandez de la répéter.</li></ul>
+  <div class="row"><button onclick="poPhrases()">Phrases utiles</button><button onclick="poMethode()">Méthode détaillée</button></div>`;
+  app.innerHTML=h;
 };
+
+/* Activités « Se préparer » */
+function prepArgEx(){
+  const qs=PREP_ARGEX.map(p=>({q:p[0],o:["Argument","Exemple"],a:p[1]}));
+  app.innerHTML=`${back('#oral','Oral')}<h1>Argument ou exemple ?</h1><p class="mut">Un argument est une idée générale qui justifie une opinion. Un exemple est un fait précis qui illustre cet argument. Classez chaque phrase.</p>
+  ${quizHTML(qs,'ae')}<div class="row"><button class="pri" id="chk">Corriger</button><span id="r" class="small"></span></div>
+  <p class="small mut">Retenez : chaque argument de votre exposé doit être suivi d'au moins un exemple.</p>`;
+  document.getElementById('chk').onclick=()=>{document.getElementById('r').textContent=grade(qs,'ae')+'/'+qs.length};
+}
+function prepIdees(){
+  app.innerHTML=`${back('#oral','Oral')}<h1>Trouver des idées</h1><p class="mut">Pour chaque affirmation, notez au moins cinq idées ou expressions utiles (pour et contre), puis comparez avec les pistes proposées.</p>
+  ${PREP_IDEES.map((p,k)=>`<h2>${p[0]}</h2><textarea class="sm" data-k="pid${k}" placeholder="Vos idées…"></textarea><details><summary>Pistes</summary><ul>${p[1].map(i=>`<li>${i}</li>`).join('')}</ul></details>`).join('')}`;keep();
+}
+function prepEnrich(){
+  app.innerHTML=`${back('#oral','Oral')}<h1>Transformer une idée en argument</h1><p class="mut">Une idée seule ne convainc pas. Complétez chaque idée par une explication ou une conséquence.</p>
+  ${PREP_ENRICH.map((p,k)=>`<div class="q"><div class="qt">${p[0]}</div><input class="in wide" data-k="pen${k}" placeholder="Complétez…"><details><summary>Proposition</summary>${p[1]}</details></div>`).join('')}`;keep();
+}
+function prepOrdre(){
+  app.innerHTML=`${back('#oral','Oral')}<h1>Remettre les idées dans l'ordre</h1><p class="mut">Numérotez les phrases de 1 à 4 pour construire un raisonnement logique. Les connecteurs vous aident.</p>
+  ${PREP_ORDRE.map((p,k)=>{const sh=shuffle(p[1].map((s,j)=>[s,j]));return `<h2>${p[0]}</h2><div id="or${k}">${sh.map(s=>`<div class="ph"><span>${s[0]}</span><select data-r="${s[1]}"><option value="">?</option>${[1,2,3,4].map(n=>`<option>${n}</option>`).join('')}</select></div>`).join('')}</div><div class="row"><button onclick="ordCheck(${k})">Vérifier</button><span id="orr${k}" class="small"></span></div>`}).join('')}`;
+}
+function ordCheck(k){const sel=[...document.querySelectorAll('#or'+k+' select')];let s=0;sel.forEach(x=>{const ok=+x.value===+x.dataset.r+1;if(ok)s++;x.style.borderColor=ok?'var(--ok)':'var(--ko)'});
+  document.getElementById('orr'+k).innerHTML=s===4?'<span class="okc">Correct.</span>':`${s}/4. <span class="mut">Ordre attendu : ${PREP_ORDRE[k][1].map((t,i)=>(i+1)+'. '+t.split(' ').slice(0,4).join(' ')+'…').join(' ')}</span>`}
+function prepReform(){
+  app.innerHTML=`${back('#oral','Oral')}<h1>Reformuler pour l'examinateur</h1><p class="mut">Pendant le débat, l'examinateur dit qu'il n'a pas compris une de vos affirmations. Reformulez-la à voix haute, en commençant par « Autrement dit… », « Ce que je veux dire, c'est que… » ou « En d'autres termes… ».</p>
+  ${PREP_REFORM.map((p,k)=>`<div class="q"><div class="qt">« ${p[0]} »</div><details><summary>Proposition</summary>${p[1]} <button onclick="say(PREP_REFORM[${k}][1])">Écouter</button></details></div>`).join('')}`;
+}
+function prepRefut(){
+  app.innerHTML=`${back('#oral','Oral')}<h1>Réfuter une affirmation</h1><p class="mut">L'examinateur affirme quelque chose. Écoutez, puis répondez à voix haute en marquant votre désaccord poliment et en donnant un argument. Comparez ensuite avec la proposition.</p>${voiceNote()}
+  ${PREP_REFUT.map((p,k)=>`<div class="q"><div class="row" style="margin:0"><button onclick="say(PREP_REFUT[${k}][0])">Écouter l'examinateur</button><span class="small mut">Affirmation ${k+1}</span></div><details><summary>Afficher l'affirmation et une réponse possible</summary><p><b>Examinateur :</b> ${p[0]}</p><p><b>Réponse :</b> ${p[1]} <button onclick="say(PREP_REFUT[${k}][1])">Écouter</button></p></details></div>`).join('')}`;
+}
+function prepDesacc(){
+  app.innerHTML=`${back('#oral','Oral')}<h1>Exprimer son désaccord</h1><p class="mut">Choisissez la forme correcte.</p>
+  ${quizHTML(PREP_DESACC,'ds')}<div class="row"><button class="pri" id="chk">Corriger</button><span id="r" class="small"></span></div>`;
+  document.getElementById('chk').onclick=()=>{document.getElementById('r').textContent=grade(PREP_DESACC,'ds')+'/'+PREP_DESACC.length};
+}
+
+/* Sujet oral en six étapes */
+const BAREME=[["Monologue suivi",7,["J'ai présenté le thème et la problématique","J'ai annoncé et suivi un plan clair","J'ai défendu un point de vue net, avec des arguments et des exemples"]],
+["Débat",6,["J'ai répondu précisément aux questions","J'ai nuancé ou défendu ma position face aux objections"]],
+["Lexique",4,["Vocabulaire précis et varié, peu de répétitions"]],
+["Morphosyntaxe",5,["Temps, accords, subjonctif et conditionnel maîtrisés"]],
+["Phonétique et prononciation",3,["Prononciation claire, intonation naturelle, débit régulier"]]];
+function poOpen(i){
+  const x=PO[i];stopSpeech();clearTimers();let qi=0;
+  const tO=shuffle(x.titres.map((t,j)=>[t,j]));
+  const s1=[{q:"Quel titre convient le mieux à ce document ?",o:tO.map(t=>t[0]),a:tO.findIndex(t=>t[1]===0)},...x.vf.map(v=>({q:"Vrai ou faux : "+v[0],o:["Vrai","Faux"],a:v[1]?0:1,j:v[2]}))];
+  const items=shuffle(x.plan.flatMap((p,pi)=>p.map((t,ri)=>({t,pi,ri}))));
+  const R=["Titre","Argument","Exemple"];
+  const cloze=x.intro.split(/\[([^\]]+)\]/).map((p,k)=>k%2?`<input class="in cz" data-a="${p}" size="${Math.max(6,p.length)}">`:p).join('');
+  app.innerHTML=`${back('#oral','Oral')}<h1>${x.titre}</h1>
+  <div class="doc">${x.doc}</div>
+  <div class="row"><button onclick="say(PO[${i}].doc)">Écouter le document</button><button onclick="stopSpeech()">Arrêter</button></div>
+
+  <h2>Étape 1. Analyser le document</h2>
+  ${quizHTML(s1,'s1')}<div class="row"><button id="v1">Vérifier</button></div>
+  <div class="q"><div class="qt">Posez-vous les questions : qui ? quoi ? pourquoi ?</div>
+  <input class="in wide" data-k="po${i}_qui" placeholder="Qui est concerné ?"><input class="in wide" data-k="po${i}_quoi" placeholder="De quoi s'agit-il ?"><input class="in wide" data-k="po${i}_pq" placeholder="Pourquoi est-ce un problème ?"></div>
+  <div class="q"><div class="qt">Reformulez ces expressions avec vos propres mots</div>
+  ${x.cles.map((c,k)=>`<div style="margin:8px 0"><span>« ${c[0]} »</span><input class="in wide" data-k="po${i}_c${k}" placeholder="Reformulation…"><details style="margin:4px 0"><summary>Proposition</summary>${c[1]}</details></div>`).join('')}</div>
+  <div class="q"><div class="qt">Formulez la problématique sous forme de question</div><input class="in wide" data-k="po${i}_prob" placeholder="Faut-il… ? Dans quelle mesure… ?"><details><summary>Proposition</summary>${x.prob}</details></div>
+
+  <h2>Étape 2. Trouver des arguments</h2>
+  <p class="small mut">Notez toutes vos idées sans trier : avantages, inconvénients, causes, conséquences, personnes concernées. Ajoutez un exemple de votre pays ou de votre vie.</p>
+  <textarea class="sm" data-k="po${i}_idees" placeholder="Vos idées…"></textarea>
+  <details><summary>Pistes de réflexion</summary><div class="row" style="align-items:flex-start;gap:32px"><div><b>Pour</b><ul>${x.pour.map(p=>`<li>${p}</li>`).join('')}</ul></div><div><b>Contre</b><ul>${x.contre.map(p=>`<li>${p}</li>`).join('')}</ul></div></div></details>
+
+  <h2>Étape 3. Construire le plan</h2>
+  <p class="small mut">Reconstituez un plan modèle : pour chaque élément, indiquez la partie et son rôle (titre, argument ou exemple).</p>
+  <div id="pl">${items.map(it=>`<div class="ph"><span>${it.t}</span><span class="row" style="margin:0;flex-wrap:nowrap"><select data-p="${it.pi}"><option value="">Partie</option><option value="0">I</option><option value="1">II</option></select><select data-r="${it.ri}"><option value="">Rôle</option>${R.map((r,k)=>`<option value="${k}">${r}</option>`).join('')}</select></span></div>`).join('')}</div>
+  <div class="row"><button id="v3">Vérifier</button><span id="r3" class="small"></span></div><div id="plm"></div>
+  <p>Écrivez maintenant votre propre plan, avec un exemple supplémentaire pour chaque argument.</p>
+  <textarea class="sm" data-k="po${i}_plan" placeholder="Introduction :&#10;Partie 1 :&#10;Partie 2 :&#10;Conclusion :"></textarea>
+
+  <h2>Étape 4. Présenter son point de vue</h2>
+  <p class="small mut">Complétez cette introduction modèle, puis écoutez-la et répétez-la. Elle contient les quatre éléments attendus : présentation du document, résumé du problème, problématique, annonce du plan.</p>
+  <div class="box" id="cz">${cloze}</div>
+  <div class="row"><button id="v4">Vérifier</button><button onclick="say(PO[${i}].intro.replace(/[\\[\\]]/g,''))">Écouter l'introduction</button><span id="r4" class="small"></span></div>
+  <p>À vous : préparez votre exposé en conditions réelles, puis présentez-le à voix haute. Enregistrez-vous avec votre téléphone.</p>
+  ${timer('tp','Préparation',1800)}${timer('tm','Monologue',600)}
+
+  <h2>Étape 5. Préparer le débat</h2>
+  <p class="small mut">L'examinateur conteste vos idées. Écoutez chaque objection et répondez à voix haute : concédez un point, puis défendez votre position avec un argument.</p>
+  ${x.obj.map((o,k)=>`<div class="q"><div class="row" style="margin:0"><button onclick="say(PO[${i}].obj[${k}][0])">Écouter l'objection ${k+1}</button></div><details><summary>Afficher l'objection et une réponse possible</summary><p><b>Examinateur :</b> ${o[0]}</p><p><b>Réponse :</b> ${o[1]} <button onclick="say(PO[${i}].obj[${k}][1])">Écouter</button></p></details></div>`).join('')}
+  <h3>Simulation du débat</h3>
+  ${timer('td','Débat',600)}
+  <div class="box"><div id="dq" class="mut">Cliquez sur « Question suivante » pour commencer.</div></div>
+  <div class="row"><button class="pri" id="nq">Question suivante</button><button id="rq">Réécouter</button><label class="small"><input type="checkbox" id="showq" checked> Afficher la question</label></div>
+
+  <h2>Étape 6. S'évaluer</h2>
+  <p class="small mut">Réécoutez votre enregistrement et notez-vous selon le barème officiel. Soyez exigeant.</p>
+  <div id="bar">${BAREME.map((b,k)=>`<div class="ph"><span>${b[0]}<br><span class="small mut">${b[2].join(' · ')}</span></span><span style="white-space:nowrap"><select data-b="${k}">${Array.from({length:b[1]*2+1},(_,v)=>v/2).map(v=>`<option value="${v}">${String(v).replace('.',',')}</option>`).join('')}</select> <span class="small mut">/${b[1]}</span></span></div>`).join('')}</div>
+  <div class="row"><button class="pri" id="savepo">Enregistrer la séance</button><span id="sv" class="small"></span></div>`;
+  keep();
+  document.getElementById('v1').onclick=()=>grade(s1,'s1');
+  document.getElementById('v3').onclick=()=>{let s=0;const rows=[...document.querySelectorAll('#pl .ph')];rows.forEach(r=>{const p=r.querySelector('[data-p]'),q=r.querySelector('[data-r]');const ok=p.value===p.dataset.p&&q.value===q.dataset.r;if(ok)s++;r.style.color=ok?'var(--ok)':'var(--ko)'});
+    document.getElementById('r3').textContent=s+'/'+rows.length;
+    document.getElementById('plm').innerHTML=`<details open><summary>Plan modèle</summary><table>${x.plan.map((p,k)=>`<tr><td>Partie ${k?'II':'I'}</td><td><b>${p[0]}</b><br>${p[1]}<br><span class="mut">Exemple : ${p[2]}</span></td></tr>`).join('')}</table></details>`};
+  document.getElementById('v4').onclick=()=>{let s=0;const z=[...document.querySelectorAll('#cz .cz')];z.forEach(el=>{const ok=norm(el.value)===norm(el.dataset.a);if(ok)s++;el.style.borderColor=ok?'var(--ok)':'var(--ko)';if(!ok)el.title=el.dataset.a});
+    document.getElementById('r4').innerHTML=s===z.length?'<span class="okc">Parfait.</span>':`${s}/${z.length}. <span class="mut">Réponses : ${z.map(e=>e.dataset.a).join(', ')}</span>`};
+  const showQ=()=>{const q=x.deb[qi%x.deb.length];document.getElementById('dq').innerHTML=document.getElementById('showq').checked?q:'<span class="mut">(question masquée, écoutez)</span>';say(q)};
+  document.getElementById('nq').onclick=()=>{const d=document.getElementById('dq');if(d.dataset.started)qi++;d.dataset.started=1;showQ()};
+  document.getElementById('rq').onclick=()=>{if(document.getElementById('dq').dataset.started)showQ()};
+  document.getElementById('savepo').onclick=()=>{const s=[...document.querySelectorAll('#bar select')].reduce((a,e)=>a+parseFloat(e.value),0);const po=S.get('po',[]);po.push({i,s,m:25,d:new Date().toLocaleDateString('fr-FR')});S.set('po',po);
+    document.getElementById('sv').textContent=`Enregistré : ${String(s).replace('.',',')}/25. ${s>=18?'Très bon niveau.':s>=13?'Au-dessus de la moyenne, continuez.':'Revoyez la méthode et les activités « Se préparer ».'}`};
+}
+function poPhrases(){
+  stopSpeech();
+  app.innerHTML=`${back('#oral','Oral')}<h1>Phrases utiles</h1><p class="mut">Écoutez, répétez à voix haute, puis réutilisez-les dans chaque séance.</p>
+  ${PHRASES.map((g,gi)=>`<h2>${g[0]}</h2>${g[1].map((p,pi)=>`<div class="ph"><span>${p}</span><button onclick="say(PHRASES[${gi}][1][${pi}].replace(/…/g,''))">Écouter</button></div>`).join('')}`).join('')}`;
+}
+
 function poRandom(){poOpen(Math.floor(Math.random()*PO.length))}
 function poTirage(){
   stopSpeech();clearTimers();
@@ -555,36 +957,6 @@ function poMethode(){
   <li>Accumuler des exemples sans les relier à une idée.</li>
   <li>Parler trop vite par stress : faites des pauses, elles montrent que vous maîtrisez votre discours.</li></ul>
   <div class="row"><button class="pri" onclick="poTirage()">S'entraîner avec un tirage</button><button onclick="poPhrases()">Phrases utiles</button></div>`;
-}
-function poOpen(i){
-  const x=PO[i];stopSpeech();clearTimers();let qi=0;
-  app.innerHTML=`${back('#oral','Oral')}<h1>${x.titre}</h1>
-  <div class="doc">${x.doc}</div>
-  <div class="row"><button onclick="say(PO[${i}].doc)">Écouter le document</button><button onclick="stopSpeech()">Arrêter</button></div>
-  <h2>1. Préparation</h2>
-  <p class="small mut">Notez seulement des mots-clés : problématique, plan en deux ou trois parties, un exemple par argument. Ne rédigez pas de phrases complètes.</p>
-  ${timer('tp','Préparation',1800)}
-  <details><summary>Pistes de réflexion (à ouvrir après la préparation)</summary><div class="row" style="align-items:flex-start;gap:32px"><div><b>Pour</b><ul>${x.pour.map(p=>`<li>${p}</li>`).join('')}</ul></div><div><b>Contre</b><ul>${x.contre.map(p=>`<li>${p}</li>`).join('')}</ul></div></div></details>
-  <h2>2. Monologue</h2>
-  <p class="small mut">Parlez à voix haute, debout si possible. Visez environ 10 minutes, avec une introduction, un développement et une conclusion. Enregistrez-vous avec l'application dictaphone de votre téléphone pour vous réécouter.</p>
-  ${timer('tm','Monologue',600)}
-  <h2>3. Débat avec l'examinateur</h2>
-  <p class="small mut">L'examinateur vous pose une question et vous répondez à voix haute. Le débat dure le reste des 20 minutes, environ 10 minutes.</p>
-  ${timer('td','Débat',600)}
-  <div class="box"><div id="dq" class="mut">Cliquez sur « Question suivante » pour commencer.</div></div>
-  <div class="row"><button class="pri" id="nq">Question suivante</button><button id="rq">Réécouter</button><label class="small"><input type="checkbox" id="showq" checked> Afficher la question</label></div>
-  <h2>4. Auto-évaluation</h2>
-  <div class="chk" id="grille">${GRILLE_PO.map(g=>`<h3>${g[0]}</h3>${g[1].map(c=>`<label><input type="checkbox"> ${c}</label>`).join('')}`).join('')}</div>
-  <div class="row"><button class="pri" id="savepo">Enregistrer la séance</button><span id="sv" class="small mut"></span></div>`;
-  const showQ=()=>{const q=x.deb[qi%x.deb.length];document.getElementById('dq').innerHTML=document.getElementById('showq').checked?q:'<span class="mut">(question masquée, écoutez)</span>';say(q)};
-  document.getElementById('nq').onclick=()=>{if(document.getElementById('dq').dataset.started)qi++;document.getElementById('dq').dataset.started=1;showQ()};
-  document.getElementById('rq').onclick=()=>{if(document.getElementById('dq').dataset.started)showQ()};
-  document.getElementById('savepo').onclick=()=>{const s=document.querySelectorAll('#grille input:checked').length;const po=S.get('po',[]);po.push({i,s,d:new Date().toLocaleDateString('fr-FR')});S.set('po',po);document.getElementById('sv').textContent=`Enregistré : ${s}/12. ${s>=10?'Très bien.':s>=7?'Bonne base, continuez.':'Revoyez les phrases utiles et la structure.'}`};
-}
-function poPhrases(){
-  stopSpeech();
-  app.innerHTML=`${back('#oral','Oral')}<h1>Phrases utiles</h1><p class="mut">Écoutez, répétez à voix haute, puis réutilisez-les dans chaque séance.</p>
-  ${PHRASES.map((g,gi)=>`<h2>${g[0]}</h2>${g[1].map((p,pi)=>`<div class="ph"><span>${p}</span><button onclick="say(PHRASES[${gi}][1][${pi}].replace(/…/g,''))">Écouter</button></div>`).join('')}`).join('')}`;
 }
 
 let VS={t:0,i:0,f:false,rev:false};
