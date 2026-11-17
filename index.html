@@ -881,20 +881,131 @@ function grRender(){
 function grAns(j){const x=GS.qs[GS.i];const ls=document.querySelectorAll('#gq label');ls[x.a].classList.add('ok');if(j!==x.a)ls[j].classList.add('ko');else GS.s++;document.querySelectorAll('#gq input').forEach(n=>n.disabled=true);
   document.getElementById('ge').innerHTML=`<p class="${j===x.a?'okc':'koc'}">${j===x.a?'Correct.':'Pas tout à fait.'}</p><p>${x.e}</p><div class="row"><button class="pri" onclick="GS.i++;grRender()">Suivant</button></div>`}
 
-V.lecture=()=>{const ce=S.get('ce',{});app.innerHTML=`${back('#exercices','Exercices')}<h1>Lecture</h1>
-<div class="list">${CE.map((x,i)=>`<div class="item" onclick="ceOpen(${i})"><span><span class="t">${x.titre}</span><br><span class="small mut">${x.type}</span></span><span class="meta">${ce[i]!==undefined?ce[i]+' %':''}</span></div>`).join('')}</div>`};
-function ceOpen(i){const x=CE[i];clearTimers();app.innerHTML=`${back('#lecture','Lecture')}<h1>${x.titre}</h1>${timer('tc','Temps conseillé',1500)}<div class="doc">${x.txt.map(p=>`<p>${p}</p>`).join('')}</div>${quizHTML(x.qs,'ce')}<div class="row"><button class="pri" id="chk">Corriger</button></div><div id="res"></div>`;
-  document.getElementById('chk').onclick=()=>{const s=grade(x.qs,'ce');const pct=Math.round(s/x.qs.length*100);const ce=S.get('ce',{});ce[i]=Math.max(ce[i]||0,pct);S.set('ce',ce);document.getElementById('res').innerHTML=`<p><b>${s}/${x.qs.length}</b> <span class="mut">(${pct} %)</span></p>`}}
+/* ---------- Lecture : méthode en 4 étapes ---------- */
+const CEX=[
+{type:0,but:0,roles:["Définir les tiers-lieux et leur point commun","Montrer leur utilité dans les petites villes et les campagnes","Exposer les critiques et les fragilités","Conclure par un bilan plutôt positif"]},
+{type:1,but:1,roles:["Présenter les arguments des partisans de la suppression","Réfuter la suppression avec deux arguments","Proposer une autre manière d'évaluer","Conclure en déplaçant le débat vers les moyens"]}];
+CEX.forEach((x,i)=>{if(CE[i])Object.assign(CE[i],x)});
+const CE_FAIT=[["La ville compte 200 000 habitants.",0],["Le suspect aurait quitté le pays hier soir.",2],["Il est évident que cette réforme est une erreur.",1],["Selon certaines sources, le ministre démissionnerait prochainement.",2],["Le musée a rouvert ses portes lundi.",0],["Cette exposition est sans doute la plus réussie de l'année.",1],["Le prix du ticket passera à 2 euros en janvier, a annoncé la mairie.",0],["Ce projet pourrait coûter plus de dix millions d'euros.",2]];
 
-V.ecrit=()=>{app.innerHTML=`${back('#exercices','Exercices')}<h1>Écrit</h1><p class="small mut">250 mots minimum, 1 heure. Le brouillon est enregistré.</p>
-<div class="list">${PE.map((x,i)=>`<div class="item" onclick="peOpen(${i})"><span><span class="t">${x.titre}</span><br><span class="small mut">${x.type}</span></span><span class="meta">${S.get('pe'+i,'')?'brouillon':''}</span></div>`).join('')}</div>`};
-function peOpen(i){const x=PE[i];clearTimers();app.innerHTML=`${back('#ecrit','Écrit')}<h1>${x.titre}</h1><p class="small mut">${x.type}</p><div class="doc">${x.c}</div>${timer('tw','Temps',3600)}
-<textarea id="ta" placeholder="Écrivez ici…">${S.get('pe'+i,'').replace(/</g,'&lt;')}</textarea><div class="row small"><span id="wc" class="mut"></span><button id="cp">Copier le texte</button></div>
-<h2>Relecture</h2><div class="chk">${GRILLE_PE.map(c=>`<label><input type="checkbox"> ${c}</label>`).join('')}</div>`;
+V.lecture=()=>{const ce=S.get('ce',{});app.innerHTML=`${back('#exercices','Exercices')}<h1>Lecture</h1>
+<div class="list">${CE.map((x,i)=>`<div class="item" onclick="ceOpen(${i})"><span class="t">${x.titre}</span><span class="meta">${ce[i]!==undefined?ce[i]+' %':x.type===1?'argumentatif':'informatif'}</span></div>`).join('')}</div>
+<h2>Petits exercices</h2>
+<div class="list"><div class="item" onclick="ceFait()"><span class="t">Fait, opinion ou information non confirmée ?</span></div>
+<div class="item" onclick="ceFiche()"><span class="t">Fiche de lecture pour n'importe quel article</span></div></div>
+<details><summary>Méthode</summary><ul>
+<li>Lecture rapide : titre, chapeau, intertitres. Texte informatif ou argumentatif ?</li>
+<li>Lecture globale : thème, objectif de l'auteur, rôle de chaque paragraphe.</li>
+<li>Questions : repérez le passage, puis reformulez avec vos mots. Pour un vrai ou faux, citez la phrase exacte.</li>
+<li>Le conditionnel (« aurait », « serait ») signale souvent une information non confirmée.</li>
+<li>1 heure pour l'épreuve : partagez votre temps entre les deux textes.</li></ul></details>`};
+
+function ceOpen(i){
+  const x=CE[i];clearTimers();
+  const g=[{q:"Quel type de texte ?",o:["Informatif","Argumentatif"],a:x.type},{q:"Quel est l'objectif de l'auteur ?",o:["Informer sur un phénomène","Défendre une opinion","Raconter une histoire"],a:x.but}];
+  const R=shuffle(x.roles.map((r,k)=>[r,k]));
+  app.innerHTML=`${back('#lecture','Lecture')}<h1>${x.titre}</h1>${timer('tc','Temps conseillé',1500)}
+  <div class="doc">${x.txt.map((p,k)=>`<p><span class="mut small">§${k+1}</span> ${p}</p>`).join('')}</div>
+  <details class="step" open><summary>Étape 1. Lecture rapide</summary>
+  <p class="small mut">Lisez seulement le titre et la première phrase de chaque paragraphe, puis répondez.</p>
+  ${quizHTML(g,'l1')}<div class="row"><button id="v1">Vérifier</button></div></details>
+  <details class="step"><summary>Étape 2. Comprendre la structure</summary>
+  <p class="small mut">Quel est le rôle de chaque paragraphe ?</p>
+  <div id="rl">${x.txt.map((_,k)=>`<div class="ph"><span>§${k+1}</span><select data-a="${k}"><option value="">Rôle…</option>${R.map(r=>`<option value="${r[1]}">${r[0]}</option>`).join('')}</select></div>`).join('')}</div>
+  <div class="row"><button id="v2">Vérifier</button><span id="r2" class="small"></span></div>
+  <p>Proposez un autre titre pour ce texte.</p><input class="in wide" data-k="ce${i}_titre" placeholder="Votre titre…"></details>
+  <details class="step"><summary>Étape 3. Répondre aux questions</summary>
+  ${quizHTML(x.qs,'ce')}<div class="row"><button class="pri" id="chk">Corriger</button><span id="res" class="small"></span></div></details>
+  <details class="step"><summary>Étape 4. Exploiter le texte</summary>
+  <p class="small mut">Relevez cinq mots du thème, puis notez les avantages et les inconvénients évoqués. Ce sont des idées pour l'oral et l'écrit.</p>
+  <textarea class="sm" data-k="ce${i}_mots" placeholder="Mots du thème…"></textarea>
+  <textarea class="sm" data-k="ce${i}_ai" placeholder="Avantages / inconvénients…"></textarea>
+  <p>Pour finir, résumez le texte à voix haute en deux minutes, sans le regarder.</p>${timer('cr','Résumé oral',120)}</details>`;
+  keep();
+  document.getElementById('v1').onclick=()=>grade(g,'l1');
+  document.getElementById('v2').onclick=()=>{let s=0;const sel=[...document.querySelectorAll('#rl select')];sel.forEach(e=>{const ok=e.value===e.dataset.a;if(ok)s++;e.style.borderColor=ok?'var(--ok)':'var(--ko)'});
+    document.getElementById('r2').innerHTML=s===sel.length?'<span class="okc">Correct.</span>':`${s}/${sel.length}. <span class="mut">${x.roles.map((r,k)=>'§'+(k+1)+' : '+r).join(' ; ')}</span>`};
+  document.getElementById('chk').onclick=()=>{const s=grade(x.qs,'ce');const pct=Math.round(s/x.qs.length*100);const ce=S.get('ce',{});ce[i]=Math.max(ce[i]||0,pct);S.set('ce',ce);document.getElementById('res').textContent=`${s}/${x.qs.length} (${pct} %)`};
+}
+function ceFait(){
+  const qs=CE_FAIT.map(f=>({q:f[0],o:["Fait","Opinion","Information non confirmée"],a:f[1]}));
+  app.innerHTML=`${back('#lecture','Lecture')}<h1>Fait, opinion ou information non confirmée ?</h1>
+  <p class="mut">Un fait se vérifie. Une opinion est un jugement (« il est évident que », « sans doute »). Le conditionnel et « selon certaines sources » signalent une information non confirmée.</p>
+  ${quizHTML(qs,'fo')}<div class="row"><button class="pri" id="chk">Corriger</button><span id="r" class="small"></span></div>`;
+  document.getElementById('chk').onclick=()=>{document.getElementById('r').textContent=grade(qs,'fo')+'/'+qs.length};
+}
+function ceFiche(){
+  const F=[["src","Titre, source, date"],["type","Type de texte (informatif ou argumentatif)"],["theme","Thème en une phrase"],["idees","Idées principales (trois maximum)"],["mots","Mots-clés du thème"],["ai","Avantages et inconvénients évoqués"],["avis","Mon avis, en deux phrases"]];
+  app.innerHTML=`${back('#lecture','Lecture')}<h1>Fiche de lecture</h1>
+  <p class="mut">Choisissez un article récent (par exemple sur <a href="${RFI}" target="_blank" rel="noopener">Le français facile avec RFI</a>), lisez-le, puis remplissez la fiche. Terminez en le présentant à voix haute, comme à l'oral.</p>
+  ${F.map(f=>`<div class="q"><div class="qt">${f[1]}</div><textarea class="sm" data-k="fiche_${f[0]}"></textarea></div>`).join('')}
+  ${timer('fp','Présentation orale',180)}
+  <div class="row"><button id="clr">Nouvelle fiche (effacer)</button></div>`;
+  keep();
+  document.getElementById('clr').onclick=()=>{F.forEach(f=>S.set('fiche_'+f[0],''));ceFiche()};
+}
+
+/* ---------- Écrit : méthode en 5 étapes ---------- */
+const PEX=[
+{qui:"Un habitant de la ville",aqui:"Le maire",theme:"Transformer un parking du centre en parc",forme:"lettre",but:"Donner son avis argumenté et proposer des solutions"},
+{qui:"Un étudiant",aqui:"Les lecteurs du magazine de l'université",theme:"Les réseaux sociaux et la solitude",forme:"article",but:"Défendre un point de vue avec des exemples"},
+{qui:"Un internaute",aqui:"L'auteur du message et les autres participants",theme:"L'utilité des langues face à la traduction automatique",forme:"forum",but:"Réagir et défendre une position"},
+{qui:"Un salarié, au nom de ses collègues",aqui:"Le directeur",theme:"La suppression du télétravail",forme:"lettre",but:"Exprimer un désaccord et proposer un compromis"},
+{qui:"Un habitant",aqui:"Les lecteurs du journal local",theme:"La gratuité des transports en commun",forme:"article",but:"Présenter et défendre son opinion"}];
+PEX.forEach((x,i)=>{if(PE[i])Object.assign(PE[i],x)});
+const PLANS={
+lettre:["Vos coordonnées, lieu et date","Objet : …","Formule d'appel (Monsieur le Maire, / Madame, Monsieur,)","Introduction : qui vous êtes et pourquoi vous écrivez","Paragraphe 1 : premier argument et exemple","Paragraphe 2 : deuxième argument et exemple","Paragraphe 3 : votre proposition","Conclusion : votre demande et la formule de politesse","Signature"],
+article:["Titre accrocheur","Introduction : le contexte et la question posée","Partie 1 : premier argument et exemple","Partie 2 : nuance ou deuxième argument et exemple","Conclusion : votre réponse et une ouverture"],
+forum:["Réaction directe au message (« Je ne suis pas d'accord avec… »)","Votre opinion dès le début","Deux ou trois arguments avec exemples","Une concession (« Certes… mais… »)","Conclusion et question aux autres participants"]};
+const PE_FORM=[
+{q:"Pour écrire au maire, on commence par :",o:["Monsieur le Maire,","Cher maire,","Salut,"],a:0},
+{q:"Pour un destinataire que l'on ne connaît pas :",o:["Madame, Monsieur,","Bonjour à tous,","Chers amis,"],a:0},
+{q:"Pour indiquer le sujet de la lettre, on écrit :",o:["Objet :","Thème :","Titre :"],a:0},
+{q:"Quelle formule finale convient ?",o:["Je vous prie d'agréer, Madame, Monsieur, l'expression de mes salutations distinguées.","Bisous et à bientôt.","Merci, bonne journée !"],a:0},
+{q:"Pour exprimer un désaccord poliment :",o:["Je me permets de vous faire part de mon désaccord concernant…","Votre idée est nulle.","Je ne suis pas content du tout."],a:0},
+{q:"Pour demander une action :",o:["Je vous serais reconnaissant de bien vouloir…","Faites ça rapidement.","Il faut que vous faites…"],a:0}];
+
+V.ecrit=()=>{app.innerHTML=`${back('#exercices','Exercices')}<h1>Écrit</h1>
+<div class="list">${PE.map((x,i)=>`<div class="item" onclick="peOpen(${i})"><span class="t">${x.titre}</span><span class="meta">${S.get('pe'+i,'')?'brouillon':x.type}</span></div>`).join('')}</div>
+<h2>Petits exercices</h2>
+<div class="list"><div class="item" onclick="peForm()"><span class="t">Les formules de la lettre formelle</span></div></div>
+<details><summary>Méthode</summary><ul>
+<li>1 heure, 250 mots minimum. Planifier 15 min, rédiger 35 min, relire 10 min.</li>
+<li>Comprendre le sujet : qui écrit, à qui, sur quoi, sous quelle forme, pour quoi faire.</li>
+<li>Un paragraphe = une idée : argument, explication, exemple.</li>
+<li>Relisez trois fois : le contenu, puis les accords, puis les temps et modes.</li></ul></details>`};
+
+function peOpen(i){
+  const x=PE[i];clearTimers();
+  const Q=[["qui","Qui écrit ?"],["aqui","À qui ?"],["theme","Sur quel thème ?"],["forme","Sous quelle forme ?"],["but","Pour quoi faire ?"]];
+  const FN={lettre:"Lettre formelle",article:"Article",forum:"Contribution à un forum"};
+  app.innerHTML=`${back('#ecrit','Écrit')}<h1>${x.titre}</h1><div class="doc">${x.c}</div>${timer('tw','Temps total',3600)}
+  <details class="step" open><summary>Étape 1. Comprendre le sujet</summary>
+  ${Q.map(q=>`<div class="ph" style="display:block"><span>${q[1]}</span><input class="in wide" data-k="pe${i}_${q[0]}"></div>`).join('')}
+  <details><summary>Réponses</summary><table>${Q.map(q=>`<tr><td>${q[1]}</td><td>${q[0]==='forme'?FN[x.forme]:x[q[0]]}</td></tr>`).join('')}</table></details></details>
+  <details class="step"><summary>Étape 2. Chercher des idées</summary>
+  <p class="small mut">Notez vos idées en vrac. Posez-vous des questions : quels avantages, quels inconvénients, pour qui, quelles conséquences, quelles solutions ? Trouvez un exemple concret pour chaque idée.</p>
+  <textarea class="sm" data-k="pe${i}_idees" placeholder="Vos idées…"></textarea></details>
+  <details class="step"><summary>Étape 3. Faire le plan</summary>
+  <p class="small mut">Structure attendue pour ce type de texte :</p>
+  <ol>${PLANS[x.forme].map(p=>`<li>${p}</li>`).join('')}</ol>
+  <textarea class="sm" data-k="pe${i}_plan" placeholder="Votre plan…"></textarea></details>
+  <details class="step"><summary>Étape 4. Rédiger</summary>
+  <p class="small mut">Un paragraphe par idée : argument, explication, exemple. Reliez les paragraphes avec des connecteurs (d'abord, de plus, cependant, enfin).</p>
+  <textarea id="ta" placeholder="Écrivez ici…">${S.get('pe'+i,'').replace(/</g,'&lt;')}</textarea>
+  <div class="row small"><span id="wc" class="mut"></span><button id="cp">Copier le texte</button></div></details>
+  <details class="step"><summary>Étape 5. Relire</summary>
+  <div class="chk">${GRILLE_PE.map(c=>`<label><input type="checkbox"> ${c}</label>`).join('')}</div></details>`;
+  keep();
   const ta=document.getElementById('ta'),wc=document.getElementById('wc');
   const upd=()=>{const n=(ta.value.trim().match(/[\wÀ-ÿ'’-]+/g)||[]).length;wc.innerHTML=`${n} mots ${n>=250?'<span class="okc">(minimum atteint)</span>':''}`;S.set('pe'+i,ta.value)};
   ta.oninput=upd;upd();
-  document.getElementById('cp').onclick=()=>{try{navigator.clipboard.writeText(ta.value).then(()=>{document.getElementById('cp').textContent='Copié'}).catch(()=>{ta.select()})}catch(e){ta.select()}};
+  document.getElementById('cp').onclick=()=>{try{navigator.clipboard.writeText(ta.value).then(()=>{document.getElementById('cp').textContent='Copié'}).catch(()=>ta.select())}catch(e){ta.select()}};
+}
+function peForm(){
+  app.innerHTML=`${back('#ecrit','Écrit')}<h1>Les formules de la lettre formelle</h1>
+  ${quizHTML(PE_FORM,'pf')}<div class="row"><button class="pri" id="chk">Corriger</button><span id="r" class="small"></span></div>`;
+  document.getElementById('chk').onclick=()=>{document.getElementById('r').textContent=grade(PE_FORM,'pf')+'/'+PE_FORM.length};
 }
 
 V.examen=()=>{
