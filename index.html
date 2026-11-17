@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DELF B2, révisions</title>
+<style>
+:root{--fg:#141414;--mut:#7a7a7a;--line:#e6e6e6;--bg:#fff;--soft:#f6f6f6;--ok:#1f7a3d;--ko:#b3261e}
+@media (prefers-color-scheme:dark){:root{--fg:#ececec;--mut:#8d8d8d;--line:#2c2c2c;--bg:#121212;--soft:#1b1b1b;--ok:#5cc27e;--ko:#ef7a72}}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--fg)}
+body{font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+header{max-width:780px;margin:0 auto;padding:28px 20px 0}
+.brand{font-weight:600;text-decoration:none;color:var(--fg);letter-spacing:.02em}
+nav{display:flex;flex-wrap:wrap;gap:4px 16px;margin:14px 0 0;padding-bottom:14px;border-bottom:1px solid var(--line)}
+nav a{color:var(--mut);text-decoration:none;font-size:14px}
+nav a.on,nav a:hover{color:var(--fg)}
+main{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+h1{font-size:24px;font-weight:600;margin:0 0 6px}
+h2{font-size:18px;font-weight:600;margin:32px 0 10px}
+h3{font-size:15px;font-weight:600;margin:20px 0 6px}
+p{margin:0 0 12px}
+.mut{color:var(--mut)}
+.small{font-size:14px}
+a{color:var(--fg)}
+button,select,input[type=date],input[type=number]{font:inherit;font-size:14px;color:var(--fg);background:transparent;border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer}
+button:hover{border-color:var(--fg)}
+button.pri{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+button:disabled{opacity:.4;cursor:default}
+input[type=number]{width:70px;cursor:text}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0}
+.list{border-top:1px solid var(--line)}
+.item{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.item:hover .t{text-decoration:underline}
+.item .meta{color:var(--mut);font-size:13px;white-space:nowrap}
+.box{background:var(--soft);border-radius:8px;padding:16px 18px;margin:12px 0}
+.doc{border-left:2px solid var(--fg);padding:2px 0 2px 16px;margin:14px 0}
+.q{margin:18px 0}
+.q .qt{font-weight:500;margin-bottom:6px}
+.q label{display:block;padding:3px 0;cursor:pointer}
+.q label.ok{color:var(--ok);font-weight:500}
+.q label.ko{color:var(--ko);text-decoration:line-through}
+.timer{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:8px 0}
+.timer .tl{min-width:130px;font-size:14px;color:var(--mut)}
+.timer .tv{font-variant-numeric:tabular-nums;font-size:20px;min-width:70px}
+.timer.done .tv{color:var(--ko)}
+.stats{display:flex;flex-wrap:wrap;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:8px;overflow:hidden;margin:16px 0}
+.stats div{flex:1 1 130px;background:var(--bg);padding:14px 16px}
+.stats b{display:block;font-size:22px;font-weight:600}
+.stats span{font-size:13px;color:var(--mut)}
+.card{border:1px solid var(--line);border-radius:10px;min-height:190px;padding:28px 24px;display:flex;flex-direction:column;justify-content:center;text-align:center;cursor:pointer;user-select:none}
+.card .w{font-size:24px;font-weight:600}
+.card .d{margin-top:10px}
+.card .ex{margin-top:8px;color:var(--mut);font-style:italic}
+textarea{width:100%;min-height:340px;font:inherit;color:var(--fg);background:transparent;border:1px solid var(--line);border-radius:8px;padding:14px;resize:vertical}
+.chk label{display:block;padding:4px 0;cursor:pointer}
+.ph{display:flex;justify-content:space-between;gap:12px;align-items:baseline;padding:7px 0;border-bottom:1px solid var(--line)}
+.ph button{padding:2px 8px;font-size:12px;flex-shrink:0}
+details{margin:12px 0}
+summary{cursor:pointer;color:var(--mut);font-size:14px}
+table{width:100%;border-collapse:collapse;font-size:14px;margin:10px 0}
+td,th{text-align:left;padding:8px 8px 8px 0;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:600}
+.back{border:none;padding:0;color:var(--mut);margin-bottom:16px}
+.back:hover{color:var(--fg)}
+.okc{color:var(--ok)}.koc{color:var(--ko)}
+ul{padding-left:20px;margin:6px 0 12px}
+</style>
+</head>
+<body>
+<header>
+  <a class="brand" href="#accueil">DELF B2</a>
+  <nav>
+    <a href="#accueil">Accueil</a>
+    <a href="#ecoute">Écoute</a>
+    <a href="#oral">Oral</a>
+    <a href="#vocabulaire">Vocabulaire</a>
+    <a href="#grammaire">Grammaire</a>
+    <a href="#lecture">Lecture</a>
+    <a href="#ecrit">Écrit</a>
+    <a href="#examen">Examen blanc</a>
+    <a href="#plan">Plan</a>
+    <a href="#ressources">Ressources</a>
+  </nav>
+</header>
+<main id="app"></main>
+
+<script>
+/* ---------- Stockage ---------- */
+const S={get(k,d){try{const v=localStorage.getItem('delfb2_'+k);return v===null?d:JSON.parse(v)}catch(e){return d}},
+set(k,v){try{localStorage.setItem('delfb2_'+k,JSON.stringify(v))}catch(e){}}};
+
+/* ---------- Données : compréhension de l'oral ---------- */
+const CO=[
+{id:"co1",titre:"Le télétravail et les villes moyennes",type:"Reportage radio",ecoutes:2,segs:[
+["A","Depuis quelques années, de nombreux cadres quittent les grandes métropoles pour s'installer dans des villes moyennes. À Mâcon, Périgueux ou Laval, les agences immobilières constatent une hausse nette des demandes venant de Parisiens. Pour la plupart, ce départ n'aurait pas été envisageable sans le télétravail : ils conservent leur poste et ne se rendent au bureau qu'un ou deux jours par semaine. Les élus locaux s'en réjouissent, car ces nouveaux habitants font vivre les commerces et remplissent les écoles. Mais tout le monde ne partage pas cet enthousiasme. Dans certaines communes, les prix des logements ont augmenté de près de quinze pour cent en trois ans, et les jeunes du coin peinent désormais à se loger. Par ailleurs, les sociologues rappellent que ce phénomène reste minoritaire : il concerne surtout des professions qualifiées, et la majorité des actifs n'a pas la possibilité de travailler à distance."]],
+qs:[
+{q:"Qui s'installe principalement dans les villes moyennes ?",o:["Des retraités","Des cadres venant de Paris","Des étudiants étrangers"],a:1},
+{q:"Qu'est-ce qui a rendu ce départ possible ?",o:["Le télétravail","La baisse des loyers à Paris","De nouvelles lignes de train"],a:0},
+{q:"Pourquoi les élus locaux sont-ils satisfaits ?",o:["Les impôts locaux augmentent","Les commerces et les écoles en profitent","Les jeunes restent dans la région"],a:1},
+{q:"Quelle conséquence négative est mentionnée ?",o:["Les jeunes du coin ont du mal à se loger","Les commerces ferment","Les transports sont saturés"],a:0},
+{q:"De combien les prix ont-ils augmenté dans certaines communes ?",o:["D'environ 5 % en un an","D'environ 15 % en trois ans","D'environ 30 % en cinq ans"],a:1},
+{q:"Selon les sociologues, ce phénomène…",o:["concerne la majorité des actifs","reste limité à certaines professions","va bientôt s'arrêter"],a:1}]},
+
+{id:"co2",titre:"Une application contre le gaspillage",type:"Interview",ecoutes:1,segs:[
+["A","Bonjour Claire Martin. Vous avez fondé une application qui permet aux commerçants de vendre leurs invendus à prix réduit. Comment l'idée vous est-elle venue ?"],
+["B","Tout simplement en travaillant dans une boulangerie pendant mes études. Chaque soir, on jetait des dizaines de viennoiseries parfaitement mangeables. Je trouvais ça absurde, et surtout, personne ne semblait s'en émouvoir."],
+["A","Aujourd'hui, combien de commerces utilisent votre service ?"],
+["B","Un peu plus de trois mille, principalement des boulangeries et des primeurs. Les supermarchés sont plus difficiles à convaincre, car ils ont déjà leurs propres circuits, notamment les dons aux associations."],
+["A","Certains vous reprochent de faire du profit sur un problème écologique. Que leur répondez-vous ?"],
+["B","Je comprends la critique, mais je crois qu'une entreprise peut être rentable et utile en même temps. Si nous n'étions pas viables économiquement, nous aurions disparu depuis longtemps, et les invendus continueraient d'aller à la poubelle. Cela dit, nous ne remplaçons pas les associations : nous sommes complémentaires."],
+["A","Et pour l'avenir ?"],
+["B","Nous voulons surtout sensibiliser. Le gaspillage le plus important ne vient pas des magasins, mais des foyers. C'est là que les habitudes doivent changer."]],
+qs:[
+{q:"D'où vient l'idée de l'application ?",o:["D'un reportage télévisé","D'un emploi étudiant dans une boulangerie","D'une association où elle était bénévole"],a:1},
+{q:"Pourquoi les supermarchés sont-ils difficiles à convaincre ?",o:["Ils n'ont pas d'invendus","Ils ont déjà leurs propres solutions","L'application est trop chère"],a:1},
+{q:"Comment répond-elle à la critique sur le profit ?",o:["Elle reconnaît que c'est un problème","Elle affirme qu'on peut être rentable et utile","Elle dit que l'entreprise ne fait pas de profit"],a:1},
+{q:"Quelle relation a l'entreprise avec les associations ?",o:["Elle les remplace","Elle est en concurrence avec elles","Elle est complémentaire"],a:2},
+{q:"Selon elle, d'où vient le gaspillage le plus important ?",o:["Des restaurants","Des magasins","Des foyers"],a:2}]},
+
+{id:"co3",titre:"Le bilinguisme et le cerveau",type:"Extrait de conférence",ecoutes:2,segs:[
+["A","Pendant longtemps, on a cru que grandir avec deux langues ralentissait le développement de l'enfant. On craignait une forme de confusion. Les recherches menées depuis une trentaine d'années ont largement démenti cette idée. Les enfants bilingues peuvent, certes, avoir un vocabulaire un peu moins étendu dans chacune de leurs langues prise séparément, mais si l'on additionne les deux, ils ne sont absolument pas en retard. Plus intéressant encore, plusieurs études ont suggéré que le fait de passer constamment d'une langue à l'autre entraînerait certaines capacités d'attention. Je dois toutefois être honnête avec vous : ces résultats font aujourd'hui débat. Des études plus récentes, menées sur des échantillons beaucoup plus larges, n'ont pas toujours retrouvé cet avantage. Ce qui, en revanche, ne fait guère de doute, ce sont les bénéfices sociaux et culturels : l'accès à d'autres cultures, à d'autres façons de penser, et, plus tard, à davantage d'opportunités professionnelles."]],
+qs:[
+{q:"Que croyait-on autrefois au sujet du bilinguisme ?",o:["Qu'il ralentissait le développement de l'enfant","Qu'il rendait l'enfant plus intelligent","Qu'il n'avait aucun effet"],a:0},
+{q:"Que dit le conférencier sur le vocabulaire des enfants bilingues ?",o:["Il est plus riche dans chaque langue","Il est plus réduit dans chaque langue, mais pas au total","Il est identique à celui des monolingues"],a:1},
+{q:"L'avantage sur les capacités d'attention…",o:["est prouvé de façon certaine","est aujourd'hui discuté","n'a jamais été étudié"],a:1},
+{q:"Pourquoi les études récentes ont-elles plus de poids ?",o:["Elles portent sur des échantillons plus larges","Elles sont plus courtes","Elles ont été faites à l'étranger"],a:0},
+{q:"Qu'est-ce qui ne fait guère de doute ?",o:["L'avantage cognitif","Les bénéfices sociaux et culturels","Le retard scolaire"],a:1}]},
+
+{id:"co4",titre:"Bulletin d'informations",type:"Flash info",ecoutes:1,segs:[
+["A","Voici les titres de ce matin. La grève des contrôleurs aériens se poursuit pour la deuxième journée consécutive : près d'un vol sur trois est annulé au départ de Lyon et de Marseille, et les autorités recommandent aux voyageurs de vérifier l'état de leur vol avant de se rendre à l'aéroport. En Bretagne, un nouveau parc éolien en mer a été inauguré hier. Il devrait couvrir les besoins en électricité d'environ huit cent mille habitants, mais des associations de pêcheurs dénoncent toujours son impact sur leur activité. Enfin, culture : le musée des Beaux-Arts de Bordeaux rouvre ses portes après deux ans de travaux. L'entrée sera gratuite pendant tout le premier week-end."]],
+qs:[
+{q:"Quelle proportion de vols est annulée ?",o:["Un sur deux","Un sur trois","Un sur dix"],a:1},
+{q:"Que conseille-t-on aux voyageurs ?",o:["De prendre le train","De vérifier leur vol avant de partir","De se faire rembourser"],a:1},
+{q:"Le parc éolien devrait alimenter environ…",o:["80 000 habitants","800 000 habitants","8 millions d'habitants"],a:1},
+{q:"Qui critique ce projet ?",o:["Des pêcheurs","Des touristes","Des élus locaux"],a:0},
+{q:"Que se passe-t-il au musée de Bordeaux ?",o:["Il ferme pour travaux","Il rouvre avec l'entrée gratuite le premier week-end","Il accueille une exposition étrangère"],a:1}]},
+
+{id:"co5",titre:"La semaine de quatre jours",type:"Débat radio",ecoutes:1,segs:[
+["A","Les expériences menées dans plusieurs pays sont assez claires : dans la majorité des entreprises testées, la productivité s'est maintenue, et les salariés se disent moins stressés. On constate aussi une baisse de l'absentéisme."],
+["B","Je ne conteste pas ces chiffres, mais ils concernent surtout des entreprises de services, avec des employés de bureau. Dans mon secteur, la restauration, si je ferme un jour de plus, je perds du chiffre d'affaires. Et si je reste ouvert, il me faut embaucher, ce que je n'ai pas les moyens de faire."],
+["A","C'est vrai que le modèle ne peut pas s'appliquer partout de la même manière. Mais on pourrait imaginer des rotations, chacun ayant son jour de repos à un moment différent de la semaine."],
+["B","Sur le papier, oui. Dans la réalité, avec une équipe de six personnes, l'organisation devient un casse-tête. Je pense qu'il faut laisser les entreprises choisir, plutôt qu'imposer une règle unique à tout le monde."]],
+qs:[
+{q:"Selon le premier intervenant, les expériences montrent que…",o:["la productivité a baissé","la productivité s'est maintenue et le stress a diminué","les salariés travaillent plus"],a:1},
+{q:"Quelle est la première objection du second intervenant ?",o:["Les chiffres sont faux","Les études concernent surtout des emplois de bureau","Les salariés n'en veulent pas"],a:1},
+{q:"Dans quel secteur travaille le second intervenant ?",o:["La restauration","Le commerce en ligne","L'industrie"],a:0},
+{q:"Quelle solution propose le premier intervenant ?",o:["Des aides de l'État","Des jours de repos en rotation","Des journées plus longues"],a:1},
+{q:"Quelle est la position finale du second intervenant ?",o:["Il faut une loi pour tous","Il faut laisser chaque entreprise décider","Il faut abandonner l'idée"],a:1}]},
+
+{id:"co6",titre:"Les jeunes et la lecture",type:"Chronique radio",ecoutes:2,segs:[
+["A","On entend souvent que les jeunes ne lisent plus. Les chiffres racontent une histoire un peu différente. Selon plusieurs enquêtes, les quinze vingt-cinq ans lisent toujours, mais différemment : moins de romans classiques, davantage de mangas, de bandes dessinées et de littérature pour jeunes adultes. Les réseaux sociaux jouent ici un rôle inattendu : sur certaines plateformes, des vidéos de quelques secondes où des lecteurs partagent leurs coups de cœur font exploser les ventes de titres parfois publiés il y a plusieurs années. Les libraires l'ont bien compris et consacrent désormais des tables entières à ces livres recommandés en ligne. Reste une inquiétude, partagée par de nombreux enseignants : le temps de lecture longue et concentrée diminue, et avec lui, peut-être, la capacité à suivre un raisonnement complexe sur plusieurs pages."]],
+qs:[
+{q:"Quel est le constat principal de la chronique ?",o:["Les jeunes ne lisent plus du tout","Les jeunes lisent, mais autrement","Les jeunes lisent surtout des classiques"],a:1},
+{q:"Quel rôle jouent les réseaux sociaux ?",o:["Ils font baisser les ventes","Ils relancent les ventes de certains livres, même anciens","Ils remplacent les livres"],a:1},
+{q:"Comment réagissent les libraires ?",o:["Ils refusent ces livres","Ils leur consacrent des tables entières","Ils ouvrent des boutiques en ligne"],a:1},
+{q:"Quelle inquiétude partagent les enseignants ?",o:["La baisse de la lecture longue et concentrée","Le prix des livres","La disparition des bibliothèques"],a:0}]}
+];
+
+/* ---------- Données : production orale ---------- */
+const PO=[
+{titre:"Le portable interdit en classe",doc:"Depuis la rentrée, les élèves d'un lycée de Besançon doivent déposer leur téléphone dans une boîte à l'entrée de la classe. Selon la direction, les résultats sont visibles : moins de bavardages, davantage de concentration et des récréations « où l'on se parle à nouveau ». Mais plusieurs parents protestent : ils souhaitent pouvoir joindre leurs enfants à tout moment et estiment que l'école devrait plutôt apprendre aux jeunes à utiliser leur téléphone de façon responsable.",
+deb:["Est-ce que l'interdiction ne risque pas de rendre le téléphone encore plus attirant pour les élèves ?","Concrètement, comment l'école pourrait-elle éduquer les jeunes au numérique ?","Et les adultes ? Faudrait-il aussi limiter les téléphones pendant les réunions de travail ?","Comment cette question est-elle traitée dans votre pays ?"],
+pour:["Meilleure concentration","Moins de harcèlement pendant les cours","Plus d'échanges directs entre élèves"],contre:["Sécurité et contact avec les parents","Mieux vaut responsabiliser qu'interdire","Le téléphone peut servir d'outil pédagogique"]},
+{titre:"Encadrer les influenceurs",doc:"Un projet de loi propose d'encadrer plus strictement l'activité des influenceurs : obligation de signaler clairement les contenus publicitaires et interdiction de promouvoir certains produits jugés dangereux. Pour ses défenseurs, ce texte protège un public jeune et souvent vulnérable. Pour certains créateurs de contenu, il fait peser sur toute la profession les fautes d'une minorité et risque de freiner un secteur économique en pleine croissance.",
+deb:["Les jeunes ne sont-ils pas capables de reconnaître une publicité tout seuls ?","Qui devrait être responsable : l'influenceur, la marque ou la plateforme ?","Une loi nationale peut-elle vraiment s'appliquer sur des plateformes internationales ?","Suivez-vous vous-même des influenceurs ? Leur faites-vous confiance ?"],
+pour:["Protection des mineurs","Transparence pour le consommateur","Les règles existent déjà pour la publicité classique"],contre:["Sanction collective injuste","Frein à un secteur créateur d'emplois","Difficile à contrôler"]},
+{titre:"Un centre-ville sans voitures",doc:"La mairie d'une ville de 200 000 habitants a annoncé que le centre historique sera fermé aux voitures particulières à partir de l'an prochain, à l'exception des riverains et des véhicules de livraison. Les associations de cyclistes saluent une décision « courageuse ». Les commerçants, eux, craignent de perdre une partie de leur clientèle, en particulier les habitants des communes voisines, mal desservies par les transports en commun.",
+deb:["Que répondez-vous aux commerçants qui craignent de perdre des clients ?","Cette mesure n'est-elle pas injuste pour les personnes âgées ou handicapées ?","Faut-il d'abord améliorer les transports avant d'interdire la voiture ?","Pourriez-vous vivre sans voiture ?"],
+pour:["Moins de pollution et de bruit","Ville plus agréable, plus sûre","Exemples de villes où les commerces ont profité de la piétonnisation"],contre:["Accès difficile depuis la périphérie","Inégalité entre centre et banlieue","Risque pour le petit commerce"]},
+{titre:"Un engagement citoyen obligatoire",doc:"Un député propose de rendre obligatoire, pour tous les jeunes de 18 à 25 ans, un engagement de six mois au service de l'intérêt général : aide aux personnes âgées, protection de l'environnement, soutien scolaire. L'objectif affiché est de renforcer la cohésion sociale. Mais de nombreux jeunes interrogés jugent l'idée injuste : selon eux, l'engagement n'a de sens que s'il est choisi.",
+deb:["Six mois, n'est-ce pas trop long au moment où les jeunes commencent leurs études ou leur carrière ?","Pourquoi seulement les jeunes, et pas toute la population ?","Un engagement forcé peut-il vraiment créer de la solidarité ?","Avez-vous déjà fait du bénévolat ? Qu'en avez-vous retiré ?"],
+pour:["Brassage social","Découverte de métiers et de réalités différentes","Utilité pour la société"],contre:["Liberté individuelle","Retard dans les études","Engagement sans motivation"]},
+{titre:"L'intelligence artificielle à l'université",doc:"Face à la généralisation des outils d'intelligence artificielle capables de rédiger des textes, certaines universités ont choisi d'interdire leur usage dans les devoirs. D'autres, au contraire, les intègrent dans leurs cours et demandent aux étudiants d'expliquer comment ils les ont utilisés. « Interdire, c'est perdre d'avance », affirme un professeur de philosophie, tandis qu'une collègue redoute que les étudiants « n'apprennent plus à penser par eux-mêmes ».",
+deb:["Comment un professeur peut-il évaluer un travail s'il ne sait pas qui l'a écrit ?","L'IA n'est-elle pas simplement un outil, comme la calculatrice autrefois ?","Quelles compétences deviendront plus importantes à l'avenir ?","Utilisez-vous ces outils dans vos études ou votre travail ? Comment ?"],
+pour:["Préparer au monde professionnel","Gain de temps sur les tâches répétitives","Apprendre à utiliser l'outil avec esprit critique"],contre:["Perte de l'effort de réflexion","Triche et inégalités","Erreurs et informations inventées"]},
+{titre:"Limiter le tourisme de masse",doc:"Pour protéger un site naturel très fréquenté, les autorités ont décidé de limiter le nombre de visiteurs à 2 000 par jour, sur réservation. Les défenseurs de l'environnement se félicitent de cette mesure. Les professionnels du tourisme, eux, dénoncent une décision qui menace l'emploi local, et certains habitants regrettent qu'un lieu qu'ils fréquentaient librement soit désormais réservé à ceux qui s'organisent à l'avance.",
+deb:["Faudrait-il faire payer l'entrée plutôt que de limiter le nombre de visiteurs ?","Les habitants de la région devraient-ils avoir un accès prioritaire ?","Les réseaux sociaux sont-ils responsables du surtourisme ?","Quel site touristique de votre pays souffre de ce problème ?"],
+pour:["Préservation de la nature","Meilleure expérience pour les visiteurs","Tourisme durable à long terme"],contre:["Emplois locaux menacés","Accès moins libre et moins spontané","Risque de réserver la nature aux plus organisés ou aux plus riches"]},
+{titre:"Des repas végétariens à la cantine",doc:"Dans plusieurs villes, les cantines scolaires proposent désormais un ou deux repas végétariens par semaine. Les municipalités mettent en avant des raisons écologiques et économiques. Une partie des parents approuve, mais d'autres estiment que ce choix relève de la vie privée des familles et s'inquiètent de l'équilibre alimentaire de leurs enfants.",
+deb:["L'école a-t-elle le droit d'influencer les habitudes alimentaires des enfants ?","Ne faudrait-il pas plutôt laisser le choix entre deux menus ?","Que répondez-vous aux parents inquiets pour l'équilibre alimentaire ?","Comment mange-t-on à l'école dans votre pays ?"],
+pour:["Impact environnemental réduit","Économies pour les communes","Découverte de nouveaux aliments"],contre:["Choix des familles","Habitudes culturelles","Qualité des repas proposés"]},
+{titre:"Le droit à la déconnexion",doc:"Une entreprise a décidé de bloquer l'envoi des courriels professionnels entre 20 heures et 7 heures, ainsi que le week-end. La direction explique vouloir protéger la santé de ses salariés. Si beaucoup applaudissent, certains employés déplorent une mesure rigide : ils préfèrent organiser librement leur temps et travailler le soir pour se libérer en journée.",
+deb:["Une règle identique pour tous est-elle vraiment adaptée ?","Comment faire avec des collègues situés dans d'autres fuseaux horaires ?","La responsabilité de se déconnecter n'est-elle pas d'abord individuelle ?","Et vous, arrivez-vous à vous déconnecter du travail ?"],
+pour:["Prévention de l'épuisement professionnel","Égalité entre salariés","Respect de la vie privée"],contre:["Manque de flexibilité","Travail à l'international","Responsabilité individuelle"]}
+];
+
+const PHRASES=[
+["Présenter le document",["Le document qui m'a été proposé traite de…","Il s'agit d'un article qui aborde la question de…","Ce texte soulève le problème suivant :"]],
+["Poser la problématique",["On peut donc se demander si…","La question qui se pose est de savoir si…","Tout l'enjeu est de savoir dans quelle mesure…"]],
+["Annoncer le plan",["Dans un premier temps, je présenterai…, puis j'exposerai…","Je commencerai par…, avant de donner mon point de vue.","Enfin, je conclurai en…"]],
+["Donner son avis",["À mon sens,","Je suis convaincu que…","Il me semble que…","Personnellement, je considère que…"]],
+["Nuancer, concéder",["Certes…, mais…","Il est vrai que… ; cependant,…","Cela dit,","Dans une certaine mesure,","Il n'en demeure pas moins que…"]],
+["Illustrer",["Prenons l'exemple de…","Dans mon pays, par exemple,…","C'est notamment le cas de…"]],
+["Conclure",["Pour conclure,","En définitive,","Tout bien considéré, je pense que…"]],
+["Gagner du temps",["C'est une question intéressante, laissez-moi réfléchir un instant.","Comment dire…","Je n'y avais pas pensé, mais…"]],
+["Faire préciser, reformuler",["Si je vous comprends bien, vous voulez dire que… ?","Pourriez-vous préciser ce que vous entendez par… ?","Ce que je voulais dire, c'est que…"]],
+["Réagir à une objection",["Je comprends votre point de vue, mais je ne suis pas tout à fait d'accord.","Vous avez raison sur ce point ; néanmoins,…","Je maintiens que…, parce que…"]]
+];
+
+const GRILLE_PO=[
+["Monologue",["J'ai présenté le thème et la problématique du document","J'ai annoncé un plan clair","J'ai défendu un point de vue net","J'ai donné au moins deux arguments avec des exemples","J'ai conclu"]],
+["Interaction",["J'ai répondu aux questions sans m'éloigner du sujet","J'ai nuancé ou défendu ma position face aux objections","J'ai relancé l'échange ou demandé des précisions"]],
+["Langue",["J'ai utilisé des connecteurs variés","J'ai bien utilisé le subjonctif et le conditionnel","Mon vocabulaire était précis, avec peu de répétitions","Ma prononciation était claire et mon débit régulier"]]
+];
+
+/* ---------- Données : vocabulaire ---------- */
+const VOC=[
+["Travail",[["le télétravail","Travail effectué à distance, souvent depuis chez soi.","Depuis la pandémie, le télétravail s'est généralisé."],["une reconversion","Changement de métier ou de secteur professionnel.","À 40 ans, elle a entamé une reconversion dans l'artisanat."],["démissionner","Quitter volontairement son emploi.","Il a démissionné pour créer son entreprise."],["l'épuisement professionnel","Fatigue extrême liée au travail (burn-out).","L'épuisement professionnel touche de plus en plus de cadres."],["concilier vie professionnelle et vie privée","Trouver un équilibre entre travail et vie personnelle.","Il est difficile de concilier vie professionnelle et vie privée."],["un contrat à durée déterminée","Contrat de travail avec une date de fin (CDD).","Elle enchaîne les contrats à durée déterminée."],["le chômage","Situation d'une personne sans emploi qui en cherche un.","Le taux de chômage des jeunes reste élevé."],["un entretien d'embauche","Rencontre avec un recruteur pour obtenir un poste.","J'ai un entretien d'embauche lundi."]]],
+["Environnement",[["le réchauffement climatique","Hausse de la température moyenne de la planète.","Le réchauffement climatique menace les zones côtières."],["les énergies renouvelables","Énergies issues de sources inépuisables (soleil, vent…).","Le pays investit dans les énergies renouvelables."],["l'empreinte carbone","Quantité de gaz à effet de serre émise par une activité.","Prendre l'avion alourdit notre empreinte carbone."],["la sobriété","Le fait de consommer moins et mieux.","La sobriété énergétique est devenue une priorité."],["la biodiversité","Diversité des espèces vivantes.","La biodiversité recule à cause de l'urbanisation."],["le gaspillage","Usage inutile ou excessif d'une ressource.","Le gaspillage alimentaire représente des tonnes chaque année."],["la transition écologique","Passage à un modèle plus respectueux de l'environnement.","La transition écologique exige des investissements."],["préserver","Protéger, garder intact.","Il faut préserver les ressources en eau."]]],
+["Numérique",[["les données personnelles","Informations permettant d'identifier une personne.","Les applications collectent nos données personnelles."],["la désinformation","Diffusion volontaire de fausses informations.","La désinformation circule vite sur les réseaux."],["la fracture numérique","Inégalité d'accès aux outils numériques.","La fracture numérique pénalise les personnes âgées."],["dématérialiser","Remplacer le papier par le numérique.","Les démarches administratives ont été dématérialisées."],["un algorithme","Suite d'instructions qui décide, par exemple, ce qu'on nous montre.","L'algorithme favorise les contenus polémiques."],["le harcèlement en ligne","Violence répétée exercée sur internet.","Le harcèlement en ligne touche de nombreux adolescents."],["la dépendance aux écrans","Difficulté à se passer de ses appareils.","La dépendance aux écrans inquiète les parents."],["la vie privée","Ce qui relève de l'intimité d'une personne.","Chacun a droit au respect de sa vie privée."]]],
+["Société",[["les inégalités","Différences injustes entre personnes ou groupes.","Les inégalités de revenus se creusent."],["la mixité sociale","Coexistence de populations d'origines sociales variées.","Ce quartier favorise la mixité sociale."],["le vieillissement de la population","Augmentation de la part des personnes âgées.","Le vieillissement de la population pèse sur les retraites."],["la précarité","Situation instable, sans sécurité matérielle.","De nombreux étudiants vivent dans la précarité."],["l'engagement associatif","Participation bénévole à une association.","L'engagement associatif crée du lien social."],["la cohésion sociale","Solidarité et liens qui unissent une société.","Ces mesures visent à renforcer la cohésion sociale."],["l'égalité entre les femmes et les hommes","Mêmes droits et chances pour tous.","L'égalité salariale n'est pas encore atteinte."],["revendiquer","Réclamer quelque chose comme un droit.","Les manifestants revendiquent de meilleurs salaires."]]],
+["Éducation",[["le décrochage scolaire","Abandon des études avant l'obtention d'un diplôme.","Le décrochage scolaire touche surtout les élèves en difficulté."],["l'alternance","Formation qui combine cours et travail en entreprise.","L'alternance facilite l'entrée sur le marché du travail."],["une filière","Parcours d'études spécialisé.","Elle a choisi une filière scientifique."],["l'esprit critique","Capacité à analyser une information sans l'accepter aveuglément.","L'école doit développer l'esprit critique."],["l'enseignement à distance","Cours suivis en ligne.","L'enseignement à distance demande de l'autonomie."],["la réussite scolaire","Le fait d'obtenir de bons résultats à l'école.","Le milieu familial influence la réussite scolaire."],["évaluer","Juger le niveau ou la valeur de quelque chose.","Comment évaluer les compétences orales ?"],["un établissement","Une école, un collège, un lycée.","Cet établissement accueille 800 élèves."]]],
+["Médias",[["une source fiable","Origine d'une information digne de confiance.","Il faut toujours vérifier si la source est fiable."],["vérifier une information","Contrôler qu'une information est exacte.","Les journalistes doivent vérifier chaque information."],["la liberté de la presse","Droit des médias d'informer sans censure.","La liberté de la presse est un pilier de la démocratie."],["un éditorial","Article qui exprime la position d'un journal.","L'éditorial critique la réforme."],["un fait divers","Événement de la vie quotidienne (accident, vol…).","Ce fait divers a fait la une des journaux."],["une rumeur","Information non vérifiée qui circule.","La rumeur s'est répandue en quelques heures."],["l'opinion publique","Ce que pense la majorité de la population.","L'opinion publique est divisée sur ce sujet."],["relayer","Transmettre, diffuser une information.","Les réseaux ont relayé la vidéo."]]],
+["Santé",[["la sédentarité","Le fait de bouger peu, de rester assis longtemps.","La sédentarité augmente les risques pour la santé."],["la prévention","Ensemble de mesures pour éviter un problème.","Les campagnes de prévention ciblent les jeunes."],["un mode de vie sain","Habitudes favorables à la santé.","Adopter un mode de vie sain prend du temps."],["la santé mentale","Équilibre psychologique et émotionnel.","On parle davantage de santé mentale au travail."],["l'accès aux soins","Possibilité de consulter et d'être soigné.","Dans certaines régions, l'accès aux soins est difficile."],["un désert médical","Zone où il y a trop peu de médecins.","Ce village est devenu un désert médical."],["le stress","Tension nerveuse liée à la pression.","Le stress est l'une des causes d'absentéisme."],["se ressourcer","Retrouver de l'énergie, se reposer.","Elle part en montagne pour se ressourcer."]]],
+["Argumenter",[["certes… mais","Reconnaître un point avant de s'y opposer.","Certes, la mesure est coûteuse, mais elle est nécessaire."],["en revanche","Introduit une opposition.","Le centre est calme ; en revanche, la banlieue est bruyante."],["dans la mesure où","Puisque, étant donné que.","Ce projet est utile dans la mesure où il crée des emplois."],["d'autant plus que","Ajoute une raison qui renforce.","Il faut agir vite, d'autant plus que les prix augmentent."],["il n'en demeure pas moins que","Malgré cela, il reste vrai que.","Il n'en demeure pas moins que le problème persiste."],["force est de constater que","On est obligé de reconnaître que.","Force est de constater que la situation s'est aggravée."],["à condition que (+ subjonctif)","Seulement si.","J'accepte, à condition que tu viennes aussi."],["quant à","En ce qui concerne.","Quant aux jeunes, ils semblent moins concernés."]]]
+];
+
+/* ---------- Données : grammaire ---------- */
+const GR=[
+{q:"Il faut que tu ___ à l'heure demain.",o:["viens","viennes","viendras"],a:1,e:"« Il faut que » est toujours suivi du subjonctif."},
+{q:"Bien qu'il ___ beaucoup travaillé, il n'a pas réussi.",o:["a","ait","avait"],a:1,e:"« Bien que » exige le subjonctif (ici passé)."},
+{q:"Je pense qu'il ___ raison.",o:["a","ait","eût"],a:0,e:"« Penser que » à la forme affirmative : indicatif."},
+{q:"Je ne pense pas qu'il ___ raison.",o:["a","ait","aura"],a:1,e:"À la forme négative, « penser que » exprime un doute : subjonctif."},
+{q:"Si j'avais su, je ___ venu plus tôt.",o:["serais","serai","étais"],a:0,e:"Si + plus-que-parfait → conditionnel passé."},
+{q:"Si tu ___ plus de temps, tu pourrais voyager.",o:["as","avais","aurais"],a:1,e:"Si + imparfait → conditionnel présent. Jamais de conditionnel après « si »."},
+{q:"C'est le projet ___ je t'ai parlé.",o:["que","dont","où"],a:1,e:"On dit « parler de quelque chose » → dont."},
+{q:"La raison pour ___ il est parti reste un mystère.",o:["laquelle","lequel","quoi"],a:0,e:"« Raison » est féminin : pour laquelle."},
+{q:"L'entreprise ___ je travaille recrute.",o:["dont","pour laquelle","que"],a:1,e:"« Travailler pour une entreprise » → pour laquelle."},
+{q:"Les lettres qu'il a ___ sont arrivées.",o:["écrit","écrite","écrites"],a:2,e:"Avec avoir, le participe s'accorde avec le COD placé avant (« les lettres »)."},
+{q:"Elles se sont ___ les mains.",o:["lavé","lavées","lavés"],a:0,e:"Le COD « les mains » est après le verbe : pas d'accord."},
+{q:"Il a appris le français ___ des films.",o:["en regardant","en regardé","regardé"],a:0,e:"Gérondif : en + participe présent, pour exprimer la manière."},
+{q:"Il m'a dit qu'il ___ le lendemain.",o:["viendra","viendrait","vient"],a:1,e:"Discours indirect au passé : futur → conditionnel présent."},
+{q:"Elle m'a demandé ___ je voulais.",o:["ce que","qu'est-ce que","que"],a:0,e:"Au discours indirect, « qu'est-ce que » devient « ce que »."},
+{q:"Il pleuvait ; ___, le match a eu lieu.",o:["pourtant","donc","car"],a:0,e:"Opposition entre la pluie et le match : pourtant."},
+{q:"Je te prête mon livre ___ tu me le rendes vite.",o:["à condition que","parce que","alors que"],a:0,e:"Condition + subjonctif : à condition que."},
+{q:"___ ses efforts, il n'a pas obtenu le poste.",o:["Malgré","Bien que","Pourtant"],a:0,e:"Devant un nom : malgré. « Bien que » est suivi d'un verbe."},
+{q:"Ce film a été réalisé ___ une jeune cinéaste.",o:["par","de","avec"],a:0,e:"Complément d'agent du passif avec un verbe d'action : par."},
+{q:"Avant qu'il ___, il faut tout ranger.",o:["part","parte","partira"],a:1,e:"« Avant que » + subjonctif. (« Après que » prend l'indicatif.)"},
+{q:"Après ___ son diplôme, elle est partie à l'étranger.",o:["avoir obtenu","obtenir","avoir obtenue"],a:0,e:"Après + infinitif passé ; pas d'accord avec avoir ici."},
+{q:"Les gens ___ dans le parc quand l'orage a éclaté.",o:["se promenaient","se sont promenés","se promèneront"],a:0,e:"Action en cours (imparfait) interrompue par une action ponctuelle (passé composé)."},
+{q:"Je doute qu'elle ___ venir.",o:["peut","puisse","pourra"],a:1,e:"« Douter que » + subjonctif."},
+{q:"C'est la meilleure solution que nous ___ trouvée.",o:["ayons","avons","aurons"],a:0,e:"Après un superlatif, on emploie souvent le subjonctif."},
+{q:"___ il fasse froid, nous sortirons.",o:["Même s'","Quoiqu'","Si"],a:1,e:"« Quoique » + subjonctif. « Même si » est suivi de l'indicatif."},
+{q:"« Le gouvernement va réduire les impôts » → La ___ des impôts.",o:["réduction","réduisement","réduite"],a:0,e:"Nominalisation : réduire → la réduction."},
+{q:"Plus on lit, ___ on comprend.",o:["plus","le plus","davantage"],a:0,e:"Structure corrélative : plus…, plus…"},
+{q:"Je cherche quelqu'un qui ___ parler japonais.",o:["sait","sache","saura"],a:1,e:"Personne recherchée, pas encore trouvée : subjonctif possible et attendu à l'écrit soutenu."},
+{q:"___ de la pluie, la course a été annulée.",o:["À cause","Grâce","Parce que"],a:0,e:"Cause négative : à cause de. « Grâce à » s'emploie pour une cause positive."}
+];
+
+/* ---------- Données : compréhension des écrits ---------- */
+const CE=[
+{titre:"Les tiers-lieux, nouveaux espaces de la vie locale",type:"Article informatif",txt:[
+"Ni tout à fait un bureau, ni vraiment un café, ni seulement un atelier : les tiers-lieux se multiplient en France depuis une dizaine d'années. On en compte aujourd'hui plusieurs milliers, installés aussi bien dans d'anciennes usines que dans des gares désaffectées ou des locaux commerciaux vacants. Leur point commun ? Offrir un espace partagé où se croisent travailleurs indépendants, associations, artisans et habitants du quartier.",
+"Le concept séduit particulièrement dans les zones rurales et les petites villes. Là où les services publics ont parfois reculé, le tiers-lieu devient un point de rencontre : on y trouve un espace de travail partagé, mais aussi un atelier de réparation de vélos, des cours d'informatique pour les seniors ou une épicerie solidaire. « Ici, on vient pour travailler et on repart avec un réseau », résume une graphiste installée dans un tiers-lieu de la Creuse.",
+"Les pouvoirs publics ont vu dans ce mouvement un outil de revitalisation des territoires et ont débloqué des financements importants. C'est précisément ce qui inquiète certains observateurs. Pour fonctionner, beaucoup de tiers-lieux dépendent de subventions et du travail de bénévoles ; leur modèle économique reste fragile. D'autres soulignent un risque de dérive : à force de vouloir répondre aux appels à projets, certains lieux perdraient leur spontanéité et deviendraient de simples prestataires de services.",
+"Il n'en demeure pas moins que, pour de nombreux habitants, ces espaces ont recréé ce qui manquait le plus : des occasions de se rencontrer."],
+qs:[
+{q:"Qu'est-ce qu'un tiers-lieu, d'après le texte ?",o:["Un nouveau type de bureau d'entreprise","Un espace partagé qui mélange activités et publics variés","Un café associatif"],a:1},
+{q:"Où ce concept a-t-il le plus de succès ?",o:["Dans les grandes métropoles","Dans les zones rurales et les petites villes","Dans les universités"],a:1},
+{q:"Que signifie la phrase de la graphiste ?",o:["Le lieu permet de créer des contacts utiles","Le lieu est trop bruyant pour travailler","Le lieu coûte cher"],a:0},
+{q:"Pourquoi le modèle économique est-il fragile ?",o:["Il dépend de subventions et de bénévoles","Les loyers sont trop élevés","Il y a trop de concurrence"],a:0},
+{q:"Quel risque de dérive est évoqué ?",o:["Devenir de simples prestataires et perdre leur spontanéité","Fermer faute de visiteurs","Être rachetés par de grandes entreprises"],a:0},
+{q:"Quel est le bilan de l'auteur ?",o:["Entièrement négatif","Positif malgré certaines limites","Neutre, sans avis"],a:1}]},
+{titre:"Faut-il en finir avec les notes ?",type:"Texte argumentatif",txt:[
+"Chaque année, le débat revient : faut-il supprimer les notes à l'école ? Ses partisans avancent un argument solide. La note chiffrée, disent-ils, résume en un seul nombre des compétences très diverses et finit par devenir un objectif en soi. Les élèves travaillent pour « avoir la moyenne » plutôt que pour comprendre. Pire, pour les plus fragiles, une succession de mauvaises notes peut installer durablement le sentiment d'être « nul », ce qui alimente le décrochage.",
+"Pourtant, la suppression pure et simple me semble être une fausse bonne idée. D'abord parce que les élèves, comme leurs parents, réclament des repères clairs. Plusieurs établissements qui ont remplacé les notes par des couleurs ou des appréciations ont constaté que les familles reconstituaient elles-mêmes une échelle chiffrée. Ensuite parce que la note n'est pas le problème en soi : c'est l'usage qu'on en fait. Une note accompagnée d'un commentaire précis, qui explique ce qui est réussi et ce qui reste à travailler, peut être un formidable outil de progression.",
+"Plutôt que de supprimer les notes, il faudrait donc changer la manière d'évaluer : multiplier les évaluations sans enjeu, permettre aux élèves de refaire un travail pour améliorer leur résultat, et surtout prendre le temps d'expliquer. Cela demande du temps aux enseignants, et donc des moyens. C'est là, sans doute, que se trouve le vrai débat."],
+qs:[
+{q:"Quel argument avancent les partisans de la suppression ?",o:["Les notes coûtent cher","La note réduit des compétences variées à un chiffre et devient un but","Les professeurs n'aiment pas noter"],a:1},
+{q:"Quel effet les mauvaises notes peuvent-elles avoir sur les élèves fragiles ?",o:["Les motiver davantage","Installer un sentiment d'échec et favoriser le décrochage","Aucun effet"],a:1},
+{q:"Quelle est la position de l'auteur ?",o:["Il veut supprimer les notes","Il est contre la suppression pure et simple","Il n'a pas d'opinion"],a:1},
+{q:"Que montre l'exemple des couleurs ?",o:["Les familles recréent une échelle chiffrée","Les élèves préfèrent les couleurs","Les résultats se sont améliorés"],a:0},
+{q:"Selon l'auteur, quel est le vrai problème ?",o:["La note elle-même","L'usage qui est fait de la note","Le nombre d'évaluations"],a:1},
+{q:"Où se situe « le vrai débat » ?",o:["Dans les moyens donnés aux enseignants","Dans le choix entre notes et couleurs","Dans l'avis des parents"],a:0}]}
+];
+
+/* ---------- Données : production écrite ---------- */
+const PE=[
+{titre:"Un parc à la place du parking",type:"Lettre formelle",c:"Votre ville envisage de transformer un grand parking du centre-ville en parc public. Vous écrivez au maire pour lui donner votre avis de façon argumentée et proposer des solutions. (250 mots minimum)"},
+{titre:"Les réseaux sociaux et la solitude",type:"Article",c:"Le magazine de votre université prépare un dossier : « Les réseaux sociaux nous rendent-ils plus seuls ? ». Vous rédigez un article argumenté, illustré d'exemples, pour donner votre point de vue. (250 mots minimum)"},
+{titre:"Apprendre des langues, encore utile ?",type:"Contribution à un forum",c:"Sur un forum, un internaute affirme qu'apprendre une langue étrangère est devenu inutile grâce aux outils de traduction automatique. Vous lui répondez en défendant une position argumentée. (250 mots minimum)"},
+{titre:"La fin du télétravail",type:"Lettre formelle",c:"La direction de votre entreprise annonce la suppression du télétravail. Au nom de vos collègues, vous écrivez au directeur pour exprimer votre désaccord et proposer une solution de compromis. (250 mots minimum)"},
+{titre:"Des transports gratuits ?",type:"Article d'opinion",c:"Le journal local organise un débat : « Faut-il rendre les transports en commun gratuits ? ». Vous rédigez un article qui présente votre opinion, avec des arguments et des exemples précis. (250 mots minimum)"}
+];
+const GRILLE_PE=["J'ai respecté le type de texte (lettre, article, forum) et ses codes","J'ai écrit au moins 250 mots","Mon point de vue est clair dès l'introduction","Chaque argument est développé et illustré par un exemple","J'ai organisé mon texte en paragraphes avec des connecteurs","Le registre est adapté au destinataire","J'ai relu les accords (participes, adjectifs)","J'ai vérifié les temps et les modes (subjonctif, conditionnel)"];
+
+/* ---------- Outils ---------- */
+const app=document.getElementById('app');
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const fmt=s=>String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
+
+/* Synthèse vocale */
+let VOICES=[];
+function loadVoices(){try{VOICES=speechSynthesis.getVoices().filter(v=>/^fr/i.test(v.lang))}catch(e){VOICES=[]}}
+if('speechSynthesis' in window){loadVoices();try{speechSynthesis.onvoiceschanged=loadVoices}catch(e){}}
+function hasTTS(){return 'speechSynthesis' in window}
+function speakSegs(segs,rate,onend){
+  if(!hasTTS()){onend&&onend(false);return}
+  try{speechSynthesis.cancel()}catch(e){}
+  loadVoices();
+  const vA=VOICES.find(v=>/fr[-_]FR/i.test(v.lang))||VOICES[0];
+  const vB=VOICES.find(v=>v!==vA);
+  const parts=[];
+  segs.forEach(s=>{(s[1].match(/[^.!?]+[.!?»]*\s*/g)||[s[1]]).forEach(t=>parts.push([s[0],t.trim()]))});
+  parts.forEach((p,i)=>{
+    const u=new SpeechSynthesisUtterance(p[1]);u.lang='fr-FR';u.rate=rate||1;
+    if(p[0]==='B'){if(vB)u.voice=vB;else{if(vA)u.voice=vA;u.pitch=0.7}}else if(vA)u.voice=vA;
+    if(i===parts.length-1)u.onend=()=>onend&&onend(true);
+    try{speechSynthesis.speak(u)}catch(e){}
+  });
+}
+function say(t){speakSegs([["A",t]],S.get('rate',0.95))}
+function stopSpeech(){try{speechSynthesis.cancel()}catch(e){}}
+function voiceNote(){
+  if(!hasTTS())return '<p class="box small">La lecture audio n\'est pas disponible dans ce navigateur. Utilisez la transcription.</p>';
+  loadVoices();
+  return VOICES.length?'':'<p class="box small">Aucune voix française détectée pour l\'instant. Si rien ne se passe en lançant l\'écoute, installez une voix française dans les réglages de votre système (langue et voix), ou essayez un autre navigateur.</p>';
+}
+
+/* Minuteurs */
+const T={};let AC=null;
+function ensureAudio(){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();AC.resume&&AC.resume()}catch(e){}}
+function beep(){try{if(!AC)return;[0,0.35,0.7].forEach(d=>{const o=AC.createOscillator(),g=AC.createGain();o.frequency.value=880;g.gain.value=0.15;o.connect(g);g.connect(AC.destination);o.start(AC.currentTime+d);o.stop(AC.currentTime+d+0.2)})}catch(e){}}
+function timer(id,label,secs){T[id]={left:secs,total:secs,iv:null};return `<div class="timer" id="${id}"><span class="tl">${label}</span><span class="tv">${fmt(secs)}</span><button onclick="tToggle('${id}')">Démarrer</button><button onclick="tReset('${id}')">Réinitialiser</button></div>`}
+function tToggle(id){ensureAudio();const t=T[id],el=document.getElementById(id);if(!t||!el)return;const b=el.querySelector('button');
+  if(t.iv){clearInterval(t.iv);t.iv=null;b.textContent='Reprendre';return}
+  if(t.left<=0)return;b.textContent='Pause';
+  t.iv=setInterval(()=>{t.left--;const e=document.getElementById(id);if(!e){clearInterval(t.iv);return}e.querySelector('.tv').textContent=fmt(Math.max(0,t.left));if(t.left<=0){clearInterval(t.iv);t.iv=null;e.classList.add('done');e.querySelector('button').textContent='Terminé';beep()}},1000)}
+function tReset(id){const t=T[id],el=document.getElementById(id);if(!t||!el)return;clearInterval(t.iv);t.iv=null;t.left=t.total;el.classList.remove('done');el.querySelector('.tv').textContent=fmt(t.total);el.querySelector('button').textContent='Démarrer'}
+function clearTimers(){Object.keys(T).forEach(k=>{clearInterval(T[k].iv);delete T[k]})}
+
+/* Quiz générique */
+function quizHTML(qs,p){return qs.map((x,i)=>`<div class="q" id="${p}q${i}"><div class="qt">${i+1}. ${x.q}</div>${x.o.map((o,j)=>`<label><input type="radio" name="${p}${i}" value="${j}"> ${o}</label>`).join('')}</div>`).join('')}
+function grade(qs,p){let s=0;qs.forEach((x,i)=>{const box=document.getElementById(p+'q'+i);const c=box.querySelector('input:checked');const labels=box.querySelectorAll('label');labels.forEach(l=>l.classList.remove('ok','ko'));labels[x.a].classList.add('ok');if(c&&+c.value===x.a)s++;else if(c)labels[+c.value].classList.add('ko');box.querySelectorAll('input').forEach(n=>n.disabled=true)});return s}
+const back=(h,l)=>`<button class="back" onclick="location.hash='${h}';route()">‹ ${l}</button>`;
+
+/* ---------- Vues ---------- */
+const V={};
+
+V.accueil=()=>{
+  const d=S.get('date','2027-05-17');
+  const days=Math.ceil((new Date(d+'T09:00:00')-new Date())/864e5);
+  const co=S.get('co',{}),coN=Object.keys(co).length;
+  const coAvg=coN?Math.round(Object.values(co).reduce((a,b)=>a+b,0)/coN):0;
+  const po=S.get('po',[]),vk=S.get('vk',[]),gr=S.get('gr',{best:0,n:0}),ex=S.get('exams',[]);
+  const totalV=VOC.reduce((a,t)=>a+t[1].length,0);
+  const jours=["Repos, ou un épisode du Journal en français facile pour le plaisir","Écoute : un exercice ici, puis 10 min de RFI","Oral : un sujet complet avec les minuteurs","Vocabulaire (un thème) et une série de grammaire","Écoute : un exercice ici, puis un podcast TV5Monde","Oral : un sujet complet, enregistrez-vous avec votre téléphone","Lecture ou écrit, en alternance"];
+  const auj=jours[new Date().getDay()];
+  app.innerHTML=`<h1>Bonjour.</h1>
+  <p class="mut">${days>0?`Il reste <b style="color:var(--fg)">${days} jours</b> avant l'examen.`:days===0?"C'est le jour J. Bon courage.":"La date de l'examen est passée."}</p>
+  <div class="row small"><label class="mut" for="dt">Date de l'examen</label><input type="date" id="dt" value="${d}" onchange="S.set('date',this.value);V.accueil()"></div>
+  <div class="box"><div class="small mut">Aujourd'hui</div><div>${auj}</div></div>
+  <div class="stats">
+    <div><b>${coN}/${CO.length}</b><span>écoutes faites${coN?`, moyenne ${coAvg} %`:''}</span></div>
+    <div><b>${po.length}</b><span>séances d'oral</span></div>
+    <div><b>${vk.length}/${totalV}</b><span>mots maîtrisés</span></div>
+    <div><b>${gr.n?gr.best+'/10':'0'}</b><span>meilleur score en grammaire</span></div>
+    <div><b>${ex.length?ex[ex.length-1].total+'/100':'0'}</b><span>dernier examen blanc</span></div>
+  </div>
+  <h2>Priorités</h2>
+  <p>Vos points faibles sont l'oral et l'écoute : ils occupent quatre jours sur six dans le <a href="#plan">plan</a>. Le reste sert à entretenir le vocabulaire, la grammaire et l'écrit.</p>
+  <h2>Rappel de l'examen</h2>
+  <table><tr><th>Épreuve</th><th>Durée</th><th>Note</th></tr>
+  <tr><td>Compréhension de l'oral</td><td>environ 30 min</td><td>/25</td></tr>
+  <tr><td>Compréhension des écrits</td><td>1 h</td><td>/25</td></tr>
+  <tr><td>Production écrite (250 mots min.)</td><td>1 h</td><td>/25</td></tr>
+  <tr><td>Production orale</td><td>20 min, après 30 min de préparation</td><td>/25</td></tr></table>
+  <p class="small mut">Il faut 50/100 au total et au moins 5/25 dans chaque épreuve. Vérifiez toujours le format à jour sur le site officiel (voir Ressources).</p>`;
+};
+
+V.ecoute=()=>{
+  const co=S.get('co',{});
+  app.innerHTML=`<h1>Compréhension de l'oral</h1>
+  <p class="mut">Documents originaux lus par la voix de synthèse de votre appareil. Comme à l'examen, lisez d'abord les questions, puis écoutez. Certains documents s'écoutent deux fois, d'autres une seule.</p>
+  ${voiceNote()}
+  <div class="row small"><span class="mut">Vitesse</span><select onchange="S.set('rate',+this.value)">${[[0.8,'Lente'],[0.95,'Normale'],[1.1,'Rapide']].map(r=>`<option value="${r[0]}" ${S.get('rate',0.95)==r[0]?'selected':''}>${r[1]}</option>`).join('')}</select>
+  <label><input type="checkbox" ${S.get('free',false)?'checked':''} onchange="S.set('free',this.checked)"> Écoutes illimitées (entraînement)</label></div>
+  <div class="list">${CO.map((x,i)=>`<div class="item" onclick="coOpen(${i})"><span><span class="t">${x.titre}</span><br><span class="small mut">${x.type}, ${x.ecoutes} écoute${x.ecoutes>1?'s':''}</span></span><span class="meta">${co[x.id]!==undefined?co[x.id]+' %':''}</span></div>`).join('')}</div>
+  <p class="small mut" style="margin-top:20px">Pour de vrais enregistrements, complétez avec RFI et TV5Monde (voir <a href="#ressources">Ressources</a>).</p>`;
+};
+function coOpen(i){
+  const x=CO[i];let plays=0;const max=S.get('free',false)?99:x.ecoutes;stopSpeech();
+  app.innerHTML=`${back('#ecoute','Écoute')}<h1>${x.titre}</h1><p class="mut">${x.type}. ${x.ecoutes===2?'Deux écoutes.':'Une seule écoute.'}</p>
+  ${voiceNote()}
+  <div class="row"><button class="pri" id="play">Écouter</button><button onclick="stopSpeech()">Arrêter</button><span class="small mut" id="pc">0/${max>9?'∞':max}</span></div>
+  ${quizHTML(x.qs,'co')}
+  <div class="row"><button class="pri" id="chk">Corriger</button></div>
+  <div id="res"></div>`;
+  const play=document.getElementById('play'),pc=document.getElementById('pc');
+  play.onclick=()=>{if(plays>=max)return;plays++;pc.textContent=plays+'/'+(max>9?'∞':max);play.disabled=true;play.textContent='Lecture…';
+    speakSegs(x.segs,S.get('rate',0.95),()=>{play.textContent=plays>=max?'Écoutes terminées':'Réécouter';play.disabled=plays>=max});
+    setTimeout(()=>{if(play.textContent==='Lecture…'){}},0)};
+  document.getElementById('chk').onclick=()=>{
+    stopSpeech();const s=grade(x.qs,'co');const pct=Math.round(s/x.qs.length*100);
+    const co=S.get('co',{});co[x.id]=Math.max(co[x.id]||0,pct);S.set('co',co);
+    document.getElementById('res').innerHTML=`<p><b>${s}/${x.qs.length}</b> <span class="mut">(${pct} %)</span></p>
+    <details><summary>Transcription</summary>${x.segs.map(s=>`<p>${x.segs.length>1?`<b>${s[0]==='A'?'Journaliste':'Invité'}</b> : `:''}${s[1]}</p>`).join('')}</details>
+    <p class="small mut">Conseil : réécoutez en lisant la transcription, puis répétez les phrases à voix haute (shadowing).</p>`;
+  };
+}
+
+V.oral=()=>{
+  const po=S.get('po',[]);
+  app.innerHTML=`<h1>Production orale</h1>
+  <p class="mut">À l'examen : 30 minutes de préparation à partir d'un court document, puis 20 minutes face au jury. Vous présentez le problème soulevé et défendez votre point de vue (monologue), puis vous débattez avec l'examinateur (interaction).</p>
+  <div class="row"><button onclick="poPhrases()">Phrases utiles</button><button onclick="poRandom()">Sujet au hasard</button></div>
+  <h2>Sujets</h2>
+  <div class="list">${PO.map((x,i)=>`<div class="item" onclick="poOpen(${i})"><span class="t">${x.titre}</span><span class="meta">${po.filter(p=>p.i===i).length?po.filter(p=>p.i===i).length+'×':''}</span></div>`).join('')}</div>
+  ${po.length?`<h2>Historique</h2><table><tr><th>Date</th><th>Sujet</th><th>Auto-évaluation</th></tr>${po.slice(-8).reverse().map(p=>`<tr><td>${p.d}</td><td>${PO[p.i].titre}</td><td>${p.s}/12</td></tr>`).join('')}</table>`:''}`;
+};
+function poRandom(){poOpen(Math.floor(Math.random()*PO.length))}
+function poOpen(i){
+  const x=PO[i];stopSpeech();clearTimers();let qi=0;
+  app.innerHTML=`${back('#oral','Oral')}<h1>${x.titre}</h1>
+  <div class="doc">${x.doc}</div>
+  <div class="row"><button onclick="say(PO[${i}].doc)">Écouter le document</button><button onclick="stopSpeech()">Arrêter</button></div>
+  <h2>1. Préparation</h2>
+  <p class="small mut">Notez seulement des mots-clés : problématique, plan en deux ou trois parties, un exemple par argument. Ne rédigez pas de phrases complètes.</p>
+  ${timer('tp','Préparation',1800)}
+  <details><summary>Pistes de réflexion (à ouvrir après la préparation)</summary><div class="row" style="align-items:flex-start;gap:32px"><div><b>Pour</b><ul>${x.pour.map(p=>`<li>${p}</li>`).join('')}</ul></div><div><b>Contre</b><ul>${x.contre.map(p=>`<li>${p}</li>`).join('')}</ul></div></div></details>
+  <h2>2. Monologue</h2>
+  <p class="small mut">Parlez à voix haute, debout si possible. Visez 5 à 7 minutes. Enregistrez-vous avec l'application dictaphone de votre téléphone pour vous réécouter.</p>
+  ${timer('tm','Monologue',420)}
+  <h2>3. Débat avec l'examinateur</h2>
+  <p class="small mut">L'examinateur vous pose une question et vous répondez à voix haute. Visez 10 à 13 minutes au total.</p>
+  ${timer('td','Débat',780)}
+  <div class="box"><div id="dq" class="mut">Cliquez sur « Question suivante » pour commencer.</div></div>
+  <div class="row"><button class="pri" id="nq">Question suivante</button><button id="rq">Réécouter</button><label class="small"><input type="checkbox" id="showq" checked> Afficher la question</label></div>
+  <h2>4. Auto-évaluation</h2>
+  <div class="chk" id="grille">${GRILLE_PO.map(g=>`<h3>${g[0]}</h3>${g[1].map(c=>`<label><input type="checkbox"> ${c}</label>`).join('')}`).join('')}</div>
+  <div class="row"><button class="pri" id="savepo">Enregistrer la séance</button><span id="sv" class="small mut"></span></div>`;
+  const showQ=()=>{const q=x.deb[qi%x.deb.length];document.getElementById('dq').innerHTML=document.getElementById('showq').checked?q:'<span class="mut">(question masquée, écoutez)</span>';say(q)};
+  document.getElementById('nq').onclick=()=>{if(document.getElementById('dq').dataset.started)qi++;document.getElementById('dq').dataset.started=1;showQ()};
+  document.getElementById('rq').onclick=()=>{if(document.getElementById('dq').dataset.started)showQ()};
+  document.getElementById('savepo').onclick=()=>{const s=document.querySelectorAll('#grille input:checked').length;const po=S.get('po',[]);po.push({i,s,d:new Date().toLocaleDateString('fr-FR')});S.set('po',po);document.getElementById('sv').textContent=`Enregistré : ${s}/12. ${s>=10?'Très bien.':s>=7?'Bonne base, continuez.':'Revoyez les phrases utiles et la structure.'}`};
+}
+function poPhrases(){
+  stopSpeech();
+  app.innerHTML=`${back('#oral','Oral')}<h1>Phrases utiles</h1><p class="mut">Écoutez, répétez à voix haute, puis réutilisez-les dans chaque séance.</p>
+  ${PHRASES.map((g,gi)=>`<h2>${g[0]}</h2>${g[1].map((p,pi)=>`<div class="ph"><span>${p}</span><button onclick="say(PHRASES[${gi}][1][${pi}].replace(/…/g,''))">Écouter</button></div>`).join('')}`).join('')}`;
+}
+
+let VS={t:0,i:0,f:false,rev:false};
+V.vocabulaire=()=>{VS={t:VS.t,i:0,f:false,rev:VS.rev};vocRender()};
+function vocCards(){const vk=S.get('vk',[]);const all=VOC[VS.t][1].map((c,i)=>({c,id:VS.t+'-'+i}));return VS.rev?all.filter(x=>!vk.includes(x.id)):all}
+function vocRender(){
+  const cards=vocCards(),vk=S.get('vk',[]);
+  if(VS.i>=cards.length)VS.i=0;
+  const cur=cards[VS.i];
+  app.innerHTML=`<h1>Vocabulaire</h1><p class="mut">Cliquez sur la carte pour la retourner.</p>
+  <div class="row"><select onchange="VS.t=+this.value;VS.i=0;VS.f=false;vocRender()">${VOC.map((t,i)=>`<option value="${i}" ${i===VS.t?'selected':''}>${t[0]} (${t[1].filter((_,j)=>vk.includes(i+'-'+j)).length}/${t[1].length})</option>`).join('')}</select>
+  <label class="small"><input type="checkbox" ${VS.rev?'checked':''} onchange="VS.rev=this.checked;VS.i=0;VS.f=false;vocRender()"> Seulement les mots à revoir</label></div>
+  ${cur?`<div class="card" onclick="VS.f=!VS.f;vocRender()"><div class="w">${cur.c[0]}</div>${VS.f?`<div class="d">${cur.c[1]}</div><div class="ex">${cur.c[2]}</div>`:'<div class="small mut" style="margin-top:10px">définition et exemple au verso</div>'}</div>
+  <div class="row" style="justify-content:space-between"><span class="small mut">${VS.i+1}/${cards.length}</span><span class="row" style="margin:0"><button onclick="say(vocCards()[VS.i].c[0]+'. '+vocCards()[VS.i].c[2])">Écouter</button><button onclick="vocMark(false)">À revoir</button><button class="pri" onclick="vocMark(true)">Je sais</button></span></div>`
+  :`<div class="box">Tous les mots de ce thème sont maîtrisés. Décochez « Seulement les mots à revoir » pour les réviser quand même.</div>`}`;
+}
+function vocMark(k){const cards=vocCards();const id=cards[VS.i].id;let vk=S.get('vk',[]);vk=vk.filter(x=>x!==id);if(k)vk.push(id);S.set('vk',vk);if(!(VS.rev&&k))VS.i++;VS.f=false;vocRender()}
+
+let GS=null;
+V.grammaire=()=>{const gr=S.get('gr',{best:0,n:0});app.innerHTML=`<h1>Grammaire</h1><p class="mut">Séries de 10 questions tirées au hasard parmi ${GR.length}, avec explication après chaque réponse. Points clés du B2 : subjonctif, hypothèses, relatifs, accords, discours indirect, connecteurs.</p>
+<p>${gr.n?`Séries faites : ${gr.n}. Meilleur score : ${gr.best}/10.`:''}</p><div class="row"><button class="pri" onclick="grStart()">Commencer une série</button></div>`};
+function grStart(){GS={qs:shuffle(GR).slice(0,10),i:0,s:0,done:false};grRender()}
+function grRender(){
+  if(GS.i>=GS.qs.length){const gr=S.get('gr',{best:0,n:0});gr.n++;gr.best=Math.max(gr.best,GS.s);S.set('gr',gr);
+    app.innerHTML=`${back('#grammaire','Grammaire')}<h1>${GS.s}/10</h1><p class="mut">${GS.s>=8?'Excellent.':GS.s>=6?'Correct, refaites une série demain.':'Relisez les explications et recommencez.'}</p><div class="row"><button class="pri" onclick="grStart()">Nouvelle série</button></div>`;return}
+  const x=GS.qs[GS.i];
+  app.innerHTML=`${back('#grammaire','Grammaire')}<p class="small mut">Question ${GS.i+1}/10</p><div class="q" id="gq"><div class="qt" style="font-size:18px">${x.q}</div>${x.o.map((o,j)=>`<label><input type="radio" name="g" value="${j}" onchange="grAns(${j})"> ${o}</label>`).join('')}</div><div id="ge"></div>`;
+}
+function grAns(j){const x=GS.qs[GS.i];const ls=document.querySelectorAll('#gq label');ls[x.a].classList.add('ok');if(j!==x.a)ls[j].classList.add('ko');else GS.s++;document.querySelectorAll('#gq input').forEach(n=>n.disabled=true);
+  document.getElementById('ge').innerHTML=`<p class="${j===x.a?'okc':'koc'}">${j===x.a?'Correct.':'Pas tout à fait.'}</p><p>${x.e}</p><div class="row"><button class="pri" onclick="GS.i++;grRender()">Suivant</button></div>`}
+
+V.lecture=()=>{const ce=S.get('ce',{});app.innerHTML=`<h1>Compréhension des écrits</h1><p class="mut">Lisez une première fois pour le sens général, puis les questions, puis relisez. À l'examen, comptez environ 1 heure pour l'ensemble de l'épreuve.</p>
+<div class="list">${CE.map((x,i)=>`<div class="item" onclick="ceOpen(${i})"><span><span class="t">${x.titre}</span><br><span class="small mut">${x.type}</span></span><span class="meta">${ce[i]!==undefined?ce[i]+' %':''}</span></div>`).join('')}</div>`};
+function ceOpen(i){const x=CE[i];clearTimers();app.innerHTML=`${back('#lecture','Lecture')}<h1>${x.titre}</h1>${timer('tc','Temps conseillé',1500)}<div class="doc">${x.txt.map(p=>`<p>${p}</p>`).join('')}</div>${quizHTML(x.qs,'ce')}<div class="row"><button class="pri" id="chk">Corriger</button></div><div id="res"></div>`;
+  document.getElementById('chk').onclick=()=>{const s=grade(x.qs,'ce');const pct=Math.round(s/x.qs.length*100);const ce=S.get('ce',{});ce[i]=Math.max(ce[i]||0,pct);S.set('ce',ce);document.getElementById('res').innerHTML=`<p><b>${s}/${x.qs.length}</b> <span class="mut">(${pct} %)</span></p>`}}
+
+V.ecrit=()=>{app.innerHTML=`<h1>Production écrite</h1><p class="mut">Un texte argumenté de 250 mots minimum en 1 heure. Votre brouillon est conservé dans ce navigateur.</p>
+<div class="list">${PE.map((x,i)=>`<div class="item" onclick="peOpen(${i})"><span><span class="t">${x.titre}</span><br><span class="small mut">${x.type}</span></span><span class="meta">${S.get('pe'+i,'')?'brouillon':''}</span></div>`).join('')}</div>`};
+function peOpen(i){const x=PE[i];clearTimers();app.innerHTML=`${back('#ecrit','Écrit')}<h1>${x.titre}</h1><p class="small mut">${x.type}</p><div class="doc">${x.c}</div>${timer('tw','Temps',3600)}
+<textarea id="ta" placeholder="Écrivez ici…">${S.get('pe'+i,'').replace(/</g,'&lt;')}</textarea><div class="row small"><span id="wc" class="mut"></span><button id="cp">Copier le texte</button></div>
+<h2>Relecture</h2><div class="chk">${GRILLE_PE.map(c=>`<label><input type="checkbox"> ${c}</label>`).join('')}</div>`;
+  const ta=document.getElementById('ta'),wc=document.getElementById('wc');
+  const upd=()=>{const n=(ta.value.trim().match(/[\wÀ-ÿ'’-]+/g)||[]).length;wc.innerHTML=`${n} mots ${n>=250?'<span class="okc">(minimum atteint)</span>':''}`;S.set('pe'+i,ta.value)};
+  ta.oninput=upd;upd();
+  document.getElementById('cp').onclick=()=>{try{navigator.clipboard.writeText(ta.value).then(()=>{document.getElementById('cp').textContent='Copié'}).catch(()=>{ta.select()})}catch(e){ta.select()}};
+}
+
+V.examen=()=>{
+  const ex=S.get('exams',[]);clearTimers();
+  const pick={co:shuffle([...CO.keys()]).slice(0,2),ce:Math.floor(Math.random()*CE.length),pe:Math.floor(Math.random()*PE.length),po:Math.floor(Math.random()*PO.length)};
+  app.innerHTML=`<h1>Examen blanc</h1><p class="mut">Faites un examen complet une fois par mois, puis toutes les deux semaines le dernier mois. Ne regardez ni transcription ni pistes pendant l'épreuve.</p>
+  <h2>Votre sujet</h2>
+  <table>
+  <tr><td>1. Compréhension de l'oral</td><td>${pick.co.map(i=>`<a href="javascript:void 0" onclick="coOpen(${i})">${CO[i].titre}</a>`).join('<br>')}</td></tr>
+  <tr><td>2. Compréhension des écrits</td><td><a href="javascript:void 0" onclick="ceOpen(${pick.ce})">${CE[pick.ce].titre}</a></td></tr>
+  <tr><td>3. Production écrite</td><td><a href="javascript:void 0" onclick="peOpen(${pick.pe})">${PE[pick.pe].titre}</a></td></tr>
+  <tr><td>4. Production orale</td><td><a href="javascript:void 0" onclick="poOpen(${pick.po})">${PO[pick.po].titre}</a></td></tr></table>
+  <p class="small mut">Chaque lien ouvre l'exercice avec ses minuteurs. Rechargez la page pour un autre tirage.</p>
+  <h2>Minuteurs des épreuves collectives</h2>
+  ${timer('e1','Oral (écoute)',1800)}${timer('e2','Écrits (lecture)',3600)}${timer('e3','Production écrite',3600)}
+  <h2>Résultats</h2>
+  <p class="small mut">Pour l'écoute et la lecture : votre pourcentage × 25 ÷ 100. Pour l'écrit et l'oral : utilisez les grilles de relecture et d'auto-évaluation, en étant sévère.</p>
+  <div class="row">${['Oral (écoute)','Lecture','Écrit','Oral (expression)'].map((l,k)=>`<label class="small">${l}<br><input type="number" min="0" max="25" step="0.5" id="n${k}"></label>`).join('')}</div>
+  <div class="row"><button class="pri" id="sx">Calculer et enregistrer</button></div><div id="rx"></div>
+  ${ex.length?`<h2>Historique</h2><table><tr><th>Date</th><th>Écoute</th><th>Lecture</th><th>Écrit</th><th>Oral</th><th>Total</th></tr>${ex.slice().reverse().map(e=>`<tr><td>${e.d}</td>${e.n.map(n=>`<td class="${n<5?'koc':''}">${n}</td>`).join('')}<td><b class="${e.ok?'okc':'koc'}">${e.total}</b></td></tr>`).join('')}</table>`:''}`;
+  document.getElementById('sx').onclick=()=>{const n=[0,1,2,3].map(k=>Math.min(25,Math.max(0,parseFloat(document.getElementById('n'+k).value)||0)));const total=n.reduce((a,b)=>a+b,0);const ok=total>=50&&n.every(v=>v>=5);
+    const ex=S.get('exams',[]);ex.push({d:new Date().toLocaleDateString('fr-FR'),n,total,ok});S.set('exams',ex);
+    document.getElementById('rx').innerHTML=`<p><b>${total}/100</b>, ${ok?'<span class="okc">réussi</span>':'<span class="koc">pas encore</span>'}${n.some(v=>v<5)?' (une note est sous le seuil éliminatoire de 5/25)':''}</p>`};
+};
+
+V.plan=()=>{app.innerHTML=`<h1>Plan sur six mois</h1><p class="mut">Environ 45 minutes par jour, six jours par semaine. L'oral et l'écoute ont la priorité.</p>
+<h2>Semaine type</h2>
+<table><tr><th>Jour</th><th>Activité</th></tr>
+<tr><td>Lundi</td><td>Écoute : un exercice ici, puis 10 min du Journal en français facile (RFI)</td></tr>
+<tr><td>Mardi</td><td>Oral : un sujet complet (préparation, monologue, débat), enregistré</td></tr>
+<tr><td>Mercredi</td><td>Vocabulaire (un thème) et une série de grammaire</td></tr>
+<tr><td>Jeudi</td><td>Écoute : un exercice ici, puis un document B2 sur TV5Monde</td></tr>
+<tr><td>Vendredi</td><td>Oral : un sujet, réécoute de l'enregistrement, grille d'auto-évaluation</td></tr>
+<tr><td>Samedi</td><td>Lecture ou production écrite, une semaine sur deux</td></tr>
+<tr><td>Dimanche</td><td>Repos, ou écoute plaisir (podcast, film en VO sous-titrée en français)</td></tr></table>
+<h2>Étapes</h2>
+<table>
+<tr><td>Mois 1</td><td><b>Diagnostic et bases.</b> Faites un premier examen blanc pour situer votre niveau. Apprenez les phrases utiles de l'oral. Écoute quotidienne avec transcription.</td></tr>
+<tr><td>Mois 2</td><td><b>Structure de l'oral.</b> Entraînez-vous à toujours suivre le même schéma : problématique, plan, deux arguments, exemples, conclusion. Écoutez d'abord sans transcription, puis avec.</td></tr>
+<tr><td>Mois 3</td><td><b>Fluidité.</b> Shadowing 10 min par jour (répéter en même temps que l'audio). À l'oral, réduisez le temps de préparation à 20 min pour gagner en réactivité.</td></tr>
+<tr><td>Mois 4</td><td><b>Documents authentiques.</b> Passez à des émissions à débit normal (France Culture, France Inter). Deuxième examen blanc. Débats à l'oral avec un partenaire si possible.</td></tr>
+<tr><td>Mois 5</td><td><b>Conditions réelles.</b> Examens blancs toutes les deux semaines, avec les sujets officiels de France Éducation international. Une production écrite par semaine.</td></tr>
+<tr><td>Mois 6</td><td><b>Révision.</b> Revoyez les mots « à revoir » et vos erreurs de grammaire récurrentes. Dernier examen blanc dix jours avant. Pas de nouveaux contenus la dernière semaine.</td></tr></table>
+<h2>Conseils pour l'oral</h2><ul>
+<li>Parlez à voix haute à chaque séance : réfléchir dans sa tête ne remplace pas la pratique.</li>
+<li>Réécoutez vos enregistrements et notez trois erreurs à corriger la fois suivante.</li>
+<li>Pendant le débat, ne cherchez pas à convaincre à tout prix : le jury évalue votre capacité à argumenter et à nuancer.</li>
+<li>Un tandem linguistique ou un club de conversation est très utile pour la partie interaction.</li></ul>
+<h2>Conseils pour l'écoute</h2><ul>
+<li>Lisez toujours les questions avant d'écouter : elles annoncent le contenu.</li>
+<li>À la première écoute, repérez le thème et les intervenants ; à la seconde, les détails (chiffres, opinions, nuances).</li>
+<li>Faites attention aux connecteurs (mais, cependant, en revanche) : les questions portent souvent sur ce qui suit.</li></ul>`};
+
+V.ressources=()=>{const R=[
+["Écoute",[["Le français facile avec RFI","https://francaisfacile.rfi.fr/fr","Journal en français facile quotidien de 10 minutes, avec transcription et exercices."],["TV5Monde Apprendre le français","https://apprendre.tv5monde.com/fr","Vidéos d'actualité classées par niveau, avec exercices de compréhension (choisissez B2)."],["France Culture","https://www.radiofrance.fr/franceculture","Émissions et podcasts à débit naturel, pour les derniers mois."],["InnerFrench","https://innerfrench.com","Podcast pour apprenants intermédiaires sur des sujets de société."]]],
+["Examen officiel",[["DELF B2 tout public, France Éducation international","https://www.france-education-international.fr/diplome/delf-tout-public/niveau-b2","Présentation des épreuves, exemples de sujets, conseils et manuel du candidat."]]]
+];app.innerHTML=`<h1>Ressources gratuites</h1><p class="mut">Les liens s'ouvrent dans un nouvel onglet.</p>${R.map(g=>`<h2>${g[0]}</h2>${g[1].map(r=>`<div class="ph" style="display:block"><a href="${r[1]}" target="_blank" rel="noopener">${r[0]}</a><div class="small mut">${r[2]}</div></div>`).join('')}`).join('')}`};
+
+/* ---------- Routeur ---------- */
+function route(){const v=(location.hash||'#accueil').slice(1);stopSpeech();clearTimers();
+  document.querySelectorAll('nav a').forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+(V[v]?v:'accueil')));
+  (V[v]||V.accueil)();window.scrollTo(0,0)}
+window.addEventListener('hashchange',route);
+route();
+</script>
+</body>
+</html>
