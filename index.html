@@ -65,6 +65,7 @@ th{font-weight:600}
 .back:hover{color:var(--fg)}
 .okc{color:var(--ok)}.koc{color:var(--ko)}
 ul{padding-left:20px;margin:6px 0 12px}
+.todo{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:10px 0;border-top:1px solid var(--line)}.todo label{display:flex;gap:10px;cursor:pointer}.todo input{margin-top:5px}.todo.done .tt,.todo.done b{color:var(--mut);text-decoration:line-through}.todo button,.todo a{flex-shrink:0}
 .tabs{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0 24px}.tabs button.on{background:var(--fg);color:var(--bg);border-color:var(--fg)}
 .in{font:inherit;font-size:15px;color:var(--fg);background:transparent;border:1px solid var(--line);border-radius:6px;padding:5px 9px}.in.wide{display:block;width:100%;margin:6px 0}.cz{padding:1px 6px;margin:0 2px}
 textarea.sm{min-height:90px;margin:6px 0}
@@ -457,7 +458,7 @@ V.accueil=()=>{
   app.innerHTML=`<h1>Bonjour.</h1>
   <p class="mut">${days>0?`Il reste <b style="color:var(--fg)">${days} jours</b> avant l'examen.`:days===0?"C'est le jour J. Bon courage.":"La date de l'examen est passée."}</p>
   <div class="row small"><label class="mut" for="dt">Date de l'examen</label><input type="date" id="dt" value="${d}" onchange="S.set('date',this.value);V.accueil()"></div>
-  <div class="box"><div class="small mut">Aujourd'hui</div><div>${auj}</div></div>
+  ${todayHTML()}
   <div class="stats">
     <div><b>${coN}/${CO.length}</b><span>écoutes faites${coN?`, moyenne ${coAvg} %`:''}</span></div>
     <div><b>${po.length}</b><span>séances d'oral</span></div>
@@ -466,7 +467,7 @@ V.accueil=()=>{
     <div><b>${ex.length?ex[ex.length-1].total+'/100':'0'}</b><span>dernier examen blanc</span></div>
   </div>
   <h2>Priorités</h2>
-  <p>Vos points faibles sont l'oral et l'écoute : ils occupent quatre jours sur six dans le <a href="#plan">plan</a>. Le reste sert à entretenir le vocabulaire, la grammaire et l'écrit.</p>
+  <p>Vous suivez le <a href="#plan">plan intensif sur 3 mois</a>. L'oral et l'écoute sont au programme chaque jour de la semaine ; le vocabulaire, la grammaire et l'écrit sont entretenus autour.</p>
   <h2>Rappel de l'examen</h2>
   <table><tr><th>Épreuve</th><th>Durée</th><th>Note</th></tr>
   <tr><td>Compréhension de l'oral</td><td>environ 30 min</td><td>/25</td></tr>
@@ -1027,34 +1028,89 @@ V.examen=()=>{
     document.getElementById('rx').innerHTML=`<p><b>${total}/100</b>, ${ok?'<span class="okc">réussi</span>':'<span class="koc">pas encore</span>'}${n.some(v=>v<5)?' (une note est sous le seuil éliminatoire de 5/25)':''}</p>`};
 };
 
-V.plan=()=>{app.innerHTML=`<h1>Plan sur six mois</h1><p class="mut">Environ 45 minutes par jour, six jours par semaine. L'oral et l'écoute ont la priorité.</p>
-<h2>Semaine type</h2>
-<table><tr><th>Jour</th><th>Activité</th></tr>
-<tr><td>Lundi</td><td>Écoute : un exercice ici, puis 10 min du Journal en français facile (RFI)</td></tr>
-<tr><td>Mardi</td><td>Oral : un sujet complet (préparation, monologue, débat), enregistré</td></tr>
-<tr><td>Mercredi</td><td>Vocabulaire (un thème) et une série de grammaire</td></tr>
-<tr><td>Jeudi</td><td>Écoute : un exercice ici, puis un document B2 sur TV5Monde</td></tr>
-<tr><td>Vendredi</td><td>Oral : un sujet, réécoute de l'enregistrement, grille d'auto-évaluation</td></tr>
-<tr><td>Samedi</td><td>Lecture ou production écrite, une semaine sur deux</td></tr>
-<tr><td>Dimanche</td><td>Repos, ou écoute plaisir (podcast, film en VO sous-titrée en français)</td></tr></table>
-<h2>Étapes</h2>
-<table>
-<tr><td>Mois 1</td><td><b>Diagnostic et bases.</b> Faites un premier examen blanc pour situer votre niveau. Apprenez les phrases utiles de l'oral. Écoute quotidienne avec transcription.</td></tr>
-<tr><td>Mois 2</td><td><b>Structure de l'oral.</b> Entraînez-vous à toujours suivre le même schéma : problématique, plan, deux arguments, exemples, conclusion. Écoutez d'abord sans transcription, puis avec.</td></tr>
-<tr><td>Mois 3</td><td><b>Fluidité.</b> Shadowing 10 min par jour (répéter en même temps que l'audio). À l'oral, réduisez le temps de préparation à 20 min pour gagner en réactivité.</td></tr>
-<tr><td>Mois 4</td><td><b>Documents authentiques.</b> Passez à des émissions à débit normal (France Culture, France Inter). Deuxième examen blanc. Débats à l'oral avec un partenaire si possible.</td></tr>
-<tr><td>Mois 5</td><td><b>Conditions réelles.</b> Examens blancs toutes les deux semaines, avec les sujets officiels de France Éducation international. Une production écrite par semaine.</td></tr>
-<tr><td>Mois 6</td><td><b>Révision.</b> Revoyez les mots « à revoir » et vos erreurs de grammaire récurrentes. Dernier examen blanc dix jours avant. Pas de nouveaux contenus la dernière semaine.</td></tr></table>
-<h2>Conseils pour l'oral</h2><ul>
-<li>Suivez toujours la même <a href="javascript:void 0" onclick="poMethode()">méthode</a> de préparation : à l'examen, vous n'aurez pas à réfléchir à l'organisation.</li>
-<li>Parlez à voix haute à chaque séance : réfléchir dans sa tête ne remplace pas la pratique.</li>
-<li>Réécoutez vos enregistrements et notez trois erreurs à corriger la fois suivante.</li>
-<li>Pendant le débat, ne cherchez pas à convaincre à tout prix : le jury évalue votre capacité à argumenter et à nuancer.</li>
-<li>Un tandem linguistique ou un club de conversation est très utile pour la partie interaction.</li></ul>
-<h2>Conseils pour l'écoute</h2><ul>
-<li>Lisez toujours les questions avant d'écouter : elles annoncent le contenu.</li>
-<li>À la première écoute, repérez le thème et les intervenants ; à la seconde, les détails (chiffres, opinions, nuances).</li>
-<li>Faites attention aux connecteurs (mais, cependant, en revanche) : les questions portent souvent sur ce qui suit.</li></ul>`};
+/* ---------- Plan intensif 3 mois et liste du jour ---------- */
+const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+let TODAY_OFF=0;
+const PREP_ACTS=[["Argument ou exemple ?","prepArgEx()"],["Trouver des idées","prepIdees()"],["Transformer une idée en argument","prepEnrich()"],["Remettre les idées dans l'ordre","prepOrdre()"],["Phrases utiles (écouter, répéter)","poPhrases()"],["Reformuler pour l'examinateur","prepReform()"],["Réfuter une affirmation","prepRefut()"],["Exprimer son désaccord","prepDesacc()"]];
+const RFI='https://francaisfacile.rfi.fr/fr';
+function dayPlan(date){
+  if(!S.get('start',null))S.set('start',iso(new Date()));
+  const start=new Date(S.get('start')+'T00:00:00');
+  const d=Math.max(0,Math.floor((new Date(iso(date)+'T00:00:00')-start)/864e5));
+  const week=Math.floor(d/7)+1,wd=date.getDay(),phase=week<=4?1:week<=8?2:3;
+  const co=d%CO.length,po=d%PO.length,th=d%VOC.length,pa=d%PREP_ACTS.length;
+  const voc={k:"Vocabulaire",m:10,t:`Thème « ${VOC[th][0]} » : passez les cartes, puis seulement les mots « à revoir ».`,a:`VS.t=${th};VS.i=0;VS.rev=false;location.hash='vocabulaire'`};
+  const gram={k:"Grammaire",m:10,t:"Une série de 10 questions. Relisez chaque explication.",a:"location.hash='grammaire';setTimeout(grStart,50)"};
+  const rfi={k:"Écoute authentique",m:10,t:"Journal en français facile (RFI) : une écoute sans texte, une avec la transcription.",href:RFI};
+  let T=[],titre;
+  if(wd===0){
+    if(phase===3||week%2===0){titre="Examen blanc";T=[
+      {k:"Examen blanc complet",m:180,t:"Les quatre épreuves dans l'ordre, avec les minuteurs. Notez vos résultats.",a:"location.hash='examen'"},
+      {k:"Bilan",m:10,t:"Notez vos trois erreurs principales : ce sont les priorités de la semaine prochaine.",a:null}]}
+    else{titre="Repos actif";T=[
+      {k:"Écoute plaisir",m:20,t:"Un podcast ou une vidéo en français sur un sujet qui vous intéresse, sans exercice.",href:RFI},
+      {k:"Vocabulaire",m:10,t:"Révisez uniquement les mots « à revoir », tous thèmes confondus.",a:"VS.rev=true;location.hash='vocabulaire'"}]}
+  }else if(wd===6){
+    titre=week%2?"Lecture et oral":"Écrit et oral";
+    T=[week%2?{k:"Lecture",m:30,t:`Texte « ${CE[week%CE.length].titre} », avec le minuteur.`,a:`ceOpen(${week%CE.length})`}
+             :{k:"Production écrite",m:60,t:`Sujet « ${PE[(week/2)%PE.length].titre} » en 1 heure, puis relecture avec la grille.`,a:`peOpen(${(week/2)%PE.length})`},
+       {k:"Oral",m:30,t:"Tirage au sort de 2 sujets, conditions réelles (étapes 4 à 6). Enregistrez-vous.",a:"poTirage()"},
+       voc];
+  }else{
+    titre=["","Fondations","Fondations","Fondations","Fondations","Fondations"][wd];
+    if(phase===2)titre="Entraînement";if(phase===3)titre="Conditions d'examen";
+    T=[voc,
+      phase===1?{k:"Écoute",m:25,t:`Écoute guidée : « ${CO[co].titre} » (4 étapes).`,a:`coGuided(${co})`}
+               :{k:"Écoute",m:20,t:`Mode examen : « ${CO[co].titre} ». Écoutes limitées, aucune aide.`,a:`coOpen(${co})`},
+      rfi,
+      phase===1?{k:"Oral",m:35,t:`Sujet « ${PO[po].titre} » : les 6 étapes, à voix haute.`,a:`poOpen(${po})`}
+      :phase===2?{k:"Oral",m:35,t:`Sujet « ${PO[po].titre} » : directement étapes 4 à 6, minuteurs lancés. Enregistrez-vous.`,a:`poOpen(${po})`}
+      :{k:"Oral",m:50,t:"Tirage au sort, 30 min de préparation puis 20 min de passation, sans regarder les pistes.",a:"poTirage()"},
+      phase===1&&wd%2?{k:"Méthode orale",m:10,t:`Activité « ${PREP_ACTS[pa][0]} ».`,a:PREP_ACTS[pa][1]}:gram,
+      {k:"Shadowing",m:5,t:"Réécoutez l'audio du jour en répétant en même temps que la voix.",a:null}];
+  }
+  return {week,phase,titre,T,date};
+}
+function todayHTML(){
+  const date=new Date();date.setDate(date.getDate()+TODAY_OFF);
+  const P=dayPlan(date),key='todo_'+iso(date),done=S.get(key,[]);
+  const tot=P.T.reduce((a,t)=>a+t.m,0);
+  const lbl=TODAY_OFF===0?"Aujourd'hui":TODAY_OFF===1?"Demain":TODAY_OFF===-1?"Hier":date.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
+  return `<div class="box">
+  <div class="row" style="justify-content:space-between;margin:0 0 6px"><span><b>${lbl}</b> <span class="small mut">Semaine ${P.week}${P.week>12?' (révision)':''} · ${P.titre} · environ ${tot>=60?Math.floor(tot/60)+' h '+String(tot%60).padStart(2,'0'):tot+' min'}</span></span>
+  <span class="row" style="margin:0"><button onclick="TODAY_OFF--;V.accueil()">‹</button><button onclick="TODAY_OFF=0;V.accueil()">Aujourd'hui</button><button onclick="TODAY_OFF++;V.accueil()">›</button></span></div>
+  ${P.T.map((t,k)=>`<div class="todo ${done.includes(k)?'done':''}"><label><input type="checkbox" ${done.includes(k)?'checked':''} onchange="todoTick('${key}',${k},this.checked)"> <span><b>${t.k}</b> <span class="mut small">${t.m} min</span><br><span class="tt">${t.t}</span></span></label>${t.href?`<a class="small" href="${t.href}" target="_blank" rel="noopener">Ouvrir</a>`:t.a?`<button onclick="${t.a}">Ouvrir</button>`:''}</div>`).join('')}
+  <div class="small mut" style="margin-top:8px">${done.length}/${P.T.length} terminées${done.length===P.T.length?' : bravo, journée validée.':''}</div></div>`;
+}
+function todoTick(key,k,on){let d=S.get(key,[]);d=d.filter(x=>x!==k);if(on)d.push(k);S.set(key,d);V.accueil()}
+
+V.plan=()=>{
+  const st=S.get('start',iso(new Date()));
+  app.innerHTML=`<h1>Plan intensif sur 3 mois</h1>
+  <p class="mut">Environ 1 h 30 par jour en semaine, un peu plus le samedi, un dimanche sur deux en examen blanc. La liste de chaque jour s'affiche sur l'accueil, avec les exercices précis à faire.</p>
+  <div class="row small"><label class="mut" for="st">Début du plan</label><input type="date" id="st" value="${st}" onchange="S.set('start',this.value);V.plan()"></div>
+  <h2>Trois phases</h2>
+  <table>
+  <tr><td>Semaines 1 à 4</td><td><b>Fondations.</b> Écoutes guidées en quatre étapes, sujets oraux complets en six étapes, activités « Se préparer » pour la méthode. Objectif : connaître la structure de l'oral par cœur.</td></tr>
+  <tr><td>Semaines 5 à 8</td><td><b>Entraînement.</b> Écoute en mode examen (écoutes limitées). À l'oral, directement l'exposé et le débat avec les minuteurs, enregistrés. Objectif : gagner en vitesse et en aisance.</td></tr>
+  <tr><td>Semaines 9 à 12</td><td><b>Conditions d'examen.</b> Tirage au sort de deux sujets chaque jour, 30 + 20 minutes. Un examen blanc chaque dimanche. Objectif : gérer le temps et le stress.</td></tr></table>
+  <p class="small mut">Si votre examen a lieu plus tard, le planning continue automatiquement en mode « conditions d'examen » après la semaine 12.</p>
+  <h2>Semaine type</h2>
+  <table><tr><th>Jour</th><th>Contenu</th><th>Durée</th></tr>
+  <tr><td>Lundi à vendredi</td><td>Vocabulaire, écoute du site, Journal en français facile, sujet oral, grammaire ou méthode, shadowing</td><td>environ 1 h 30</td></tr>
+  <tr><td>Samedi</td><td>Lecture ou production écrite (en alternance), tirage oral, vocabulaire</td><td>1 h 10 à 1 h 40</td></tr>
+  <tr><td>Dimanche</td><td>Examen blanc une semaine sur deux (chaque semaine à partir de la semaine 9), sinon repos actif</td><td>30 min à 3 h</td></tr></table>
+  <h2>Pour aller vite</h2><ul>
+  <li>Régularité avant intensité : 1 h 30 tous les jours vaut mieux que 5 heures le week-end.</li>
+  <li>Parlez à voix haute à chaque séance d'oral et enregistrez-vous : c'est la seule façon de progresser vite.</li>
+  <li>Réécoutez vos enregistrements et notez trois erreurs à corriger la fois suivante.</li>
+  <li>Si vous manquez un jour, ne rattrapez pas tout : reprenez simplement la liste du jour.</li>
+  <li>Un tandem linguistique ou un club de conversation une fois par semaine aide beaucoup pour le débat.</li></ul>
+  <h2>Pour l'écoute</h2><ul>
+  <li>Lisez toujours les questions avant d'écouter.</li>
+  <li>Première écoute : le sens général. Deuxième : les détails (chiffres, opinions, nuances).</li>
+  <li>Surveillez les connecteurs (mais, cependant, en revanche) : les questions portent souvent sur ce qui suit.</li></ul>`;
+};
 
 V.ressources=()=>{const R=[
 ["Écoute",[["Le français facile avec RFI","https://francaisfacile.rfi.fr/fr","Journal en français facile quotidien de 10 minutes, avec transcription et exercices."],["TV5Monde Apprendre le français","https://apprendre.tv5monde.com/fr","Vidéos d'actualité classées par niveau, avec exercices de compréhension (choisissez B2)."],["France Culture","https://www.radiofrance.fr/franceculture","Émissions et podcasts à débit naturel, pour les derniers mois."],["InnerFrench","https://innerfrench.com","Podcast pour apprenants intermédiaires sur des sujets de société."]]],
