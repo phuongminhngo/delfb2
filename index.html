@@ -934,7 +934,8 @@ function dayPlan(date){
   const co=d%CO.length,po=d%PO.length,th=d%VOC.length,pa=d%PREP_ACTS.length;
   const voc={k:"Vocabulaire",m:10,t:`Thème « ${VOC[th][0]} » : passez les cartes, puis seulement les mots « à revoir ».`,a:`VS.t=${th};VS.i=0;VS.rev=false;location.hash='vocabulaire'`};
   const gram={k:"Grammaire",m:10,t:"Une série de 10 questions. Relisez chaque explication.",a:"location.hash='grammaire';setTimeout(grStart,50)"};
-  const rfi={k:"Écoute authentique",m:10,t:"Journal en français facile (RFI) : une écoute sans texte, une avec la transcription.",href:RFI};
+  const rfi=wd%2?{k:"Écoute authentique",m:10,t:"Journal en français facile (RFI) : une écoute sans texte, une avec la transcription.",href:RFI}
+                :{k:"Vidéo TV5Monde",m:15,t:"Une vidéo de niveau B2 avancé avec ses exercices (choisissez le niveau B2 sur le site).",href:"https://apprendre.tv5monde.com/fr"};
   let T=[],titre;
   if(wd===0){
     if(phase===3||week%2===0){titre="Examen blanc";T=[
@@ -978,7 +979,7 @@ function todayHTML(){
 function todoTick(key,k,on){let d=S.get(key,[]);d=d.filter(x=>x!==k);if(on)d.push(k);S.set(key,d);V.accueil()}
 
 V.ressources=()=>{const R=[
-["Écoute",[["Le français facile avec RFI","https://francaisfacile.rfi.fr/fr","Journal en français facile quotidien de 10 minutes, avec transcription et exercices."],["TV5Monde Apprendre le français","https://apprendre.tv5monde.com/fr","Vidéos d'actualité classées par niveau, avec exercices de compréhension (choisissez B2)."],["France Culture","https://www.radiofrance.fr/franceculture","Émissions et podcasts à débit naturel, pour les derniers mois."],["InnerFrench","https://innerfrench.com","Podcast pour apprenants intermédiaires sur des sujets de société."]]],
+["Écoute",[["Le français facile avec RFI","https://francaisfacile.rfi.fr/fr","Journal en français facile quotidien de 10 minutes, avec transcription et exercices."],["TV5Monde Apprendre le français","https://apprendre.tv5monde.com/fr","Vidéos d'actualité avec exercices interactifs, du A1 au B2. Choisissez le niveau B2 avancé. Gratuit, existe aussi en application (TV5MONDE EDU)."],["France Culture","https://www.radiofrance.fr/franceculture","Émissions et podcasts à débit naturel, pour les derniers mois."],["InnerFrench","https://innerfrench.com","Podcast pour apprenants intermédiaires sur des sujets de société."]]],
 ["Examen officiel (gratuit)",[["Sujets d'exemple officiels DELF B2","https://www.france-education-international.fr/diplome/delf-tout-public/niveau-b2/exemples-sujets","Deux examens complets (les deux formats d'écoute et de lecture), l'oral, les audios et les grilles de correction."],["Exercices d'entraînement officiels","https://www.france-education-international.fr/diplome/delf-tout-public/niveau-b2/entrainement","Un modèle de chaque exercice avec des conseils, et les audios."],["Présentation du DELF B2 tout public","https://www.france-education-international.fr/diplome/delf-tout-public/niveau-b2","Les épreuves, la durée et le barème."]]]
 ];app.innerHTML=`${back('#exercices','Exercices')}<h1>Ressources</h1>${R.map(g=>`<h2>${g[0]}</h2>${g[1].map(r=>`<div class="ph" style="display:block"><a href="${r[1]}" target="_blank" rel="noopener">${r[0]}</a><div class="small mut">${r[2]}</div></div>`).join('')}`).join('')}`};
 
