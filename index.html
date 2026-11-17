@@ -85,7 +85,6 @@ select{cursor:pointer}
     <a href="#lecture">Lecture</a>
     <a href="#ecrit">Écrit</a>
     <a href="#examen">Examen blanc</a>
-    <a href="#plan">Plan</a>
     <a href="#ressources">Ressources</a>
   </nav>
 </header>
@@ -466,8 +465,20 @@ V.accueil=()=>{
     <div><b>${gr.n?gr.best+'/10':'0'}</b><span>meilleur score en grammaire</span></div>
     <div><b>${ex.length?ex[ex.length-1].total+'/100':'0'}</b><span>dernier examen blanc</span></div>
   </div>
-  <h2>Priorités</h2>
-  <p>Vous suivez le <a href="#plan">plan intensif sur 3 mois</a>. L'oral et l'écoute sont au programme chaque jour de la semaine ; le vocabulaire, la grammaire et l'écrit sont entretenus autour.</p>
+  <h2>Le plan : 3 mois intensifs</h2>
+  <div class="row small"><label class="mut" for="st">Début du plan</label><input type="date" id="st" value="${S.get('start',iso(new Date()))}" onchange="S.set('start',this.value);V.accueil()"></div>
+  <table>
+  <tr><td>Semaines 1 à 4</td><td><b>Fondations.</b> Écoutes guidées, sujets oraux complets en six étapes, activités de méthode.</td></tr>
+  <tr><td>Semaines 5 à 8</td><td><b>Entraînement.</b> Écoute en mode examen ; à l'oral, exposé et débat directement, minuteurs lancés et enregistrés.</td></tr>
+  <tr><td>Semaines 9 à 12</td><td><b>Conditions d'examen.</b> Tirage au sort de deux sujets chaque jour, examen blanc chaque dimanche.</td></tr>
+  <tr><td>Ensuite</td><td>Le rythme « conditions d'examen » continue jusqu'au jour J.</td></tr></table>
+  <p class="small mut">Semaine : environ 1 h 30 par jour. Samedi : lecture ou écrit, tirage oral, vocabulaire. Dimanche : examen blanc une semaine sur deux (chaque semaine à partir de la semaine 9), sinon repos actif.</p>
+  <details><summary>Conseils pour progresser vite</summary><ul>
+  <li>Régularité avant intensité : 1 h 30 chaque jour vaut mieux que 5 heures le week-end.</li>
+  <li>Parlez à voix haute à chaque séance d'oral et enregistrez-vous ; réécoutez et notez trois erreurs à corriger la fois suivante.</li>
+  <li>Si vous manquez un jour, ne rattrapez pas tout : reprenez simplement la liste du jour.</li>
+  <li>Un tandem linguistique ou un club de conversation une fois par semaine aide beaucoup pour le débat.</li>
+  <li>À l'écoute : lisez les questions avant, sens général à la première écoute, détails à la seconde, attention aux connecteurs.</li></ul></details>
   <h2>Rappel de l'examen</h2>
   <table><tr><th>Épreuve</th><th>Durée</th><th>Note</th></tr>
   <tr><td>Compréhension de l'oral</td><td>environ 30 min</td><td>/25</td></tr>
@@ -1083,34 +1094,6 @@ function todayHTML(){
   <div class="small mut" style="margin-top:8px">${done.length}/${P.T.length} terminées${done.length===P.T.length?' : bravo, journée validée.':''}</div></div>`;
 }
 function todoTick(key,k,on){let d=S.get(key,[]);d=d.filter(x=>x!==k);if(on)d.push(k);S.set(key,d);V.accueil()}
-
-V.plan=()=>{
-  const st=S.get('start',iso(new Date()));
-  app.innerHTML=`<h1>Plan intensif sur 3 mois</h1>
-  <p class="mut">Environ 1 h 30 par jour en semaine, un peu plus le samedi, un dimanche sur deux en examen blanc. La liste de chaque jour s'affiche sur l'accueil, avec les exercices précis à faire.</p>
-  <div class="row small"><label class="mut" for="st">Début du plan</label><input type="date" id="st" value="${st}" onchange="S.set('start',this.value);V.plan()"></div>
-  <h2>Trois phases</h2>
-  <table>
-  <tr><td>Semaines 1 à 4</td><td><b>Fondations.</b> Écoutes guidées en quatre étapes, sujets oraux complets en six étapes, activités « Se préparer » pour la méthode. Objectif : connaître la structure de l'oral par cœur.</td></tr>
-  <tr><td>Semaines 5 à 8</td><td><b>Entraînement.</b> Écoute en mode examen (écoutes limitées). À l'oral, directement l'exposé et le débat avec les minuteurs, enregistrés. Objectif : gagner en vitesse et en aisance.</td></tr>
-  <tr><td>Semaines 9 à 12</td><td><b>Conditions d'examen.</b> Tirage au sort de deux sujets chaque jour, 30 + 20 minutes. Un examen blanc chaque dimanche. Objectif : gérer le temps et le stress.</td></tr></table>
-  <p class="small mut">Si votre examen a lieu plus tard, le planning continue automatiquement en mode « conditions d'examen » après la semaine 12.</p>
-  <h2>Semaine type</h2>
-  <table><tr><th>Jour</th><th>Contenu</th><th>Durée</th></tr>
-  <tr><td>Lundi à vendredi</td><td>Vocabulaire, écoute du site, Journal en français facile, sujet oral, grammaire ou méthode, shadowing</td><td>environ 1 h 30</td></tr>
-  <tr><td>Samedi</td><td>Lecture ou production écrite (en alternance), tirage oral, vocabulaire</td><td>1 h 10 à 1 h 40</td></tr>
-  <tr><td>Dimanche</td><td>Examen blanc une semaine sur deux (chaque semaine à partir de la semaine 9), sinon repos actif</td><td>30 min à 3 h</td></tr></table>
-  <h2>Pour aller vite</h2><ul>
-  <li>Régularité avant intensité : 1 h 30 tous les jours vaut mieux que 5 heures le week-end.</li>
-  <li>Parlez à voix haute à chaque séance d'oral et enregistrez-vous : c'est la seule façon de progresser vite.</li>
-  <li>Réécoutez vos enregistrements et notez trois erreurs à corriger la fois suivante.</li>
-  <li>Si vous manquez un jour, ne rattrapez pas tout : reprenez simplement la liste du jour.</li>
-  <li>Un tandem linguistique ou un club de conversation une fois par semaine aide beaucoup pour le débat.</li></ul>
-  <h2>Pour l'écoute</h2><ul>
-  <li>Lisez toujours les questions avant d'écouter.</li>
-  <li>Première écoute : le sens général. Deuxième : les détails (chiffres, opinions, nuances).</li>
-  <li>Surveillez les connecteurs (mais, cependant, en revanche) : les questions portent souvent sur ce qui suit.</li></ul>`;
-};
 
 V.ressources=()=>{const R=[
 ["Écoute",[["Le français facile avec RFI","https://francaisfacile.rfi.fr/fr","Journal en français facile quotidien de 10 minutes, avec transcription et exercices."],["TV5Monde Apprendre le français","https://apprendre.tv5monde.com/fr","Vidéos d'actualité classées par niveau, avec exercices de compréhension (choisissez B2)."],["France Culture","https://www.radiofrance.fr/franceculture","Émissions et podcasts à débit naturel, pour les derniers mois."],["InnerFrench","https://innerfrench.com","Podcast pour apprenants intermédiaires sur des sujets de société."]]],
