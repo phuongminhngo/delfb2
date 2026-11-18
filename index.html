@@ -72,7 +72,100 @@ details.step{border-top:1px solid var(--line);margin:0}details.step>summary{font
 textarea.sm{min-height:90px;margin:6px 0}
 select{cursor:pointer}
 
+.ent{
+  --bg:#FFFFFF; --panel:#FBFBFA; --ink:#37352F; --muted:#787774; --line:#E9E9E7; --hover:#F1F1EF;
+  --accent:#2E6FD8; --accent-soft:#E7F0FC;
+  --c-moi:#FBF3DB; --c-moi-ink:#8A6A12;
+  --c-proj:#E7F3EC; --c-proj-ink:#2F6B48;
+  --c-meth:#E8EEFB; --c-meth-ink:#3456A6;
+  --c-vis:#F6E9F1; --c-vis-ink:#8C3E6B;
+  --c-ent:#EEEBF8; --c-ent-ink:#5A4A9E;
+  --warm:#C77A1E;
+  --done:#2F8F5B;
+  --body:"Libre Franklin", -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  --display:"Fraunces", Georgia, serif;
+  --shadow:0 1px 2px rgba(15,15,15,.06), 0 0 0 1px rgba(15,15,15,.05);
+;font-family:var(--body);font-size:15px;line-height:1.55;color:var(--ink);background:var(--bg);margin:0 -20px;padding:8px 20px 40px;border-radius:8px}
+@media (prefers-color-scheme: dark){.ent{
+  --bg:#191919; --panel:#202020; --ink:#E6E5E2; --muted:#9B9A97; --line:#2F2F2F; --hover:#2A2A2A;
+  --accent:#6FA2F2; --accent-soft:#1F2C42;
+  --c-moi:#3A3220; --c-moi-ink:#E9C76B; --c-proj:#1F3328; --c-proj-ink:#7CCB9C;
+  --c-meth:#212C45; --c-meth-ink:#94B2F2; --c-vis:#3A2532; --c-vis-ink:#E59AC6;
+  --c-ent:#2B2640; --c-ent-ink:#B9AAF0; --warm:#E9A65A;
+  --done:#5CC48A; --shadow:0 0 0 1px rgba(255,255,255,.07); color-scheme:dark}}
+.ent *{box-sizing:border-box}
+.ent [hidden]{display:none!important}
+.ent .box{padding:0;margin:0;background:none}
+.ent .tabs{margin:0}
+.ent .wrap{max-width:1040px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+.ent .pageicon{font-size:56px;line-height:1}
+.ent h1{font-family:var(--display);font-weight:600;font-size:clamp(30px,5vw,40px);margin:0;letter-spacing:-.01em;text-wrap:balance}
+.ent .sub{margin:0;color:var(--muted);max-width:65ch}
+.ent .callout{display:flex;gap:12px;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:14px 16px}
+.ent .callout .ic{font-size:20px;line-height:1.3}
+.ent .callout strong{display:block;margin-bottom:4px}
+.ent .callout ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:2px}
+.ent .tabs{display:flex;gap:2px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:6px}
+.ent .tab{font:inherit;font-size:14px;background:none;border:0;color:var(--muted);padding:5px 9px;border-radius:5px;cursor:pointer;display:flex;align-items:center;gap:6px}
+.ent .tab:hover{background:var(--hover)}
+.ent .tab[aria-pressed="true"]{color:var(--ink);font-weight:600;box-shadow:inset 0 -2px 0 var(--ink);border-radius:5px 5px 0 0}
+.ent .tab .n{font-size:12px;color:var(--muted);font-weight:400}
+.ent button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.ent .group{display:flex;flex-direction:column;gap:10px}
+.ent .ghead{display:flex;align-items:center;gap:8px;font-size:14px;flex-wrap:wrap}
+.ent .pill{display:inline-flex;align-items:center;gap:5px;padding:1px 8px;border-radius:4px;font-size:13px;font-weight:500;white-space:nowrap}
+.ent .p-moi{background:var(--c-moi);color:var(--c-moi-ink)}.ent .p-proj{background:var(--c-proj);color:var(--c-proj-ink)}
+.ent .p-meth{background:var(--c-meth);color:var(--c-meth-ink)}.ent .p-vis{background:var(--c-vis);color:var(--c-vis-ink)}
+.ent .p-ent{background:var(--c-ent);color:var(--c-ent-ink)}
+.ent .ghead .count{color:var(--muted)}
+.ent .subhead{font-size:13px;font-weight:600;color:var(--muted);margin:6px 0 0}
+.ent .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+.ent .card{all:unset;box-sizing:border-box;cursor:pointer;background:var(--bg);border-radius:6px;box-shadow:var(--shadow);display:flex;flex-direction:column;overflow:hidden;transition:background .12s}
+.ent .card:hover{background:var(--hover)}
+.ent .card:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.ent .cover{height:72px;position:relative}
+.ent .cover.moi{background:var(--c-moi)}.ent .cover.proj{background:var(--c-proj)}.ent .cover.meth{background:var(--c-meth)}.ent .cover.vis{background:var(--c-vis)}.ent .cover.ent{background:var(--c-ent)}
+.ent .cover .emo{position:absolute;left:14px;bottom:-16px;font-size:30px;line-height:1}
+.ent .cbody{padding:24px 14px 14px;display:flex;flex-direction:column;gap:8px;flex:1;min-width:0}
+.ent .ctitle{font-weight:600;font-size:15px;line-height:1.35}
+.ent .cprev{color:var(--muted);font-size:13.5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ent .cprops{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:auto}
+.ent .state{font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:5px}
+.ent .state.on{color:var(--done)}
+.ent .box{width:13px;height:13px;border:1.5px solid currentColor;border-radius:3px;display:inline-grid;place-items:center;font-size:10px}
+.ent .scrim{position:fixed;inset:0;background:rgba(15,15,15,.25);z-index:20}
+.ent .peek{position:fixed;top:0;right:0;bottom:0;width:min(560px,100%);background:var(--bg);z-index:21;box-shadow:-8px 0 30px rgba(15,15,15,.15);
+  overflow-y:auto;padding:calc(18px + env(safe-area-inset-top,0px)) max(24px,env(safe-area-inset-right,0px)) calc(40px + env(safe-area-inset-bottom,0px)) 24px;display:flex;flex-direction:column;gap:18px}
+.ent .ptop{display:flex;justify-content:space-between;align-items:center}
+.ent .iconbtn{font:inherit;background:none;border:0;color:var(--muted);padding:4px 8px;border-radius:5px;cursor:pointer;font-size:14px}
+.ent .iconbtn:hover{background:var(--hover);color:var(--ink)}
+.ent .peek .emo{font-size:44px;line-height:1}
+.ent .peek h2{font-family:var(--display);font-weight:600;font-size:clamp(22px,4vw,28px);line-height:1.25;margin:0;text-wrap:balance}
+.ent .props{display:grid;grid-template-columns:110px 1fr;gap:8px 12px;font-size:14px;align-items:center}
+.ent .props .k{color:var(--muted)}
+.ent .tags{display:flex;gap:6px;flex-wrap:wrap}
+.ent .tag{background:var(--hover);border-radius:4px;padding:1px 7px;font-size:13px}
+.ent .ctrl{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.ent .btn{font:inherit;font-size:14px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:6px;padding:7px 12px;cursor:pointer}
+.ent .btn:hover{background:var(--hover)}
+.ent .btn.primary{background:var(--accent);border-color:var(--accent);color:var(--bg);font-weight:600}
+.ent .btn[aria-pressed="true"]{border-color:var(--done);color:var(--done)}
+.ent select{font:inherit;font-size:14px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:6px;padding:6px 8px}
+.ent .hint{font-size:13px;color:var(--muted);margin:0}
+.ent .chunks{display:flex;flex-wrap:wrap;gap:6px;line-height:1.4}
+.ent .chunk{all:unset;cursor:pointer;padding:6px 10px;border-radius:6px;background:var(--panel);border:1px solid var(--line);font-size:16px}
+.ent .chunk:hover{border-color:var(--accent)}
+.ent .chunk:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.ent .chunk.playing{background:var(--accent-soft);border-color:var(--accent)}
+.ent .full{font-size:16px;line-height:1.7;margin:0;max-width:65ch}
+.ent .sec{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0}
+.ent .tipbox{border-left:3px solid var(--warm);padding:2px 0 2px 14px;display:flex;flex-direction:column;gap:6px}
+.ent .tipbox p{margin:0;font-size:16px;line-height:1.65;max-width:65ch}
+.ent .tipbox .src{font-size:13px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){.ent .card{transition:none}}
+.ent .wrap{max-width:1040px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
 </style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600&display=swap">
 </head>
 <body>
 <header>
@@ -81,6 +174,7 @@ select{cursor:pointer}
     <a href="#accueil">Aujourd'hui</a>
     <a href="#exercices">Exercices</a>
     <a href="#examen">Examen blanc</a>
+    <a href="#entretien">Entretien</a>
   </nav>
 </header>
 <main id="app"></main>
@@ -610,7 +704,7 @@ function transcript(x){return x.segs.map(s=>`<p>${x.segs.length>1?`<b>${s[0]==='
 
 /* ===== ÉCOUTE ===== */
 V.exercices=()=>{
-  const L=[["ecoute","Écoute","Documents audio et petits exercices"],["oral","Oral","Sujets, tirage au sort, méthode"],["vocabulaire","Vocabulaire","Cartes par thème"],["grammaire","Grammaire","Séries de 10 questions"],["lecture","Lecture","Textes et questions"],["ecrit","Écrit","Sujets avec minuteur"],["ressources","Ressources","Liens gratuits"]];
+  const L=[["ecoute","Écoute","Documents audio et petits exercices"],["oral","Oral","Sujets, tirage au sort, méthode"],["vocabulaire","Vocabulaire","Cartes par thème"],["grammaire","Grammaire","Séries de 10 questions"],["lecture","Lecture","Textes et questions"],["ecrit","Écrit","Sujets avec minuteur"],["entretien","Entretien RH","10 réponses modèles à répéter"],["ressources","Ressources","Liens gratuits"]];
   app.innerHTML=`<div class="list">${L.map(l=>`<div class="item" onclick="location.hash='${l[0]}'"><span class="t">${l[1]}</span><span class="meta">${l[2]}</span></div>`).join('')}</div>`;
 };
 V.ecoute=()=>{
@@ -1071,6 +1165,7 @@ function dayPlan(date){
       :phase===2?{k:"Oral",m:35,t:`Sujet « ${PO[po].titre} » : directement étapes 4 à 6, minuteurs lancés. Enregistrez-vous.`,a:`poOpen(${po})`}
       :{k:"Oral",m:50,t:"Tirage au sort, 30 min de préparation puis 20 min de passation, sans regarder les pistes.",a:"poTirage()"},
       phase===1&&wd%2?{k:"Méthode orale",m:10,t:`Activité « ${PREP_ACTS[pa][0]} ».`,a:PREP_ACTS[pa][1]}:gram,
+      {k:"Entretien",m:10,t:`Réponse modèle « ${RM[d%RM.length].q} » : écoutez, répétez groupe par groupe, puis dites-la en entier.`,a:`rmOpen(${d%RM.length})`},
       {k:"Shadowing",m:5,t:"Réécoutez l'audio du jour en répétant en même temps que la voix.",a:null}];
   }
   return {week,phase,titre,T,date};
@@ -1092,6 +1187,263 @@ V.ressources=()=>{const R=[
 ["Écoute",[["Le français facile avec RFI","https://francaisfacile.rfi.fr/fr","Journal en français facile quotidien de 10 minutes, avec transcription et exercices."],["TV5Monde Apprendre le français","https://apprendre.tv5monde.com/fr","Vidéos d'actualité avec exercices interactifs, du A1 au B2. Choisissez le niveau B2 avancé. Gratuit, existe aussi en application (TV5MONDE EDU)."],["France Culture","https://www.radiofrance.fr/franceculture","Émissions et podcasts à débit naturel, pour les derniers mois."],["InnerFrench","https://innerfrench.com","Podcast pour apprenants intermédiaires sur des sujets de société."]]],
 ["Examen officiel (gratuit)",[["Sujets d'exemple officiels DELF B2","https://www.france-education-international.fr/diplome/delf-tout-public/niveau-b2/exemples-sujets","Deux examens complets (les deux formats d'écoute et de lecture), l'oral, les audios et les grilles de correction."],["Exercices d'entraînement officiels","https://www.france-education-international.fr/diplome/delf-tout-public/niveau-b2/entrainement","Un modèle de chaque exercice avec des conseils, et les audios."],["Présentation du DELF B2 tout public","https://www.france-education-international.fr/diplome/delf-tout-public/niveau-b2","Les épreuves, la durée et le barème."]]]
 ];app.innerHTML=`${back('#exercices','Exercices')}<h1>Ressources</h1>${R.map(g=>`<h2>${g[0]}</h2>${g[1].map(r=>`<div class="ph" style="display:block"><a href="${r[1]}" target="_blank" rel="noopener">${r[0]}</a><div class="small mut">${r[2]}</div></div>`).join('')}`).join('')}`};
+
+/* ---------- Entretien RH (réponses modèles) ---------- */
+const ENTD=(()=>{
+const CATS={
+  moi:{label:"Vous et votre motivation",emo:"👋"},
+  proj:{label:"Vos projets",emo:"🚀"},
+  meth:{label:"Vos méthodes de travail",emo:"🛠️"},
+  vis:{label:"Votre vision des RH",emo:"🌱"}
+};
+const SUB={fit:"Motivation et adéquation",exp:"Expérience et comportement",ex:"Exercices",ask:"Vos questions pour le recruteur"};
+const A=[
+{id:"presentation",cat:"moi",emo:"🙋‍♀️",q:"Présentez-vous et parlez-moi de votre parcours.",
+ a:"Je m'appelle Minh Phuong Ngo. / Je suis étudiante / en Master de communication digitale / et direction artistique. / Depuis septembre 2025, / je suis en alternance chez [company], / dans l'équipe People. / Je m'occupe du SIRH, / de la communication interne / et de l'expérience collaborateur. / J'ai créé une dizaine d'outils RH, / comme l'onboarding sur Slack / ou le Hiring Hub. / J'ai aussi organisé / le premier webinar de l'entreprise. / Aujourd'hui, / je souhaite continuer dans les RH, / avec mon double profil, / RH et communication.",
+ k:["je suis étudiante","en alternance","je m'occupe de","une dizaine de","mon double profil"]},
+{id:"amelioration",cat:"moi",emo:"📈",q:"Quel est votre principal point d'amélioration ?",
+ a:"Le français n'est pas ma langue maternelle, / donc à l'oral, / je cherche parfois mes mots. / Mais je travaille dessus / tous les jours : / je pratique des entretiens, / je fais du shadowing, / et je progresse vite. / À l'écrit, / je suis déjà très à l'aise.",
+ k:["ma langue maternelle","à l'oral","je cherche mes mots","je travaille dessus","je progresse"]},
+{id:"fiere",cat:"proj",emo:"⭐",q:"Parlez-moi d'un projet RH dont vous êtes particulièrement fière.",
+ a:"Le projet dont je suis la plus fière, / c'est l'onboarding sur Slack. / Au départ, / l'onboarding était sur Notion. / Les nouveaux arrivants / ne savaient pas toujours / qui contacter. / Pourtant, / le premier jour est très important : / c'est la première expérience / du nouvel arrivant chez nous. / J'ai donc tout transféré / dans des workflows Slack, / l'outil que l'équipe utilise déjà tous les jours. / Pour chaque nouvel arrivant, / je crée un canal dédié, / avec les RH, / son manager / et son buddy. / C'est son point de contact unique. / Les tâches sont adaptées / à chaque poste, / et il peut indiquer son avancement / directement dans le canal. / Résultat : / l'onboarding est maintenant le même / pour tous les postes, / et chaque nouvel arrivant / sait qui contacter dès le premier jour. / Ce que j'en retiens : / un bon outil RH, / c'est un outil que les gens utilisent déjà.",
+ k:["au départ","le nouvel arrivant","un point de contact unique","résultat","ce que j'en retiens"]},
+{id:"managers",cat:"proj",emo:"⏱️",q:"Comment travaillez-vous avec les managers qui n'ont pas beaucoup de temps pour les sujets RH ?",
+ a:"Mon objectif, / c'est de rendre les processus RH / simples et rapides pour eux. / Par exemple, / pour les entretiens annuels, / j'utilise des formulaires Tally, / et je crée des réunions de débrief / à partir des réponses. / Pour les congés, / avant, / les demandes passaient par Excel / ou par message. / Il n'y avait pas / de source unique d'information. / J'ai d'abord créé un système sur Notion, / avec des notifications automatiques / pour les managers. / Mais Notion était compliqué à utiliser. / Aujourd'hui, / les congés sont gérés sur Slack, / avec notre agent IA. / Les managers valident en un clic, / sans changer d'outil.",
+ k:["un formulaire","une source unique d'information","des notifications automatiques","valider en un clic"]},
+{id:"deployer",cat:"meth",emo:"🧩",q:"Comment déploieriez-vous un nouvel outil pour que tout le monde suive le même processus ?",
+ a:"D'abord, / je commence toujours par écouter / et comprendre les besoins. / Chez [company], / nous avons des profils très différents : / des salariés français, / des freelances / et des collaborateurs étrangers. / Chacun a des besoins différents. / Je crée une première version, / je la teste avec ma manager, / puis avec chaque type de collaborateur. / Ensuite, / nous améliorons l'outil / et nous décidons ensemble / s'il est prêt à être diffusé. / Après le lancement, / je reste disponible / pour accompagner mes collègues / et corriger les erreurs.",
+ k:["commencer par","les collaborateurs étrangers","diffuser","accompagner","corriger les erreurs"]},
+{id:"documentation",cat:"meth",emo:"📚",q:"Comment gardez-vous la documentation RH organisée et à jour ?",
+ a:"Pour moi, / la documentation doit être simple / et facile à trouver. / Pour chaque outil, / je crée un guide court, / avec des captures d'écran. / Tous les guides sont au même endroit, / sur Slack, / l'outil que l'équipe utilise tous les jours. / Et dès que je change un processus, / je mets à jour le guide / en même temps. / Comme ça, / l'information est toujours juste.",
+ k:["un guide","des captures d'écran","au même endroit","mettre à jour","en même temps"]},
+{id:"90jours",cat:"meth",emo:"🗓️",q:"Comment occuperiez-vous vos 30 à 90 premiers jours ?",
+ a:"Le premier mois, / j'écoute et j'apprends. / Je rencontre l'équipe, / les managers, / et je découvre les outils RH / et les processus. / Le deuxième mois, / j'identifie ce qui peut être amélioré, / avec les retours des collaborateurs. / Le troisième mois, / je propose mes premières solutions / et je lance un premier projet concret.",
+ k:["le premier mois","découvrir","identifier","les retours","un projet concret"]},
+{id:"ia",cat:"meth",emo:"🤖",q:"Utilisez-vous l'IA dans votre travail ? Pour quoi faire ?",
+ a:"Oui, / tous les jours. / Chez [company], / nous avons un agent IA sur Slack / qui aide à gérer les demandes de congés. / Personnellement, / j'utilise l'IA / pour rédiger des premières versions, / créer des guides / ou automatiser des tâches répétitives. / Mais je vérifie toujours le résultat : / l'IA m'aide, / elle ne décide pas à ma place.",
+ k:["un agent IA","rédiger","automatiser","des tâches répétitives","vérifier le résultat"]},
+{id:"pourquoi-rh",cat:"vis",emo:"💬",q:"Pourquoi voulez-vous continuer dans les RH, et pas seulement dans la communication ?",
+ a:"J'aime travailler avec les gens, / et la communication interne / reste mon domaine préféré. / Mais dans les RH, / je peux faire beaucoup plus. / J'aime aussi créer des systèmes / et travailler sur les outils, / en suivant les nouvelles tendances. / Le SIRH est un domaine / en pleine évolution, / et mon double profil, / RH et communication, / peut être un vrai atout / pour une équipe People.",
+ k:["mon domaine préféré","les nouvelles tendances","en pleine évolution","un vrai atout"]},
+{id:"experience",cat:"vis",emo:"🤝",q:"Selon vous, qu'est-ce qu'une bonne expérience collaborateur ?",
+ a:"Pour moi, / une bonne expérience collaborateur, / c'est une expérience adaptée / à chaque personne. / Nous n'avons pas tous les mêmes besoins. / Par exemple, / une personne a besoin d'un écran, / une autre a besoin d'un casque. / Le rôle des RH, / c'est de comprendre ces besoins / et de s'adapter. / Il faut aussi créer un espace / où chacun peut partager ses besoins / facilement. / Comme ça, / les collaborateurs se sentent écoutés / et à l'aise / dans leur travail.",
+ k:["adaptée à chaque personne","un écran, un casque","partager ses besoins","se sentir à l'aise"]}
+];
+/* Banque [company]: questions from recorded hiring interviews (no model answer yet) */
+const B=[
+["fit","🏢","Pourquoi [company] ? Nous sommes une petite entreprise.","Montrer que vous comprenez le compromis : moins de structure et de soutien, mais plus d'autonomie et de choses à construire. Reliez l'offre d'emploi à votre propre expérience.","Jérome, entretien BDR"],
+["fit","🔐","Pourquoi la cybersécurité ? Pourquoi ce secteur ?","Un intérêt sincère. La meilleure réponse citait un exemple concret de fuite de données et son impact, puis expliquait que croire au problème rend meilleur dans son travail.","Jérome, entretien BDR"],
+["fit","🚪","Pourquoi voulez-vous quitter votre poste actuel ?","Une raison tournée vers l'avenir (évoluer, avoir plus de responsabilités, construire quelque chose), sans critiquer l'employeur actuel.","Jean-David et Jérome, entretiens commerciaux"],
+["fit","🔄","Pourquoi repartir de zéro dans un nouveau secteur, au lieu de garder votre expertise ?","Votre capacité à apprendre vite et la cohérence de votre parcours. Montrez ce que vous gardez d'un poste à l'autre.","Jérome, panel RSM Inde"],
+["fit","🔎","Comment avez-vous connu [company] ?","Une question pour démarrer, mais elle montre aussi si vous vous êtes renseignée sur l'entreprise.","Bertrand, entretien CS"],
+["fit","💡","D'après ce que vous avez compris, quelle est la proposition de valeur de [company] ?","Que vous avez fait vos recherches. Parlez simplement de l'accès réseau des invités et des salariés, des objets connectés, du portail captif, de la conformité et du zero trust.","Jean-David, entretien RSM Allemagne"],
+["fit","🌍","Comment voyez-vous [company] en tant qu'entreprise ?","Du réalisme : une scale-up d'environ 60 personnes, autofinancée, où l'on a de la liberté mais où il faut s'investir.","Jean-David, entretien RSM Allemagne"],
+["fit","🏠","Êtes-vous à l'aise en télétravail, et pour venir à Paris de temps en temps ?","L'autonomie dans une équipe surtout à distance, et l'envie de se voir en personne quand c'est utile.","Plusieurs entretiens"],
+["fit","🇬🇧","Êtes-vous à l'aise pour travailler en anglais, à l'écrit et à l'oral ?","La documentation est en anglais et l'équipe est internationale. Soyez honnête sur vos difficultés et expliquez comment vous progressez.","Boris et William, entretien PO"],
+["fit","🎁","Si vous commenciez demain, qu'attendriez-vous de nous ?","De la maturité sur l'intégration : savoir ce qu'est la réussite dans le poste, avoir accès aux responsables, comprendre comment l'équipe travaille.","Jérome, entretien commercial"],
+["fit","🪞","Comment vous définiriez-vous en tant que professionnelle ?","Deux ou trois qualités, chacune avec une preuve concrète. Pas seulement des adjectifs.","Jérome, entretien commercial"],
+["fit","❤️","Qu'est-ce qui est important pour vous dans la vie ? La culture d'entreprise compte-t-elle ?","Vos valeurs. La réponse entendue parlait de respect, de rester calme sous pression et d'une culture ouverte et diverse.","Jean-David, entretien RSM Allemagne"],
+["fit","💶","Quelles sont vos prétentions salariales ?","Un chiffre préparé et réaliste, dit calmement.","Jérome, entretien commercial"],
+["fit","📅","Avez-vous d'autres processus de recrutement en cours ?","De la transparence sur votre calendrier, sans mettre la pression.","William, entretiens techniques"],
+["exp","☀️","Comment voyez-vous votre métier ? Décrivez-moi une journée ou une semaine type.","Votre méthode et votre sens des responsabilités : comment vous organisez votre temps et vos priorités.","Jean-David, entretien RSM Allemagne"],
+["exp","🚀","Parlez-moi d'une fois où vous êtes allée au-delà de votre rôle.","L'initiative. Choisissez une histoire liée à votre travail, par exemple une responsabilité que personne ne prenait.","Jean-David, entretien RSM Allemagne"],
+["exp","🧗","Parlez-moi d'une situation difficile qui montre que vous n'abandonnez pas.","La persévérance et la résolution de problèmes : ce qui bloquait, qui vous avez impliqué, ce qui a changé le résultat.","Jean-David, entretien RSM Allemagne"],
+["exp","🏆","Racontez votre plus belle réussite : pourquoi ce projet, pourquoi vous, pourquoi à ce moment-là ?","Bertrand utilise les « 3 Why ». Son conseil : chiffrez l'impact de chaque problème et dites ce qui était unique dans votre apport.","Bertrand, panel RSM Inde"],
+["exp","📨","Comment avez-vous obtenu un premier rendez-vous avec un décideur ? Et s'il n'avait jamais répondu ?","De la débrouillardise : plusieurs canaux, d'autres interlocuteurs, des personnes qui peuvent vous présenter.","Bertrand, panel RSM Inde"],
+["exp","🤝","Qui vous a soutenue en interne, et comment avez-vous construit cette relation ?","Une relation de confiance construite par l'honnêteté, la transparence et le travail fait ensemble.","Simranjeet, panel RSM Inde"],
+["exp","📇","Citez trois contacts de votre réseau, leur rôle et la dernière fois que vous leur avez parlé.","Que votre réseau est réel. Connaissez les noms.","Simranjeet, panel RSM Inde"],
+["exp","👥","Préférez-vous travailler seule sur vos dossiers ou manager une équipe ?","Honnêteté et souplesse. Une bonne réponse : commencer seule pour apprendre le métier, puis évoluer.","Bertrand, panel RSM Inde"],
+["exp","🧩","Un collègue n'a pas livré ce que vous attendiez. Comment l'avez-vous aidé ?","La collaboration plutôt que la critique : comment vous l'avez soutenu et avez adapté votre façon de faire.","Richa, panel RSM Inde"],
+["exp","🙌","Qu'attendez-vous des personnes avec qui vous travaillez au quotidien ?","L'esprit d'équipe et la responsabilité partagée des résultats.","Richa et Bertrand, panel RSM Inde"],
+["exp","⛰️","Quels sont les deux ou trois défis de ce poste, et comment les aborderiez-vous ?","Une vraie compréhension du poste et un plan réaliste pour chaque défi.","Richa, panel RSM Inde"],
+["exp","✋","Êtes-vous à l'aise pour dire non, même aux personnes qui vous ont recrutée ?","Du courage avec des arguments. La bonne réponse : ne jamais dire non pour dire non, expliquer pourquoi, et reconnaître aussi ce qui va bien.","Boris, entretien PO"],
+["exp","⏳","L'équipe vous dit que votre demande prendra six mois, ou ne veut pas la faire. Que faites-vous ?","La négociation : demander pourquoi, faire confiance à leur expertise, réduire le périmètre, découper le travail en petites étapes.","William et Boris, entretien PO"],
+["exp","📊","Qu'avez-vous mis en place dans votre poste actuel, et avec quels résultats ?","Des actions concrètes avec des chiffres (satisfaction, délais, adoption d'un outil).","Bertrand, entretien CS"],
+["exp","🔀","Vous êtes passée d'un type de poste à un autre. Le premier vous manque-t-il ?","La cohérence du parcours : ce que les deux postes ont en commun et ce que vous avez gardé.","Bertrand, entretien CS"],
+["exp","🗣️","Que pensez-vous du collègue que vous venez de rencontrer ? Qualités et défauts ?","Du jugement et du tact. Soyez juste et précise, en commençant par le positif.","William, entretien DevOps"],
+["ex","📞","Jeu de rôle : je suis un architecte réseau que vous appelez à froid. Obtenez le rendez-vous.","Rapidité et assurance : partir d'un problème, gérer les objections, proposer une date. Conseil reçu : creuser quelles solutions le client utilise déjà et si c'est un vrai problème.","Jérome, entretien BDR"],
+["ex","🔁","Faites le bilan de votre propre exercice : qu'est-ce qui a bien marché, que feriez-vous mieux ?","La lucidité. Citez vos vrais points faibles avant le recruteur.","Jérome, entretien BDR"],
+["ex","📐","Expliquez une méthode que vous utilisez et comment vous l'appliquez.","La pratique réelle plutôt que la théorie. Jérome voyait quand une méthode venait d'un chatbot et pas de l'expérience : utilisez vos propres exemples.","Jérome, entretiens commerciaux"],
+["ex","🗂️","Présentez votre cas pratique et expliquez vos choix.","Une pensée structurée, les raisons de chaque choix, et l'ouverture à ajuster avec l'équipe.","Entretien PO, panel RSM Inde"],
+["ex","🧐","Relisons ce document ensemble : qu'en pensez-vous ?","Pas de test : une revue commune. On regarde comment vous repérez les incohérences et discutez des solutions.","Romain, entretiens techniques"],
+["ex","📶","Un utilisateur est connecté au Wi-Fi, mais le portail captif ne s'affiche pas. Comment diagnostiquez-vous ?","Étape par étape : le réseau Wi-Fi, l'adresse IP, le DNS, puis la réponse du navigateur. Et demander si c'est un seul utilisateur ou tout le monde.","Mahfoud, entretien support"],
+["ask","🌟","Comment voyez-vous la personne idéale pour ce poste ?","Les candidats ont posé cette question. Elle montre que vous pensez à l'adéquation et vous donne des idées pour conclure.","Posée par les candidats"],
+["ask","🧭","Comment décririez-vous votre style de management ?","Vous montrez que la relation de travail compte pour vous, pas seulement le titre.","Posée par les candidats"],
+["ask","🪪","Comment voyez-vous mon profil pour ce poste ? Avez-vous des réserves ?","Vous invitez un retour honnête pendant que vous pouvez encore y répondre.","Posée par les candidats"],
+["ask","🕘","À quoi ressemble une journée type dans ce poste ?","Une question concrète et facile pour tout recruteur.","Posée par les candidats"],
+["ask","➡️","Quelles sont les prochaines étapes ?","Terminez toujours par cette question. En général, la suite passe par Melissa puis un dernier échange avec le CEO.","Posée par les candidats"]
+];
+/* Model answers for the bank, built on Bertrand's structure: problem, impact, action, result */
+const ANS={
+b1:"Je connais déjà [company] de l'intérieur, / et c'est justement ce type d'entreprise / qui me correspond. / Dans une petite équipe, / on ne fait pas seulement une tâche : / on construit. / En un an, / j'ai créé une dizaine d'outils RH / et organisé le premier webinar de l'entreprise. / Dans un grand groupe, / je n'aurais pas eu cette liberté. / Bien sûr, / il y a moins de structure, / mais j'aime ça : / quand je vois un problème, / je peux proposer une solution rapidement.",
+b2:"Je ne viens pas de la tech, / mais aujourd'hui, / je travaille au quotidien / avec des équipes techniques. / Ce que j'aime dans ce secteur, / c'est qu'il évolue vite. / Les équipes testent de nouveaux outils / et utilisent l'IA, / et ça m'inspire pour les RH. / Par exemple, / pour l'onboarding, / j'ai suivi la même logique : / partir de l'outil que les équipes utilisent déjà. / Pour moi, / les RH dans la tech / doivent être aussi agiles / que les équipes qu'elles accompagnent.",
+b3:"Je suis en alternance, / et mon contrat se termine dans environ un an. / Je ne pars pas parce que quelque chose ne va pas : / j'ai beaucoup appris chez [company]. / Mais maintenant, / je veux un poste / où je peux prendre plus de responsabilités / sur le SIRH / et l'expérience collaborateur, / et continuer à construire / des outils utiles pour les équipes.",
+b4:"Je ne repars pas vraiment de zéro. / Ce que je garde d'un poste à l'autre, / c'est ma méthode : / écouter les besoins, / tester une première version, / puis améliorer. / Et j'apprends vite. / Je venais de la communication, / et en quelques mois chez [company], / j'avais construit l'onboarding sur Slack / et les entretiens annuels sur Tally. / Un nouveau secteur, / c'est surtout de nouveaux problèmes à résoudre, / et c'est ce qui me motive.",
+b5:"J'ai découvert votre entreprise / sur [LinkedIn / un site d'emploi]. / Avant cet entretien, / j'ai regardé votre site, / vos offres / et les posts de vos collaborateurs sur LinkedIn. / Ce qui m'a plu, / c'est [un point précis sur l'entreprise], / parce que [lien avec votre expérience].",
+b6:"[company] aide les grandes entreprises / à sécuriser l'accès à leur réseau / pour les invités, / les salariés / et les objets connectés. / Tout se gère dans le cloud, / donc sans matériel compliqué / sur chaque site. / Par exemple, / le portail captif, / c'est la page qui s'affiche / quand on se connecte au Wi-Fi / d'un magasin ou d'un bureau. / [company] aide aussi ses clients / à rester conformes, / par exemple au RGPD.",
+b7:"Je vois [company] / comme une scale-up d'environ 60 personnes, / autofinancée, / avec des clients dans le monde entier. / Sa taille est un vrai avantage : / tout est possible, / on peut proposer des idées / et les voir appliquées. / Mais ça demande aussi / de l'autonomie / et de l'investissement. / Pour moi, / c'est exactement ce qui me motive.",
+b8:"Oui, / je travaille déjà à distance chez [company], / avec des collègues en France, / en Inde / et aux États-Unis. / Pour rester organisée, / je planifie mes priorités chaque semaine / et je communique beaucoup sur Slack. / Mais j'aime aussi / me voir en personne : / pour lancer un projet / ou pour un moment d'équipe, / je viens volontiers à Paris.",
+b9:"Oui. / Chez [company], / je travaille déjà en anglais / avec mes collègues étrangers, / à l'écrit et à l'oral. / J'ai organisé et animé / le webinar Women in Tech #Unfiltered / en anglais. / Je suis à l'aise / pour écrire des guides / et animer des réunions. / Et comme pour le français, / je continue à progresser / en pratiquant tous les jours.",
+b10:"D'abord, / comprendre ce qu'est une réussite / dans ce poste : / quels sont les objectifs / pour les six premiers mois. / Ensuite, / avoir un point régulier / avec ma manager, / pour avancer dans la bonne direction. / Et enfin, / rencontrer les équipes, / parce que pour moi, / un bon outil RH / commence par écouter les gens.",
+b11:"Je dirais trois choses. / D'abord, / je suis autonome : / j'ai créé une dizaine d'outils RH / en un an. / Ensuite, / je suis à l'écoute : / avant chaque outil, / je parle avec les collaborateurs / pour comprendre leurs besoins. / Et enfin, / je suis créative : / grâce à mon parcours en communication, / je rends les processus RH / clairs et agréables à utiliser.",
+b12:"Pour moi, / le plus important, / c'est le respect / et la bienveillance. / Au travail, / je veux une culture ouverte, / où chacun peut donner son avis / et poser des questions. / C'est aussi pour ça / que j'ai lancé le programme ambassadeurs LinkedIn : / pour que chaque collaborateur / puisse partager son expérience / et se sentir valorisé.",
+b13:"Pour ce type de poste, / et avec mon expérience, / je vise une rémunération / entre [X] et [Y] euros brut par an. / Je reste ouverte à la discussion / selon l'ensemble du package.",
+b14:"Oui, / j'ai [quelques] processus en cours. / Mais votre poste / est celui qui m'intéresse le plus, / parce que [raison précise]. / Si vous avez un calendrier, / je peux m'organiser.",
+b15:"Le lundi, / je fais le point / sur mes priorités de la semaine. / Chaque jour, / je réponds aux questions des collaborateurs sur Slack, / je suis les arrivées et les départs, / et je mets à jour le SIRH. / Ensuite, / je garde du temps / pour un projet de fond, / par exemple / un nouvel outil / ou un post pour la page LinkedIn de l'entreprise. / Pour moi, / l'important, / c'est d'équilibrer / l'opérationnel / et les projets.",
+b16:"Mon exemple, / c'est le webinar Women in Tech #Unfiltered. / Ce n'était pas dans ma fiche de poste, / et l'entreprise n'avait jamais fait de webinar. / Je l'ai créé et organisé de A à Z : / trouver les intervenantes, / préparer les questions, / faire une répétition / et animer le jour J. / Résultat : / [X] participants, / et le premier webinar de l'histoire de [company]. / Ce que j'en retiens : / si une idée est utile, / il faut oser la proposer.",
+b17:"Pour les congés, / ma première solution n'a pas marché. / Avant, / les demandes passaient par Excel / ou par message, / sans source unique d'information. / J'ai créé un système sur Notion, / mais il était compliqué à utiliser. / Je n'ai pas abandonné. / J'ai compris le vrai problème : / les gens ne voulaient pas changer d'outil. / Alors j'ai tout déplacé sur Slack, / avec notre agent IA. / Aujourd'hui, / les managers valident en un clic. / J'ai appris qu'un échec / donne souvent la bonne réponse.",
+b18:"Ma plus belle réussite, / c'est l'onboarding sur Slack. / Pourquoi ce projet ? / Les nouveaux arrivants ne savaient pas / qui contacter, / et [des étapes étaient oubliées]. / Pourquoi moi ? / Je voulais partir de l'outil / que l'équipe utilise déjà, / au lieu d'en ajouter un nouveau. / J'ai créé un canal par arrivant, / avec les RH, / le manager / et le buddy. / Pourquoi à ce moment-là ? / L'entreprise recrute dans plusieurs pays, / donc il fallait un processus simple / et identique pour tous. / Résultat : / [X] arrivants intégrés / avec ce système.",
+b19:"Dans les RH, / mes décideurs, / ce sont la direction / et les managers. / Ils ont peu de temps, / donc je rends la décision facile. / J'envoie un message court, / avec l'objectif, / ce que j'attends d'eux / et le temps nécessaire. / Pour le webinar, / par exemple, / j'ai présenté l'idée / avec un format clair / avant de demander l'accord. / Si je n'ai pas de réponse, / je relance une fois, / puis je passe par ma manager.",
+b20:"Ma principale alliée, / c'est ma manager. / Au début, / je lui présentais chaque idée / avec une première version concrète, / pas seulement une idée. / Elle pouvait voir vite / si ça pouvait marcher. / Avec le temps, / elle m'a fait confiance / pour lancer des projets seule. / Pour moi, / la confiance vient du travail livré / et de la transparence, / même quand quelque chose ne marche pas.",
+b22:"Aujourd'hui, / je préfère commencer / par mes propres projets, / pour bien connaître l'entreprise. / Mais j'aime aussi / accompagner les autres : / avec le programme ambassadeurs LinkedIn, / j'aide mes collègues / à prendre la parole sur LinkedIn. / Plus tard, / manager une petite équipe / m'intéresserait beaucoup.",
+b23:"Dans le programme ambassadeurs, / certains collègues voulaient participer, / mais ne publiaient pas. / Je n'ai pas relancé en boucle : / je leur ai demandé / ce qui les bloquait. / Souvent, / c'était [le manque de temps / la peur d'écrire]. / Alors je leur ai proposé / [des idées de posts / une première version à adapter]. / Résultat : / [X] collègues ont publié. / Pour moi, / il faut comprendre / avant de juger.",
+b24:"J'attends de la transparence / et de la communication. / Si un projet prend du retard, / je préfère le savoir tôt, / pour trouver une solution ensemble. / J'aime aussi / quand chacun se sent responsable du résultat, / pas seulement de sa tâche. / Et je fais pareil : / je partage mon avancement / et je demande de l'aide / quand j'en ai besoin.",
+b25:"Je vois deux défis. / Le premier, / c'est la diversité des profils : / salariés, / freelances / et collaborateurs à l'étranger. / Chacun a des règles différentes. / Je commencerais par lister ces situations, / pour avoir un processus clair / pour chacune. / Le deuxième, / c'est l'adoption des outils. / Un outil RH ne sert à rien / si personne ne l'utilise. / Donc je partirais toujours / des outils que les équipes / utilisent déjà.",
+b26:"Oui, / mais jamais sans raison. / Si une demande pose problème, / par exemple / si elle n'est pas conforme / ou si elle complique un processus, / j'explique pourquoi / et je propose une autre solution. / Un non est aussi mieux accepté / quand on reconnaît / ce qui fonctionne bien. / Et je préfère dire non tout de suite / plutôt qu'un « peut-être » / qui repousse le problème.",
+b27:"D'abord, / je demande pourquoi. / Les personnes qui font le travail / savent mieux que moi / ce qu'il demande. / Ensuite, / on cherche une solution ensemble : / est-ce qu'on peut faire / une première version plus simple ? / Ou découper le projet / en petites étapes ? / C'est ce que je fais avec mes outils RH : / je lance une première version, / puis j'améliore.",
+b28:"En un an, / j'ai mis en place / une dizaine d'outils RH. / Par exemple, / l'onboarding sur Slack, / la gestion des congés / avec notre agent IA, / et les entretiens annuels / avec des formulaires Tally. / J'ai aussi lancé / le programme ambassadeurs LinkedIn / et organisé le premier webinar de l'entreprise. / Résultat : / les managers valident les congés en un clic, / et [X] entretiens annuels / ont été faits avec le nouveau système.",
+b29:"Je viens de la communication, / et non, / elle ne me manque pas, / parce que je l'utilise tous les jours. / Dans les RH, / communiquer, / c'est expliquer un processus clairement, / écrire un guide, / ou préparer un post LinkedIn / sur la vie de l'équipe. / Mon double profil, / RH et communication, / est justement ma force.",
+b30:"J'ai trouvé [son prénom] / [une qualité], / par exemple quand [un moment de l'échange]. / Si je devais citer un point à améliorer, / je dirais [un point], / mais je ne le connais pas encore assez / pour vraiment juger.",
+b32:"Je pense que [ce point] a bien marché, / parce que [raison]. / Par contre, / je n'ai pas assez [point faible]. / Si je recommençais, / je commencerais par [amélioration]. / J'aime faire ce bilan : / c'est comme ça que je progresse.",
+b33:"Ma méthode, / c'est écouter, / tester, / améliorer. / D'abord, / j'écoute les besoins / des collaborateurs et des managers. / Ensuite, / je crée une première version / et je la teste avec quelques personnes. / Enfin, / j'améliore avec leurs retours / avant de lancer. / Par exemple, / pour les congés, / c'est cette méthode / qui m'a fait passer de Notion à Slack.",
+b34:"Pour ce cas, / j'ai d'abord identifié le problème principal : / [problème]. / Ensuite, / j'ai proposé [solution], / parce que [raison]. / J'ai fait une hypothèse / sur [point inconnu], / mais je l'adapterais / avec votre équipe. / Est-ce que ça correspond / à votre réalité ?",
+b35:"En lisant, / je regarde d'abord / si le message principal est clair. / Ensuite, / je cherche les incohérences : / un chiffre qui change, / ou un mot différent / pour la même chose. / Ici, / je remarque [un point]. / Je proposerais de [solution]. / Mais avant de changer, / j'aimerais comprendre / pourquoi c'est écrit comme ça.",
+b37:"Pour finir, / j'aimerais vous poser une question : / comment voyez-vous / la personne idéale pour ce poste ?",
+b38:"J'ai une question pour vous : / comment décririez-vous / votre style de management ?",
+b39:"Comment voyez-vous mon profil / pour ce poste ? / Est-ce que vous avez des réserves / que je pourrais clarifier ?",
+b40:"À quoi ressemble / une journée type / dans ce poste ?",
+b41:"Merci beaucoup pour cet échange. / Quelles sont les prochaines étapes / du processus ?"
+};
+/* Full model answers replacing the templates, and answers for the three cards that had none */
+Object.assign(ANS,{
+b5:"J'ai découvert votre entreprise sur LinkedIn, / grâce au post d'un de vos collaborateurs / sur la vie de l'équipe. / Ça m'a parlé, / parce que je gère moi-même / la page LinkedIn de [company] / et un programme ambassadeurs. / Ensuite, / j'ai regardé votre site / et vos offres. / J'ai vu que ce poste mélange / les RH et les outils, / et c'est exactement mon profil.",
+b14:"Oui, / j'ai quelques autres processus en cours. / Mais votre poste / est celui qui m'intéresse le plus, / parce qu'il mélange le SIRH / et l'expérience collaborateur, / deux sujets que je pratique déjà / tous les jours. / Si vous avez un calendrier, / je peux tout à fait m'organiser.",
+b16:"Mon exemple, / c'est le webinar Women in Tech #Unfiltered. / Ce n'était pas dans ma fiche de poste, / et l'entreprise n'avait jamais fait de webinar. / Je l'ai créé et organisé de A à Z, / en partenariat avec WomenTech Network : / trouver les quatre intervenantes, / préparer les questions, / faire une répétition / et animer le jour J. / Résultat : / le premier webinar de l'histoire de [company], / et un nouveau format / pour la marque employeur. / Ce que j'en retiens : / si une idée est utile, / il faut oser la proposer.",
+b18:"Ma plus belle réussite, / c'est l'onboarding sur Slack. / Pourquoi ce projet ? / L'onboarding était sur Notion, / et les nouveaux arrivants / ne savaient pas toujours qui contacter. / Pourquoi moi ? / Je voulais partir de l'outil / que l'équipe utilise déjà, / au lieu d'en ajouter un nouveau. / J'ai créé un canal par arrivant, / avec les RH, / le manager / et le buddy. / Pourquoi à ce moment-là ? / L'entreprise recrute dans plusieurs pays, / donc il fallait un processus simple / et identique pour tous. / Résultat : / l'onboarding est maintenant le même / pour tous les postes, / et chaque arrivant sait qui contacter / dès le premier jour.",
+b21:"Je pense d'abord à ma manager, / Melissa, / responsable People chez [company] : / on se parle tous les jours. / Ensuite, / Noémie Nana Gassa, / créatrice de contenu sur LinkedIn, / avec plus de vingt mille abonnés. / Je l'ai invitée / pour une session Real Talk / avec nos ambassadeurs, / en octobre. / Et enfin, / l'équipe de WomenTech Network, / avec qui j'ai organisé / le webinar Women in Tech #Unfiltered.",
+b23:"Dans le programme ambassadeurs, / certains collègues voulaient participer, / mais ne publiaient pas. / Je n'ai pas relancé en boucle : / je leur ai demandé / ce qui les bloquait. / J'ai trouvé quatre freins : / le doute sur la valeur de leur expérience, / la peur de s'exposer, / le manque d'inspiration / et le manque de temps. / Alors j'ai organisé une session Real Talk / avec Noémie Nana Gassa, / une créatrice LinkedIn, / construite autour de ces quatre freins. / Pour moi, / il faut comprendre / avant de juger.",
+b28:"En un an, / j'ai mis en place / une dizaine d'outils RH. / Par exemple, / l'onboarding sur Slack, / la gestion des congés / avec notre agent IA, / et les entretiens annuels / avec des formulaires Tally. / Côté marque employeur, / j'ai doublé le rythme sur LinkedIn, / de six à douze publications par mois, / avec un engagement cent pour cent organique. / Résultat : / les managers valident les congés en un clic, / et l'entreprise est plus visible / sans payer de publicité.",
+b30:"J'ai trouvé votre collègue / très clair et pédagogue : / quand je lui ai posé une question sur l'équipe, / il a pris le temps / de donner un exemple concret. / J'ai aussi senti / qu'il est très investi. / Si je devais citer un point, / je dirais qu'il a beaucoup de sujets / en même temps, / donc il doit être difficile / d'avoir du temps pour tout. / Mais je ne le connais pas encore assez / pour vraiment juger.",
+b31:"Bonjour Monsieur Martin, / Phuong, de [company]. / Je sais que je vous appelle sans prévenir, / donc je serai rapide : / vous avez deux minutes ? / Je travaille avec des responsables réseau / dans de grands groupes. / Ce qu'ils me disent souvent, / c'est qu'ils ont plusieurs solutions / pour le Wi-Fi invités et la sécurité, / et que c'est difficile à gérer. / Aujourd'hui, / quelle solution utilisez-vous ? / Et est-ce que c'est simple pour votre équipe ? / Je vous propose trente minutes / avec notre expert / pour voir ce qu'on peut simplifier. / Jeudi à quatorze heures, / ou vendredi à dix heures ?",
+b32:"Je pense que j'ai bien présenté / le problème du client, / et j'ai obtenu le rendez-vous. / Par contre, / je n'ai pas assez posé de questions / sur le budget / et le calendrier. / J'étais concentrée sur le rendez-vous, / et je suis allée trop vite. / Si je recommençais, / je demanderais d'abord / quelle solution il utilise aujourd'hui, / avant de présenter la nôtre. / J'aime faire ce bilan : / c'est comme ça que je progresse.",
+b34:"Pour ce cas, / j'ai d'abord identifié le problème principal : / les nouveaux arrivants à l'étranger / ne reçoivent pas les mêmes informations / que les salariés en France. / Ensuite, / j'ai proposé un parcours unique sur Slack, / avec des étapes adaptées / à chaque pays, / parce que c'est l'outil / que l'équipe utilise déjà. / J'ai fait une hypothèse / sur le nombre d'arrivées par mois, / mais je l'adapterais avec votre équipe. / Est-ce que ça correspond / à votre réalité ?",
+b35:"En lisant, / je regarde d'abord / si le message principal est clair. / Ensuite, / je cherche les incohérences. / Ici, / je remarque que le guide parle de « congés » / dans une partie, / et de « PTO » dans une autre. / Pour un nouvel arrivant, / ça peut prêter à confusion. / Je proposerais un seul mot partout, / et un exemple concret au début. / Mais avant de changer, / j'aimerais comprendre / pourquoi c'est écrit comme ça.",
+b36:"D'abord, / je demande si c'est un seul utilisateur / ou tout le monde. / Ensuite, / je vérifie étape par étape. / Est-ce qu'il est bien connecté / au bon réseau Wi-Fi ? / Est-ce qu'il a reçu une adresse IP ? / Est-ce que le DNS répond ? / Si tout ça fonctionne, / je regarde la réponse du navigateur : / si le site répond normalement, / l'appareil pense qu'il a déjà internet, / et le portail ne s'affiche pas. / Enfin, / je demande une capture du trafic / pour confirmer, / et je tiens le client informé / à chaque étape."
+});
+const SKIP={};
+/* Practiced cards that were also asked in the [company] interviews: add the recruiter tip and show them in the bank too */
+const ALSO={
+presentation:["fit","Chaque entretien commence ici. Les recruteurs veulent une histoire courte et structurée, qui se termine par la raison pour laquelle ce poste a du sens maintenant. Pas une lecture du CV.","La plupart des entretiens"],
+ia:["fit","Un usage concret et critique. Les recruteurs ont apprécié les réponses qui citent de vrais usages (rédiger, chercher, automatiser des tâches répétitives) et qui disent que le résultat doit toujours être vérifié.","William, entretien PO"],
+deployer:["exp","Une formation courte, des processus clairs et des guides rapides que chacun peut consulter en cas de doute. Le but : que tout le monde suive la même règle.","Boris, entretien PO"],
+documentation:["exp","Un processus, pas de bonnes intentions : chaque changement de processus entraîne une mise à jour du guide, avec un lien entre les deux.","William, entretien PO"],
+"90jours":["exp","Un plan concret : apprendre l'entreprise et les outils, regarder ce qui est déjà en cours, puis lancer un premier projet. Pour un poste commercial, Jérome attendait aussi le cycle de vente et le pipeline.","Jérome, entretien commercial"]
+};
+/* Each bank card also lives in the main group that matches its nature */
+const HOME={moi:[1,2,3,4,5,8,9,10,11,13,14,22,29,37,38,39,40,41],proj:[16,17,18,20,21,23,28],meth:[15,19,24,26,27,30,31,32,33,34,35,36],vis:[6,7,12,25]};
+Object.entries(HOME).forEach(([c,ns])=>ns.forEach(n=>{const x=A.find(y=>y.id==="b"+n);if(x){x.cat=c;x.h=null}}));
+A.forEach(x=>{const r=ALSO[x.id];if(r){x.g=r[0];x.t=r[1];x.s=r[2];x.also=true}});
+B.forEach((r,i)=>{const id="b"+(i+1);A.push({id,cat:(Object.keys(HOME).find(c=>HOME[c].includes(i+1))||"moi"),g:r[0],emo:r[1],q:r[2],t:r[3],s:r[4],k:[],a:ANS[id]||"",skip:!!SKIP[id]})});
+
+return {CATS,SUB,A};})();
+
+const ENTA=ENTD.A, RM=ENTD.A.filter(x=>x.a);
+const eg=id=>document.getElementById('e-'+id);
+let EV='all',ECUR=null;
+function eDone(){let d=S.get('ent_done',null);if(d===null){const old=S.get('rm_done',[]);d=old.map(i=>ENTA[i]&&ENTA[i].id).filter(Boolean);S.set('ent_done',d)}return new Set(d)}
+function eSave(set){S.set('ent_done',[...set])}
+const eChunks=a=>a.split(" / ").map(s=>s.trim()).filter(Boolean);
+const ePlain=a=>eChunks(a).join(" ");
+function eSay(text,el){if(!('speechSynthesis' in window))return;stopSpeech();document.querySelectorAll('.ent .chunk.playing').forEach(c=>c.classList.remove('playing'));
+  try{loadVoices();const u=new SpeechSynthesisUtterance(text);u.lang='fr-FR';const v=VOICES.find(x=>/fr[-_]FR/i.test(x.lang))||VOICES[0];if(v)u.voice=v;
+  u.rate=parseFloat((eg('speed')||{}).value)||S.get('ent_rate',.85);if(el){el.classList.add('playing');u.onend=u.onerror=()=>el.classList.remove('playing')}speechSynthesis.speak(u)}catch(e){}}
+function ePill(c){return `<span class="pill p-${c}">${ENTD.CATS[c].emo} ${ENTD.CATS[c].label}</span>`}
+V.entretien=()=>{stopSpeech();clearTimers();
+  app.innerHTML=`<div class="ent"><div class="wrap">
+  <div class="pageicon" aria-hidden="true">🎙️</div>
+  <h1>Réponses modèles RH</h1>
+  <p class="sub">Dix réponses construites à partir de vos idées, pour le shadowing. Ouvrez une carte, écoutez la réponse, puis répétez groupe par groupe. Cliquez sur un groupe pour l'entendre seul. Les autres cartes reprennent les questions de nos vrais entretiens d'embauche [company] : chacune donne une réponse modèle et ce que le recruteur cherchait.</p>
+
+  <div class="callout">
+    <span class="ic" aria-hidden="true">💡</span>
+    <div><strong>Points à travailler</strong>
+      <ul>
+        <li>Moins de « euh », « like » et « très, très, très » : un seul « très » suffit.</li>
+        <li>Commencer par l'idée principale, puis un exemple et le résultat.</li>
+        <li>Garder un seul temps dans une réponse (le présent ou le passé).</li>
+        <li>Pour les histoires : le problème, son impact, ce que j'ai fait, le résultat. Les éléments entre crochets [ ] sont à remplacer par vos propres chiffres et exemples.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="tabs" id="e-tabs" role="toolbar" aria-label="Filtrer par catégorie"></div>
+  <div id="e-groups" style="display:flex;flex-direction:column;gap:30px"></div>
+</div>
+
+<div class="scrim" id="e-scrim" hidden></div>
+<aside class="peek" id="e-peek" hidden aria-label="Réponse modèle">
+  <div class="ptop"><span class="pill" id="e-pcat"></span><button class="iconbtn" id="e-close" aria-label="Fermer">✕ Fermer</button></div>
+  <div class="emo" id="e-pemo" aria-hidden="true"></div>
+  <h2 id="e-pq"></h2>
+  <div class="props">
+    <span class="k" id="e-ptagsk">Mots clés</span><div class="tags" id="e-ptags"></div>
+    <span class="k">Statut</span><div><button class="btn" id="e-pdone" aria-pressed="false">☐ À pratiquer</button></div>
+  </div>
+  <div id="e-answerpart">
+    <div class="ctrl">
+      <button class="btn primary" id="e-play">🔊 Écouter la réponse</button>
+      <label for="e-speed" class="hint">Vitesse</label>
+      <select id="e-speed"><option value="0.7">Lente</option><option value="0.85" selected>Normale</option><option value="1">Rapide</option></select>
+    </div>
+    <p class="sec" style="margin-top:18px">Groupes à répéter</p>
+    <div class="chunks" id="e-chunks" style="margin-top:8px"></div>
+    <p class="sec" style="margin-top:18px">Réponse complète</p>
+    <p class="full" id="e-full" style="margin-top:8px"></p>
+  </div>
+  <div id="e-tippart" hidden style="margin-top:6px">
+    <div id="e-noanswer">
+      <div class="ctrl"><button class="btn primary" id="e-playq">🔊 Écouter la question</button></div>
+      <p class="hint" style="margin-top:14px" id="e-noanswerhint"></p>
+    </div>
+    <div class="tipbox" style="margin-top:14px">
+      <span class="sec">Ce que le recruteur cherchait</span>
+      <p id="e-tip"></p>
+      <span class="src" id="e-tipsrc"></span>
+    </div>
+  </div>
+</aside></div>`;
+  if(!('speechSynthesis' in window)){eg('play').hidden=true;eg('speed').hidden=true;eg('playq').hidden=true}
+  eg('speed').value=String(S.get('ent_rate',.85));eg('speed').onchange=e=>S.set('ent_rate',parseFloat(e.target.value));
+  eg('close').onclick=eClose;eg('scrim').onclick=eClose;
+  eg('play').onclick=()=>ECUR&&ECUR.a&&eSay(ePlain(ECUR.a));
+  eg('playq').onclick=()=>ECUR&&eSay(ECUR.q);
+  eg('pdone').onclick=()=>{const d=eDone();d.has(ECUR.id)?d.delete(ECUR.id):d.add(ECUR.id);eSave(d);eSetDone();eGroups()};
+  eTabs();eGroups();
+};
+function eTabs(){const t=eg('tabs');t.innerHTML='';
+  [["all","📋 Toutes",ENTA.length],...Object.entries(ENTD.CATS).map(([k,v])=>[k,v.emo+" "+v.label,ENTA.filter(x=>x.cat===k).length])].forEach(([k,l,n])=>{
+    const b=document.createElement('button');b.className='tab';b.setAttribute('aria-pressed',k===EV);b.innerHTML='<span></span><span class="n">'+n+'</span>';b.firstChild.textContent=l;
+    b.onclick=()=>{EV=k;eTabs();eGroups()};t.appendChild(b)})}
+function eCard(x){const d=eDone(),on=d.has(x.id);const c=document.createElement('button');c.className='card';c.setAttribute('aria-label',x.q);
+  c.innerHTML=`<div class="cover ${x.cat}"><span class="emo" aria-hidden="true"></span></div><div class="cbody"><div class="ctitle"></div><div class="cprev"></div><div class="cprops"><span class="state ${on?'on':''}"><span class="box">${on?'✓':''}</span>${on?'Pratiquée':'À pratiquer'}</span></div></div>`;
+  c.querySelector('.emo').textContent=x.emo;c.querySelector('.ctitle').textContent=x.q;c.querySelector('.cprev').textContent=x.a?ePlain(x.a):x.t;
+  c.onclick=()=>eOpenX(x);return c}
+function eGroups(){const g=eg('groups');if(!g)return;g.innerHTML='';const d=eDone();
+  Object.keys(ENTD.CATS).filter(c=>EV==='all'||EV===c).forEach(c=>{const items=ENTA.filter(x=>x.cat===c);const nd=items.filter(x=>d.has(x.id)).length;
+    const s=document.createElement('section');s.className='group';s.innerHTML=`<div class="ghead">${ePill(c)}<span class="count">${items.length} · ${nd} pratiquée${nd>1?'s':''}</span></div>`;
+    const grid=document.createElement('div');grid.className='grid';items.forEach(x=>grid.appendChild(eCard(x)));s.appendChild(grid);g.appendChild(s)})}
+function eSetDone(){const on=eDone().has(ECUR.id);eg('pdone').setAttribute('aria-pressed',on);eg('pdone').textContent=on?'☑ Pratiquée':'☐ À pratiquer'}
+function eOpenX(x){ECUR=x;eg('pcat').className='pill p-'+x.cat;eg('pcat').textContent=ENTD.CATS[x.cat].emo+' '+ENTD.CATS[x.cat].label;
+  eg('pemo').textContent=x.emo;eg('pq').textContent=x.q;const hasA=!!x.a;eg('answerpart').hidden=!hasA;eg('tippart').hidden=!x.t;eg('noanswer').hidden=hasA;
+  eg('noanswerhint').textContent=x.skip?"Pas de réponse modèle : cette question concerne surtout les postes commerciaux ou techniques. Lisez le conseil pour savoir ce qu'on attend.":"Répondez d'abord à voix haute, en deux minutes maximum. Ensuite, lisez le conseil.";
+  eg('ptags').innerHTML='';(x.k||[]).forEach(k=>{const s=document.createElement('span');s.className='tag';s.textContent=k;eg('ptags').appendChild(s)});
+  eg('ptags').hidden=!(x.k||[]).length;eg('ptagsk').hidden=!(x.k||[]).length;
+  if(hasA){eg('full').textContent=ePlain(x.a);eg('chunks').innerHTML='';eChunks(x.a).forEach(t=>{const b=document.createElement('button');b.className='chunk';b.textContent=t;b.onclick=()=>eSay(t,b);eg('chunks').appendChild(b)})}
+  if(x.t){eg('tip').textContent=x.t;eg('tipsrc').textContent='Source : '+x.s}
+  eSetDone();eg('scrim').hidden=false;eg('peek').hidden=false;eg('peek').scrollTop=0;eg('close').focus()}
+function eClose(){stopSpeech();if(eg('scrim')){eg('scrim').hidden=true;eg('peek').hidden=true}ECUR=null}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&ECUR)eClose()});
+function rmOpen(i){if(location.hash!=='#entretien'){location.hash='entretien';setTimeout(()=>{V.entretien();eOpenX(RM[i])},60)}else{V.entretien();eOpenX(RM[i])}}
 
 /* ---------- Routeur ---------- */
 function route(){const v=(location.hash||'#accueil').slice(1);stopSpeech();clearTimers();
